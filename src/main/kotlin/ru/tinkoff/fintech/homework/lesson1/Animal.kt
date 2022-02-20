@@ -8,43 +8,42 @@ Energy - это кол-во оставшейся энергии у животн�
 Weight - это переменная, которая определяет насколько питательное животное
  */
 
-abstract class Animal {
-    private val weight: Int
+abstract class Animal(private val weight: Int) {
     private var energy: Int = 100
 
-    constructor(weight: Int) {
-        this.weight = weight
-    }
+    abstract fun say()
 
-    abstract fun say(): String
+    abstract fun run()
 
-    private fun animalCondition(): String {
-        return when (energy) {
+    abstract fun getAnimalType(): String
+
+    private fun animalCondition() {
+        when (energy) {
             in 1..24 -> "It's energy is low: $energy\n"
             in 25..75 -> "It's energy is middle: $energy\n"
             in 76..99 -> "It's energy is high: $energy\n"
             else -> "It died\n"
-        }
+        }.prettyPrint()
     }
 
-    protected fun run(costOfRunning: Int): String {
+    protected fun run(costOfRunning: Int) {
         if (energy > 0) energy = max(0, energy - costOfRunning)
-        return animalCondition()
+        animalCondition()
     }
 
-    abstract fun run(): String
-
-    protected fun die(nameOfAnimal: String): String {
+    protected fun die() {
         energy = 0
-        return "$nameOfAnimal was eaten\n"
+        "Was eaten".prettyPrint()
     }
 
-    abstract fun die(): String
-
-    fun eat(animal: Animal): String {
+    fun eat(animal: Animal) {
         if (energy > 0) energy = min(100, energy + animal.weight)
-        return animalCondition()
+        animalCondition()
     }
 
-
+    protected fun String.prettyPrint() {
+        println(getAnimalType())
+        println(this)
+        println()
+    }
 }
