@@ -19,11 +19,15 @@ abstract class Animal(private val weight: Int) {
 
     private fun animalCondition() {
         when (energy) {
-            in 1..24 -> "It's energy is low: $energy\n"
-            in 25..75 -> "It's energy is middle: $energy\n"
-            in 76..99 -> "It's energy is high: $energy\n"
-            else -> "It died\n"
+            in 1..24 -> "It's energy is low: $energy"
+            in 25..75 -> "It's energy is middle: $energy"
+            in 76..99 -> "It's energy is high: $energy"
+            else -> "It died"
         }.prettyPrint()
+    }
+
+    fun isAlive(): Boolean {
+        return energy > 0
     }
 
     protected fun run(costOfRunning: Int) {
@@ -31,14 +35,19 @@ abstract class Animal(private val weight: Int) {
         animalCondition()
     }
 
-    protected fun die() {
+    private fun die() {
         energy = 0
-        "Was eaten".prettyPrint()
+        "It dead".prettyPrint()
     }
 
     fun eat(animal: Animal) {
-        if (energy > 0) energy = min(100, energy + animal.weight)
-        animalCondition()
+        if (animal.isAlive()) {
+            animal.die()
+            if (energy > 0) energy = min(100, energy + animal.weight)
+            animalCondition()
+        } else {
+            "It can't eat a non-existent animal".prettyPrint()
+        }
     }
 
     protected fun String.prettyPrint() {

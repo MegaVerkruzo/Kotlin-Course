@@ -2,10 +2,20 @@ package ru.tinkoff.fintech.homework.lesson1
 
 fun main(args: Array<String>) {
     val cat = Cat(8)
-    println(cat.say())
-    println(cat.animalCondition())
-}
+    cat.say()
+    cat.run()
+    cat.run()
 
-fun Cat(weight: Int): Cat {
+    val chicken = Chicken(3)
+    chicken.say()
+    chicken.run()
+    chicken.run()
 
+    cat.eat(chicken)
+    chicken.run()
+
+    cat.eat(chicken)
+    for (i in 1..10) {
+        cat.run()
+    }
 }

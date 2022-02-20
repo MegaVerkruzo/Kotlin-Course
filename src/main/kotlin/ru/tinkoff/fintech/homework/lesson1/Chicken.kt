@@ -4,7 +4,7 @@ class Chicken(private val weight: Int) : Animal(weight) {
     private val costOfRunning: Int = 5
 
     override fun say() {
-        "Cock-A-Doodle-Doo\n".prettyPrint()
+        "Cock-A-Doodle-Doo".prettyPrint()
     }
 
     override fun run() {
