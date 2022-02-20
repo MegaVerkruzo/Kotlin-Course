@@ -6,10 +6,12 @@ import kotlin.math.max
 /*
 Energy - это кол-во оставшейся энергии у животного. Если она станет равна нулю, то он не сможет ни есть, ни бегать
 Weight - это переменная, которая определяет насколько питательное животное
+DistanceFromStart - это расстояние между охотником и животным
  */
 
 abstract class Animal(private val weight: Int) {
     private var energy: Int = 100
+    private var distance: Int = 2
 
     abstract fun say()
 
@@ -30,18 +32,23 @@ abstract class Animal(private val weight: Int) {
         return energy > 0
     }
 
+    fun getDistance(): Int {
+        return distance
+    }
+
     protected fun run(costOfRunning: Int) {
         if (energy > 0) energy = max(0, energy - costOfRunning)
+        distance += 1
         animalCondition()
     }
 
-    private fun die() {
+    fun die() {
         energy = 0
         "It dead".prettyPrint()
     }
 
     fun eat(animal: Animal) {
-        if (animal.isAlive()) {
+        if (energy > 0) {
             animal.die()
             if (energy > 0) energy = min(100, energy + animal.weight)
             animalCondition()
