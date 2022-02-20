@@ -20,20 +20,31 @@ abstract class Animal {
 
     private fun animalCondition(): String {
         return when (energy) {
-            in 1..24 -> "It's energy is low: $energy"
-            in 25..75 -> "It's energy is middle: $energy"
-            in 76..99 -> "It's energy is high: $energy"
-            else -> "It died"
+            in 1..24 -> "It's energy is low: $energy\n"
+            in 25..75 -> "It's energy is middle: $energy\n"
+            in 76..99 -> "It's energy is high: $energy\n"
+            else -> "It died\n"
         }
-    }
-
-    protected fun eat(animal: Animal): String {
-        if (energy > 0) energy = min(100, energy + animal.weight)
-        return animalCondition()
     }
 
     protected fun run(costOfRunning: Int): String {
         if (energy > 0) energy = max(0, energy - costOfRunning)
         return animalCondition()
     }
+
+    abstract fun run(): String
+
+    protected fun die(nameOfAnimal: String): String {
+        energy = 0
+        return "$nameOfAnimal was eaten\n"
+    }
+
+    abstract fun die(): String
+
+    fun eat(animal: Animal): String {
+        if (energy > 0) energy = min(100, energy + animal.weight)
+        return animalCondition()
+    }
+
+
 }

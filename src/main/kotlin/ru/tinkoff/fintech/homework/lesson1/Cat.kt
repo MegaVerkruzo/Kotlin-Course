@@ -7,10 +7,16 @@ class Cat(private val weight: Int): Animal(weight) {
     private val costOfRunning: Int = 15
 
     override fun say(): String {
-        return "Meow"
+        return "Meow\n"
     }
 
-    fun run(): String {
+    override fun run(): String {
         return super.run(costOfRunning)
     }
+
+    override fun die(): String {
+        return super.die("Cat")
+    }
+
+
 }
