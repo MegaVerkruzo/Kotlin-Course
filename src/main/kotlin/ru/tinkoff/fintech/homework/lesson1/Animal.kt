@@ -26,10 +26,11 @@ abstract class Animal {
 
     private fun animalCondition() {
         when (energy) {
+            0 -> "It died"
             in 1..24 -> "It's energy is low: $energy"
             in 25..75 -> "It's energy is middle: $energy"
-            in 76..99 -> "It's energy is high: $energy"
-            else -> "It died"
+            in 76..100 -> "It's energy is high: $energy"
+            else -> "Something wrong"
         }.prettyPrint()
     }
 
