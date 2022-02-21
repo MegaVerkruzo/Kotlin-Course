@@ -54,7 +54,7 @@ abstract class Animal {
     }
 
     fun eat(animal: Animal) {
-        if (energy > 0) {
+        if (animal.isAlive()) {
             animal.die()
             if (energy > 0) energy = min(100, energy + animal.weight)
             animalCondition()
