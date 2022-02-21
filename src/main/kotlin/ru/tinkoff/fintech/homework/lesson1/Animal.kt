@@ -9,9 +9,14 @@ Weight - это переменная, которая определяет нас
 DistanceFromStart - это расстояние между охотником и животным
  */
 
-abstract class Animal(private val weight: Int) {
+abstract class Animal {
+    private val weight: Int
     private var energy: Int = 100
     private var distance: Int = 2
+
+    constructor(weight: Int) {
+        this.weight = weight
+    }
 
     abstract fun say()
 
