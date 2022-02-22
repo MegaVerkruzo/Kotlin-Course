@@ -2,30 +2,15 @@ package ru.tinkoff.fintech.homework.lesson1
 
 import kotlin.random.Random
 
-class Hunter(private val victim: Animal) {
-    private var victimIsCaught: Boolean = false
+class Hunter: Animal {
+    constructor(weight: Int, costOfRunning: Int): super(weight, costOfRunning)
 
-    fun isVictimCaught() {
-        if (victimIsCaught) "Victim is caught".prettyPrint()
-        else "Victim isn't caught".prettyPrint()
+    override fun say(): String {
+        return "I will shoot you!!!"
     }
 
-    fun tryToCaught() {
-        if (victimIsCaught) {
-            isVictimCaught()
-            return
-        }
-        if (Random.nextDouble() < 1.0 / victim.getDistance()) {
-            victimIsCaught = true
-            victim.die()
-            "Successful try".prettyPrint()
-        }
-        else "Unsuccessful try".prettyPrint()
+    override fun getAnimalType(): String {
+        return "Hunter"
     }
 
-    private fun String.prettyPrint() {
-        println("Hunter")
-        println(this)
-        println()
-    }
 }

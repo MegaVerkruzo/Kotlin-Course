@@ -1,14 +1,10 @@
 package ru.tinkoff.fintech.homework.lesson1
 
-class Cat(private val weight: Int) : Animal(weight) {
-    private val costOfRunning: Int = 15
+class Cat: Animal {
+    constructor(weight: Int, costOfRunning: Int) : super(weight, costOfRunning)
 
-    override fun say() {
-        "Meow".prettyPrint()
-    }
-
-    override fun run() {
-        super.run(costOfRunning)
+    override fun say(): String {
+        return "Meow"
     }
 
     override fun getAnimalType(): String {
