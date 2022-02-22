@@ -2,7 +2,7 @@ package ru.tinkoff.fintech.homework.lesson1
 
 private fun String.printInfo(animal: Animal) {
     println("___________________________________________")
-    println("Now ${animal.type} has ${animal.energy} energy because $this")
+                println("Now ${animal.type} has ${animal.energy} energy because $this")
 }
 
 fun die(animal: Animal) {
