@@ -5,5 +5,3 @@
 *.ipr
 .kotlintest
 .flattened-pom.xml
-.gradle
-build
