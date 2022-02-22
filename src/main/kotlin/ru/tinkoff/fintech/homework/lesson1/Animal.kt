@@ -1,10 +1,9 @@
 package ru.tinkoff.fintech.homework.lesson1
 
-import kotlin.math.min
 import kotlin.math.max
 
 /*
-Energy - это кол-во оставшейся энергии у животного. Если она станет равна нулю, то он не сможет ни есть, ни бегать
+Energy - это кол-во оставшейся энергии у животного. Если она станет равна нулю, то он умрёт
 Weight - это переменная, которая определяет насколько питательное животное
  */
 
@@ -26,11 +25,13 @@ abstract class Animal {
         if (energy > 0) energy = max(0, energy - costOfRunning)
     }
 
-    fun energy(): Int = energy
-
-    fun isAlive(): Boolean = energy > 0
-
     fun die() {
         energy = 0
     }
+
+    fun getEnergy(): Int = energy
+
+    fun isAlive(): Boolean = energy > 0
+
+
 }
