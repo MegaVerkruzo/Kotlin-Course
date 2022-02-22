@@ -22,14 +22,6 @@ class Hunting {
         hunter.addEnergy(victim.getWeight())
     }
 
-    fun reduceDistance() {
-        distance--
-    }
-
-    fun increaseDistance() {
-        distance++
-    }
-
     fun huntersRun() {
         hunter.run()
         distance = max(1, distance - 1)

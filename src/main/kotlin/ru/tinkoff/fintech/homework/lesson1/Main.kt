@@ -30,8 +30,7 @@ fun run(animal: Animal) {
 
 fun hunterRun(hunting: Hunting) {
     if (hunting.getHunter().isAlive()) {
-        run(hunting.getHunter())
-        hunting.reduceDistance()
+        hunting.huntersRun()
         println("distance between hunter and victim: ${hunting.getDistance()}")
     } else {
         "hunter has died".printInfo(hunting.getHunter())
@@ -40,8 +39,7 @@ fun hunterRun(hunting: Hunting) {
 
 fun victimRun(hunting: Hunting) {
     if (hunting.getVictim().isAlive()) {
-        run(hunting.getVictim())
-        hunting.increaseDistance()
+        hunting.victimsRun()
         println("distance between hunter and victim: ${hunting.getDistance()}")
     } else {
         "victim has died".printInfo(hunting.getVictim())
@@ -86,7 +84,7 @@ fun main() {
         victimRun(hunting)
     }
     hunterRun(hunting)
-    for (i in 1..5) {
+    for (i in 1..3) {
         shoot(hunting)
     }
 }
