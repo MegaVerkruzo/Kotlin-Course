@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson1
 
 import kotlin.math.max
+import kotlin.math.min
 
 /*
 Energy - это кол-во оставшейся энергии у животного. Если она станет равна нулю, то он умрёт
@@ -29,9 +30,13 @@ abstract class Animal {
         energy = 0
     }
 
+    fun getWeight(): Int = weight
+
     fun getEnergy(): Int = energy
 
     fun isAlive(): Boolean = energy > 0
 
-
+    fun addEnergy(additiveEnergy: Int) {
+        if (this.energy > 0) this.energy = min(100, this.energy + additiveEnergy)
+    }
 }
