@@ -1,13 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson1
 
-class Cat : Animal {
-    constructor(weight: Int, costOfRunning: Int) : super(weight, costOfRunning)
-
+class Cat(weight: Int, costOfRunning: Int) : Animal(weight, costOfRunning, "Cat") {
     override fun say(): String {
         return "Meow"
-    }
-
-    override fun getAnimalType(): String {
-        return "Cat"
     }
 }

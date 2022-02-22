@@ -1,14 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson1
 
-class Hunter : Animal {
-    constructor(weight: Int, costOfRunning: Int) : super(weight, costOfRunning)
-
+class Hunter(weight: Int, costOfRunning: Int) : Animal(weight, costOfRunning, "Hunter") {
     override fun say(): String {
         return "I will shoot you!!!"
     }
-
-    override fun getAnimalType(): String {
-        return "Hunter"
-    }
-
 }
