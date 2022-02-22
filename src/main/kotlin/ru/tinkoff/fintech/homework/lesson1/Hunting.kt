@@ -22,6 +22,14 @@ class Hunting {
         hunter.addEnergy(victim.getWeight())
     }
 
+    fun reduceDistance() {
+        distance--
+    }
+
+    fun increaseDistance() {
+        distance++
+    }
+
     fun huntersRun() {
         hunter.run()
         distance = max(1, distance - 1)
@@ -33,11 +41,17 @@ class Hunting {
     }
 
     fun huntersShoot(): Boolean {
-        return if (!victim.isAlive() || Random.nextDouble() < 1.0 / distance) {
+        return if (victim.isAlive() && Random.nextDouble() < 1.0 / distance) {
             kill()
             true
         } else {
             false
         }
     }
+
+    fun getVictim(): Animal = victim
+
+    fun getHunter(): Animal = hunter
+
+    fun getDistance(): Int = distance
 }

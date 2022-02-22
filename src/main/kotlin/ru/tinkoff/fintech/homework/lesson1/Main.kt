@@ -28,6 +28,42 @@ fun run(animal: Animal) {
     }
 }
 
+fun hunterRun(hunting: Hunting) {
+    if (hunting.getHunter().isAlive()) {
+        run(hunting.getHunter())
+        hunting.reduceDistance()
+        println("distance between hunter and victim: ${hunting.getDistance()}")
+    } else {
+        "hunter has died".printInfo(hunting.getHunter())
+    }
+}
+
+fun victimRun(hunting: Hunting) {
+    if (hunting.getVictim().isAlive()) {
+        run(hunting.getVictim())
+        hunting.increaseDistance()
+        println("distance between hunter and victim: ${hunting.getDistance()}")
+    } else {
+        "victim has died".printInfo(hunting.getVictim())
+    }
+}
+
+fun shoot(hunting: Hunting) {
+    if (!hunting.getHunter().isAlive()) {
+        println("hunter has died")
+        return
+    }
+    if (!hunting.getVictim().isAlive()) {
+        println("victim has died")
+        return
+    }
+    if (hunting.huntersShoot()) {
+        "it killed victim".printInfo(hunting.getHunter())
+    } else {
+        "it missed".printInfo(hunting.getHunter())
+    }
+}
+
 fun main() {
     val cat = Cat(9, 32)
     say(cat)
@@ -45,4 +81,12 @@ fun main() {
 
     say(hunter)
 
+    val hunting = Hunting(hunter, victim)
+    for (i in 1..3) {
+        victimRun(hunting)
+    }
+    hunterRun(hunting)
+    for (i in 1..5) {
+        shoot(hunting)
+    }
 }
