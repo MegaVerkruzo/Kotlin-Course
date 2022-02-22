@@ -51,7 +51,7 @@ fun victimRun(hunting: Hunting) {
 fun shoot(hunting: Hunting) {
     if (!hunting.hunter.isAlive()) {
         println("___________________________________________")
-        println("Vunter has died")
+        println("Hunter has died")
         return
     }
     if (!hunting.victim.isAlive()) {
