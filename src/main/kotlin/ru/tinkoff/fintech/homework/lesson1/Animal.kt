@@ -8,7 +8,10 @@ Energy - это кол-во оставшейся энергии у животн�
 Weight - это переменная, которая определяет насколько питательное животное
  */
 
-abstract class Animal(val weight: Int, private val costOfRunning: Int, val type: String, var energy: Int = 100) {
+abstract class Animal(val weight: Int, private val costOfRunning: Int, val type: String) {
+    var energy: Int = 100
+        private set
+
     abstract fun say(): String
 
     fun run() {
