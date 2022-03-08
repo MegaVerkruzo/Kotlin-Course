@@ -1,7 +1,3 @@
-/target/
+.gradle
 .idea
-*.iws
-*.iml
-*.ipr
-.kotlintest
-.flattened-pom.xml
+build
