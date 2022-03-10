@@ -1,10 +1,11 @@
 package ru.tinkoff.fintech.homework.lesson3
 
+import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import ru.tinkoff.fintech.homework.lesson1.*
 
-class TestKotlin1 : StringSpec(){
+class TestKotlin1 : FeatureSpec(){
     init {
         "Chicken" {
             val chicken = Chicken(3, 3)
