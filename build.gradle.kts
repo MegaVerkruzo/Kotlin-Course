@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.1.0")
+    testImplementation("io.mockk:mockk:1.12.2")
     testImplementation(kotlin("test"))
 }
 
@@ -21,7 +23,11 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "9"
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
 
 application {
