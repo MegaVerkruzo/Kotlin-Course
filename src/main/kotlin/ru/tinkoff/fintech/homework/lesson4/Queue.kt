@@ -15,10 +15,6 @@ class Queue<T> {
         }
     }
 
-    private fun previousElement(index: Int): Int {
-        return (index - 1 + elements.size) % elements.size
-    }
-
     private fun nextElement(index: Int): Int {
         return (index + 1) % elements.size
     }
@@ -35,12 +31,12 @@ class Queue<T> {
     }
 
     fun element(): T {
-        if (size == 0) error("Нет элементов в массиве")
+        if (size == 0) error("Нет элементов в очереди")
         return elements[head] as T
     }
 
     fun dequeue(): T {
-        if (size == 0) error("Нет элементов в массиве")
+        if (size == 0) error("Нет элементов в очереди")
         val result: T = elements[head] as T
         size -= 1
         head = nextElement(head)
