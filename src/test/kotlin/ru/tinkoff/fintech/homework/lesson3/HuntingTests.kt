@@ -1,13 +1,11 @@
 package ru.tinkoff.fintech.homework.lesson3
 
 import io.kotest.core.spec.style.FeatureSpec
-import io.kotest.matchers.ints.shouldBeInRange
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.verify
 import ru.tinkoff.fintech.homework.lesson1.*
 
-class Task2 : FeatureSpec() {
+class HuntingTests : FeatureSpec() {
     init {
         lateinit var chicken: Chicken
 //        lateinit var hunter: Hunter
