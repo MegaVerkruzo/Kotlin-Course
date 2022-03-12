@@ -3,22 +3,12 @@ package ru.tinkoff.fintech.homework.lesson4
 import java.util.*
 import kotlin.math.max
 
-class Queue<T : Comparable<T>> {
+class Queue<T : Any> {
     private lateinit var elements: Array<T?>
     private var head = 0
     private var tail = 0
     var size = 0
         private set
-
-    private fun ensureCapacity() {
-        if (elements.size == size) {
-            elements = elements.copyOf(max(size * 2, 1))
-        }
-    }
-
-    private fun nextElement(index: Int): Int {
-        return (index + 1) % elements.size
-    }
 
     fun offer(element: T): Boolean {
         ensureCapacity()
@@ -56,5 +46,15 @@ class Queue<T : Comparable<T>> {
         size -= 1
         head = nextElement(head)
         return result
+    }
+
+    private fun ensureCapacity() {
+        if (elements.size == size) {
+            elements = elements.copyOf(max(size * 2, 1))
+        }
+    }
+
+    private fun nextElement(index: Int): Int {
+        return (index + 1) % elements.size
     }
 }

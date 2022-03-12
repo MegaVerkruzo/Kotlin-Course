@@ -3,7 +3,7 @@ package ru.tinkoff.fintech.homework.lesson4
 import java.util.*
 import kotlin.math.max
 
-class Stack<T : Comparable<T>> {
+class Stack<T : Any> {
     private lateinit var elements: Array<T?>
     var size = 0
         private set
