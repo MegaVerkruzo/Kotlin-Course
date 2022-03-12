@@ -1,4 +1,9 @@
 package ru.tinkoff.fintech.homework.lesson4
 
-class QueueTest :  {
+import io.kotest.core.spec.style.FeatureSpec
+
+class QueueTest : FeatureSpec() {
+    init {
+
+    }
 }
