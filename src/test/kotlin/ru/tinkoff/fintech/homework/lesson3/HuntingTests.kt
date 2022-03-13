@@ -1,32 +1,36 @@
 package ru.tinkoff.fintech.homework.lesson3
 
 import io.kotest.core.spec.style.FeatureSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.verify
 import ru.tinkoff.fintech.homework.lesson1.*
 
 class HuntingTests : FeatureSpec() {
     init {
-        lateinit var chicken: Chicken
-//        lateinit var hunter: Hunter
-
-
         feature("Тестирование охоты") {
-            scenario("Охота на курицу вполтную") {
-                every { chicken.energy } returns 80
-//                every { hunter.energy } returns 100
+            scenario("Охотник стреляет в курицу") {
+                val chicken = mockk<Chicken>()
+                val hunter = Hunter(10, 10)
 
-                verify { chicken.run() }
+                val hunting = Hunting(hunter, chicken);
+                every { chicken.isAlive() } returns false
+
+                hunting.huntersShoot() shouldBe false
+                verify(exactly = 1) { hunting.huntersShoot() }
             }
-//
-//            scenario("Бег до смерти") {
-//                val cat = Cat(10, 20)
-//                for (i in 1..10) {
-//                    cat.run()
-//                }
-//                cat.energy shouldBe 0
-//                cat.isAlive() shouldBe false
-//            }
+
+            scenario("Кот охотиться за курицей") {
+                val cat = mockk<Cat>()
+                val chicken = Chicken(5, 3)
+
+                val hunting = Hunting(cat, chicken)
+                every { cat.isAlive() } returns true
+
+                hunting.huntersShoot() shouldBe true
+                verify(exactly = 1) { hunting.huntersShoot() }
+            }
         }
     }
 }
