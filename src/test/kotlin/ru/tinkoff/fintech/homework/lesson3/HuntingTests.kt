@@ -12,11 +12,9 @@ import ru.tinkoff.fintech.homework.lesson1.*
 class HuntingTests : FeatureSpec() {
     val chicken = mockk<Chicken>()
     val hunter = mockk<Hunter>()
+    val hunting = mockk<Hunting>()
 
     init {
-
-        val hunting = mockk<Hunting>()
-
         feature("Тестирование охоты") {
 
             scenario("Охотник не может убить, мёртвую курицу") {
