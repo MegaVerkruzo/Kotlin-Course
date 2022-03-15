@@ -23,8 +23,12 @@ class Hunting(val hunter: Animal, val victim: Animal, var distance: Int = 1) {
         distance++
     }
 
+    fun successfulHunting(): Boolean {
+        return Random.nextDouble() <= 1.0 / distance
+    }
+
     fun huntersShoot(): Boolean {
-        return if (hunter.isAlive() && victim.isAlive() && Random.nextDouble() <= 1.0 / distance) {
+        return if (hunter.isAlive() && victim.isAlive() && successfulHunting()) {
             kill()
             true
         } else {
