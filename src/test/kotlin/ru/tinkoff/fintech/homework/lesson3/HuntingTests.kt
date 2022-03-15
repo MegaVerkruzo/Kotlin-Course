@@ -9,50 +9,37 @@ import io.mockk.verify
 import ru.tinkoff.fintech.homework.lesson1.*
 
 class HuntingTests : FeatureSpec() {
-    init {
-        val chicken = mockk<Chicken>()
-        val cat = mockk<Cat>()
+    val chicken = mockk<Chicken>()
+    val cat = mockk<Cat>()
 
+    init {
         feature("Тестирование охоты") {
-            scenario("Охотник стреляет в курицу") {
+            scenario("Охотник не может убить, мёртвую курицу") {
                 val hunter = Hunter(10, 10)
                 val hunting = Hunting(hunter, chicken);
                 every { chicken.isAlive() } returns false
 
                 hunting.huntersShoot() shouldBe false
-                verify(exactly = 1) { hunting.huntersShoot() }
             }
 
-            scenario("Кот охотиться за курицей") {
+            scenario("Мёртвый кот не может охотиться за курицей") {
                 val chicken = Chicken(5, 3)
                 val hunting = Hunting(cat, chicken)
                 every { cat.isAlive() } returns false
 
                 hunting.huntersShoot() shouldBe false
-                verify(exactly = 1) { hunting.huntersShoot() }
             }
 
-            scenario("Тестирование охоты вплотную") {
+            scenario("При дефолтном расстоянии между животными, хищник может убить жертву с вероятностью 100%") {
                 val chicken = Chicken(10, 22)
                 val hunting = Hunting(cat, chicken)
                 every { cat.isAlive() } returns true
                 every { cat.addEnergy(chicken.weight) } returns Unit
 
                 hunting.huntersShoot() shouldBe true
-                hunting.huntersShoot() shouldBe false
-                verify(exactly = 2) { hunting.huntersShoot() }
-                verify(exactly = 2) { cat.isAlive() }
             }
 
-            scenario("10 пробежек кота") {
-                every { cat.run() } returns Unit
 
-                repeat(10) {
-                    cat.run()
-                }
-
-                verify(exactly = 10) { cat.run() }
-            }
         }
     }
 }
