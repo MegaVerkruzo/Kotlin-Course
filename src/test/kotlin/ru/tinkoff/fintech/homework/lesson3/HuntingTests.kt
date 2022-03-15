@@ -32,11 +32,12 @@ class HuntingTests : FeatureSpec() {
 
             scenario("Мёртвый охотник не может охотиться за курицей") {
                 val chicken = Chicken(5, 3)
+                every { hunter.isAlive() } returns false
                 every { hunting.hunter } returns hunter
                 every { hunting.victim } returns chicken
                 every { hunting.successfulHunting() } returns false
                 every { hunting.huntersShoot() } returns (hunting.hunter.isAlive() && hunting.victim.isAlive() && hunting.successfulHunting())
-                every { hunter.isAlive() } returns false
+
 
                 hunting.huntersShoot() shouldBe false
             }

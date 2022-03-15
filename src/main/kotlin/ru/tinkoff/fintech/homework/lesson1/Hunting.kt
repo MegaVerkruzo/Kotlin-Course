@@ -24,7 +24,15 @@ class Hunting(val hunter: Animal, val victim: Animal, var distance: Int = 1) {
     }
 
     fun successfulHunting(): Boolean {
-        return Random.nextDouble() <= 1.0 / distance
+        return random() <= chance()
+    }
+
+    fun random(): Double {
+        return Random.nextDouble()
+    }
+
+    fun chance(): Double {
+        return 1.0 / distance
     }
 
     fun huntersShoot(): Boolean {
