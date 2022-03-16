@@ -4,30 +4,54 @@ import java.util.*
 import kotlin.math.max
 
 class Stack<T : Any> {
-    private lateinit var elements: Array<T?>
-    var size = 0
-        private set
-
-    private fun ensureCapacity() {
-        if (elements.size == size) {
-            elements = elements.copyOf(max(size * 2, 1))
-        }
+    private class Node<T>(val value: T, var prev: Node<T>?) {
     }
 
-    fun push(element: T) {
-        ensureCapacity()
-        elements[size++] = element
+    private var top: Node<T>? = null
+    private var back: Node<T>? = null
+
+    fun element(): T {
+        if (top == null) NoSuchElementException()
+
+        return top!!.value
     }
 
-    fun pop(): T? {
-        if (size == 0) error ("Нет элементов в Стэке")
-        val result = elements[--size]
-        elements[size] = null // Не понимаю, как я могу удалять элементы
+    fun remove(): T {
+        if (top == null) NoSuchElementException()
+        val result = top!!.value
+        top = top!!.prev
         return result
     }
 
     fun peek(): T? {
-        if (size == 0) error ("Нет элементов в Стэке")
-        return elements[size - 1]
+        if (top == null) return null
+
+        return top!!.value
+    }
+
+    fun poll(): T? {
+        if (top == null) null
+        val result = top!!.value
+        top = top!!.prev
+        return result
+    }
+
+    fun offer(element: Any): Boolean {
+        if (element as? T == null) {
+            return false
+        }
+        if (top == null) {
+            top = Node(element, null)
+        } else {
+            val newNode = Node(element, null)
+            if (back == null) {
+                back = newNode
+                top!!.prev = back
+            } else {
+                back!!.prev = newNode
+                back = newNode
+            }
+        }
+        return true
     }
 }

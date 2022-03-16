@@ -8,7 +8,7 @@ class QueueTest : FeatureSpec() {
 
     private fun checkQueue(array: Array<Int>, queue: Queue<Int>): Boolean {
         (array.indices).forEach() { i ->
-            if (array[i] != queue.remove()) {
+            if (queue.peek() == null && array[i] != queue.remove()) {
                 return false
             }
         }
@@ -16,10 +16,8 @@ class QueueTest : FeatureSpec() {
     }
 
     init {
-
-
         feature("Тестирование изменения очереди") {
-            scenario("Только добавление") {
+            scenario("Добавление и удаление") {
                 val queue = Queue<Int>()
 
                 queue.offer(1)
