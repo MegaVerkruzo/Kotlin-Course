@@ -17,7 +17,6 @@ class HuntingTests : FeatureSpec() {
 
     override fun beforeEach(testCase: TestCase) {
         mockkStatic(::nextDouble)
-        mockkStatic(::successfulHunting)
 
         every { chicken.isAlive() } returns true
         every { chicken.weight } returns 0
@@ -30,32 +29,31 @@ class HuntingTests : FeatureSpec() {
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
         unmockkStatic(::nextDouble)
-        unmockkStatic(::successfulHunting)
         clearAllMocks()
     }
 
     init {
         feature("Тестирование охоты") {
             scenario("Охотник не может убить, мёртвую курицу") {
-                every { successfulHunting(hunting) } returns true
+                every { nextDouble() } returns 0.0
                 every { chicken.isAlive() } returns false
 
                 hunting.huntersShoot() shouldBe false
             }
 
             scenario("Мёртвый охотник не может охотиться за курицей") {
-                every { successfulHunting(hunting) } returns true
+                every { nextDouble() } returns 0.0
                 every { hunter.isAlive() } returns false
 
                 hunting.huntersShoot() shouldBe false
             }
 
             scenario("Охотник имеет sudo оружие, которое убивает живую жертву") {
-                every { successfulHunting(hunting) } returns true
+                every { nextDouble() } returns 0.0
 
                 hunting.huntersShoot() shouldBe true
 
-                verify(exactly = 1) { successfulHunting(hunting) }
+                verify(exactly = 1) { nextDouble() }
             }
 
             scenario("Охотнику повезло попасть с шансом на попадание 0.333..") {
@@ -65,7 +63,7 @@ class HuntingTests : FeatureSpec() {
                 hunting.victimsRun()
                 hunting.huntersShoot() shouldBe true
 
-                verify(exactly = 1) { successfulHunting(any()) }
+                verify(exactly = 1) {  nextDouble() }
                 verify(exactly = 2) { chicken.run() }
             }
 
@@ -76,7 +74,7 @@ class HuntingTests : FeatureSpec() {
                 hunting.victimsRun()
                 hunting.huntersShoot() shouldBe false
 
-                verify(exactly = 1) { successfulHunting(any()) }
+                verify(exactly = 1) { nextDouble() }
                 verify(exactly = 2) { chicken.run() }
             }
         }
