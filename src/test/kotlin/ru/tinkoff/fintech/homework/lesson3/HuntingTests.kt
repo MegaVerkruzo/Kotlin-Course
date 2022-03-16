@@ -13,16 +13,18 @@ import ru.tinkoff.fintech.homework.lesson1.*
 class HuntingTests : FeatureSpec() {
     val chicken = mockk<Chicken>()
     val hunter = mockk<Hunter>()
+    val hunting = Hunting(hunter, chicken)
 
     override fun beforeEach(testCase: TestCase) {
         mockkStatic(::nextDouble)
         mockkStatic(::successfulHunting)
-        every { hunter.isAlive() } returns true
+
         every { chicken.isAlive() } returns true
+        every { chicken.weight } returns 0
+        every { hunter.isAlive() } returns true
         justRun { chicken.die() }
         justRun { chicken.run() }
         justRun { hunter.run() }
-        every { chicken.weight } returns 0
         justRun { hunter.addEnergy(any()) }
     }
 
@@ -32,12 +34,9 @@ class HuntingTests : FeatureSpec() {
         clearAllMocks()
     }
 
-
-
     init {
         feature("Тестирование охоты") {
             scenario("Охотник не может убить, мёртвую курицу") {
-                val hunting = Hunting(hunter, chicken)
                 every { successfulHunting(hunting) } returns true
                 every { chicken.isAlive() } returns false
 
@@ -45,7 +44,6 @@ class HuntingTests : FeatureSpec() {
             }
 
             scenario("Мёртвый охотник не может охотиться за курицей") {
-                val hunting = Hunting(hunter, chicken)
                 every { successfulHunting(hunting) } returns true
                 every { hunter.isAlive() } returns false
 
@@ -53,36 +51,33 @@ class HuntingTests : FeatureSpec() {
             }
 
             scenario("Охотник имеет sudo оружие, которое убивает живую жертву") {
-                val hunting = Hunting(hunter, chicken)
                 every { successfulHunting(hunting) } returns true
 
                 hunting.huntersShoot() shouldBe true
 
-                verify (exactly = 1) { successfulHunting(hunting) }
+                verify(exactly = 1) { successfulHunting(hunting) }
             }
 
             scenario("Охотнику повезло попасть с шансом на попадание 0.333..") {
-                val hunting = Hunting(hunter, chicken)
                 every { nextDouble() } returns 0.25
 
                 hunting.victimsRun()
                 hunting.victimsRun()
                 hunting.huntersShoot() shouldBe true
 
-                verify (exactly = 1) { successfulHunting(any()) }
-                verify (exactly = 2) { chicken.run() }
+                verify(exactly = 1) { successfulHunting(any()) }
+                verify(exactly = 2) { chicken.run() }
             }
 
             scenario("Охотнику не повезло попасть с шансом на попадание 0.333..") {
-                val hunting = Hunting(hunter, chicken)
                 every { nextDouble() } returns 0.5
 
                 hunting.victimsRun()
                 hunting.victimsRun()
                 hunting.huntersShoot() shouldBe false
 
-                verify (exactly = 1) { successfulHunting(any()) }
-                verify (exactly = 2) { chicken.run() }
+                verify(exactly = 1) { successfulHunting(any()) }
+                verify(exactly = 2) { chicken.run() }
             }
         }
     }
