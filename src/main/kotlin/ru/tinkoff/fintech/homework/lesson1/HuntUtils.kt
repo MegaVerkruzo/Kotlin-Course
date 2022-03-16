@@ -1,8 +1,14 @@
 package ru.tinkoff.fintech.homework.lesson1
 
+import kotlin.random.Random
+
+fun nextDouble() = Random.nextDouble()
+
+fun successfulHunting(hunting: Hunting) = nextDouble() <= 1.0 / hunting.distance
+
 private fun String.printInfo(animal: Animal) {
     println("___________________________________________")
-                println("Now ${animal.type} has ${animal.energy} energy because $this")
+    println("Now ${animal.type} has ${animal.energy} energy because $this")
 }
 
 fun die(animal: Animal) {

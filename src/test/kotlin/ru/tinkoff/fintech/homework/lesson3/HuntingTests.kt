@@ -1,52 +1,88 @@
 package ru.tinkoff.fintech.homework.lesson3
 
+import io.kotest.core.spec.BeforeSpec
+import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.FeatureSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.ints.exactly
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.runs
-import io.mockk.verify
+import io.mockk.*
 import ru.tinkoff.fintech.homework.lesson1.*
 
 class HuntingTests : FeatureSpec() {
     val chicken = mockk<Chicken>()
     val hunter = mockk<Hunter>()
-    val hunting = mockk<Hunting>()
+
+    override fun beforeEach(testCase: TestCase) {
+        mockkStatic(::nextDouble)
+        mockkStatic(::successfulHunting)
+        every { hunter.isAlive() } returns true
+        every { chicken.isAlive() } returns true
+        justRun { chicken.die() }
+        justRun { chicken.run() }
+        justRun { hunter.run() }
+        every { chicken.weight } returns 0
+        justRun { hunter.addEnergy(any()) }
+    }
+
+    override fun afterEach(testCase: TestCase, result: TestResult) {
+        unmockkStatic(::nextDouble)
+        unmockkStatic(::successfulHunting)
+        clearAllMocks()
+    }
+
+
 
     init {
         feature("Тестирование охоты") {
-
             scenario("Охотник не может убить, мёртвую курицу") {
-                val hunter = Hunter(10, 10)
-                every { hunting.hunter } returns hunter
-                every { hunting.victim } returns chicken
+                val hunting = Hunting(hunter, chicken)
+                every { successfulHunting(hunting) } returns true
                 every { chicken.isAlive() } returns false
-                every { hunting.successfulHunting() } returns false
-                every { hunting.huntersShoot() } returns (hunting.hunter.isAlive() && hunting.victim.isAlive() && hunting.successfulHunting())
 
                 hunting.huntersShoot() shouldBe false
             }
 
             scenario("Мёртвый охотник не может охотиться за курицей") {
-                val chicken = Chicken(5, 3)
+                val hunting = Hunting(hunter, chicken)
+                every { successfulHunting(hunting) } returns true
                 every { hunter.isAlive() } returns false
-                every { hunting.hunter } returns hunter
-                every { hunting.victim } returns chicken
-                every { hunting.successfulHunting() } returns false
-                every { hunting.huntersShoot() } returns (hunting.hunter.isAlive() && hunting.victim.isAlive() && hunting.successfulHunting())
-
 
                 hunting.huntersShoot() shouldBe false
             }
 
-            scenario("При дефолтном расстоянии между животными, хищник может убить жертву с вероятностью 100%") {
-                val chicken = Chicken(10, 22)
+            scenario("Охотник имеет sudo оружие, которое убивает живую жертву") {
                 val hunting = Hunting(hunter, chicken)
-                every { hunter.isAlive() } returns true
-                every { hunter.addEnergy(chicken.weight) } returns Unit
+                every { successfulHunting(hunting) } returns true
 
                 hunting.huntersShoot() shouldBe true
+
+                verify (exactly = 1) { successfulHunting(hunting) }
+            }
+
+            scenario("Охотнику повезло попасть с шансом на попадание 0.333..") {
+                val hunting = Hunting(hunter, chicken)
+                every { nextDouble() } returns 0.25
+
+                hunting.victimsRun()
+                hunting.victimsRun()
+                hunting.huntersShoot() shouldBe true
+
+                verify (exactly = 1) { successfulHunting(any()) }
+                verify (exactly = 2) { chicken.run() }
+            }
+
+            scenario("Охотнику не повезло попасть с шансом на попадание 0.333..") {
+                val hunting = Hunting(hunter, chicken)
+                every { nextDouble() } returns 0.5
+
+                hunting.victimsRun()
+                hunting.victimsRun()
+                hunting.huntersShoot() shouldBe false
+
+                verify (exactly = 1) { successfulHunting(any()) }
+                verify (exactly = 2) { chicken.run() }
             }
         }
     }
