@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.math.max
 
 class Queue<T : Any> {
-    private val elements: Array<T?> = arrayOf()
+    private lateinit var elements: Array<T?>
     private var head = 0
     private var tail = 0
     var size = 0
