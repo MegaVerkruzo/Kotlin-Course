@@ -4,54 +4,31 @@ import java.util.*
 import kotlin.math.max
 
 class Stack<T : Any> {
-    private class Node<T>(val value: T, var prev: Node<T>?) {
-    }
+    private class Node<T>(val value: T, var prev: Node<T>?)
 
     private var top: Node<T>? = null
-    private var back: Node<T>? = null
+    var size = 0
+        private set
 
-    fun element(): T {
-        if (top == null) NoSuchElementException()
-
-        return top!!.value
+    fun push(element: T) {
+        top = Node(element, top)
     }
 
-    fun remove(): T {
-        if (top == null) NoSuchElementException()
+    fun pop(): T? {
+        if (size == 0) NoSuchElementException()
+
         val result = top!!.value
         top = top!!.prev
         return result
     }
 
     fun peek(): T? {
-        if (top == null) return null
+        if (size == null) NoSuchElementException()
 
         return top!!.value
     }
 
-    fun poll(): T? {
-        if (top == null) null
-        val result = top!!.value
-        top = top!!.prev
-        return result
-    }
-
-    fun offer(element: Any): Boolean {
-        if (element as? T == null) {
-            return false
-        }
-        if (top == null) {
-            top = Node(element, null)
-        } else {
-            val newNode = Node(element, null)
-            if (back == null) {
-                back = newNode
-                top!!.prev = back
-            } else {
-                back!!.prev = newNode
-                back = newNode
-            }
-        }
-        return true
+    fun isEmpty(): Boolean {
+        return size == 0
     }
 }
