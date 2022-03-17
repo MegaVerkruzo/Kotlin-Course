@@ -14,14 +14,14 @@ class Stack<T : Any> {
     }
 
     fun pop(): T {
-        if (size == 0) NoSuchElementException()
+        if (size == 0) throw NoSuchElementException()
         val result = elements[--size]
         elements[size] = null // Не понимаю, как я могу удалять элементы
         return result as T
     }
 
     fun peek(): T {
-        if (size == 0) NoSuchElementException()
+        if (size == 0) throw NoSuchElementException()
         return elements[size - 1] as T
     }
 

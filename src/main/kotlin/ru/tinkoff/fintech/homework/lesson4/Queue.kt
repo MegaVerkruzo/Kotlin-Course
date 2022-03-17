@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson4
 
 import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.math.max
 
 class Queue<T : Any> {
@@ -24,27 +25,21 @@ class Queue<T : Any> {
     }
 
     fun element(): T {
-        if (size == 0) NoSuchElementException()
-        return elements[head] as T
-    }
-
-    fun peek(): T? {
-        if (size == 0) null
-        return elements[head] as T
+        return peek() ?: throw NoSuchElementException()
     }
 
     fun remove(): T {
-        if (size == 0) NoSuchElementException()
-        val result: T = elements[head] as T
-        elements[head] = null
-        size -= 1
-        head = nextElement(head)
-        return result
+        return poll() ?: throw NoSuchElementException()
+    }
+
+    fun peek(): T? {
+        if (size == 0) return null
+        return elements[head] as T
     }
 
     fun poll(): T? {
         if (size == 0) return null
-        val result: T = elements[head] as T
+        val result = elements[head] as T
         elements[head] = null
         size -= 1
         head = nextElement(head)
