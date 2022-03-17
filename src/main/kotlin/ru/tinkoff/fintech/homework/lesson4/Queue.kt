@@ -11,8 +11,7 @@ class Queue<T : Any> {
     var size = 0
         private set
 
-    fun offer(element: Any): Boolean {
-        if (element as? T == null) return false
+    fun offer(element: T): Boolean {
         ensureCapacity()
         if (tail == head && size > 0) {
             System.arraycopy(elements, 0, elements, elements.size / 2, tail)

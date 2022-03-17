@@ -16,7 +16,7 @@ class Stack<T : Any> {
     fun pop(): T {
         if (size == 0) throw NoSuchElementException()
         val result = elements[--size]
-        elements[size] = null // Не понимаю, как я могу удалять элементы
+        elements[size] = null
         return result as T
     }
 
