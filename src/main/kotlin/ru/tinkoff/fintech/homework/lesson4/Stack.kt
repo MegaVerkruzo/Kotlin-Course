@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.math.max
 
 class Stack<T : Any> {
-    private lateinit var elements: Array<T?>
+    private var elements: Array<Any?> = arrayOf()
     var size = 0
         private set
 
@@ -19,15 +19,17 @@ class Stack<T : Any> {
         elements[size++] = element
     }
 
-    fun pop(): T? {
+    fun pop(): T {
         if (size == 0) error ("Нет элементов в Стэке")
         val result = elements[--size]
         elements[size] = null // Не понимаю, как я могу удалять элементы
-        return result
+        return result as T
     }
 
-    fun peek(): T? {
+    fun peek(): T {
         if (size == 0) error ("Нет элементов в Стэке")
-        return elements[size - 1]
+        return elements[size - 1] as T
     }
+
+    fun isEmpty(): Boolean = size == 0
 }
