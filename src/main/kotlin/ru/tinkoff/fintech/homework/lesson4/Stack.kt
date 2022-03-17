@@ -4,31 +4,32 @@ import java.util.*
 import kotlin.math.max
 
 class Stack<T : Any> {
-    private class Node<T>(val value: T, var prev: Node<T>?)
-
-    private var top: Node<T>? = null
+    private var elements: Array<Any?> = arrayOf()
     var size = 0
         private set
 
     fun push(element: T) {
-        top = Node(element, top)
+        ensureCapacity()
+        elements[size++] = element
     }
 
-    fun pop(): T? {
+    fun pop(): T {
         if (size == 0) NoSuchElementException()
-
-        val result = top!!.value
-        top = top!!.prev
-        return result
+        val result = elements[--size]
+        elements[size] = null // Не понимаю, как я могу удалять элементы
+        return result as T
     }
 
-    fun peek(): T? {
-        if (size == null) NoSuchElementException()
-
-        return top!!.value
+    fun peek(): T {
+        if (size == 0) NoSuchElementException()
+        return elements[size - 1] as T
     }
 
-    fun isEmpty(): Boolean {
-        return size == 0
+    fun isEmpty(): Boolean = size == 0
+
+    private fun ensureCapacity() {
+        if (elements.size == size) {
+            elements = elements.copyOf(max(size * 2, 1))
+        }
     }
 }
