@@ -23,18 +23,7 @@ class Queue<T : Any> {
         return true
     }
 
-    fun element(): T {
-        return peek() ?: throw NoSuchElementException()
-    }
-
-    fun remove(): T {
-        return poll() ?: throw NoSuchElementException()
-    }
-
-    fun peek(): T? {
-        if (size == 0) return null
-        return elements[head] as T
-    }
+    fun peek(): T? = if (size == 0) null else elements[head] as T
 
     fun poll(): T? {
         if (size == 0) return null
@@ -43,6 +32,14 @@ class Queue<T : Any> {
         size -= 1
         head = nextElement(head)
         return result
+    }
+
+    fun element(): T {
+        return peek() ?: throw NoSuchElementException()
+    }
+
+    fun remove(): T {
+        return poll() ?: throw NoSuchElementException()
     }
 
     fun isEmpty(): Boolean = size == 0
