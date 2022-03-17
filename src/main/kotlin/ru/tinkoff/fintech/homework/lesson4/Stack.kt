@@ -20,10 +20,7 @@ class Stack<T : Any> {
         return result as T
     }
 
-    fun peek(): T? {
-        if (size == 0) return null
-        return elements[size - 1] as T
-    }
+    fun peek(): T? = if (size == 0) null else elements[size - 1] as T
 
     fun isEmpty(): Boolean = size == 0
 
