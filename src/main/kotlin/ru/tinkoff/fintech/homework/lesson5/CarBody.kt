@@ -1,6 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson5
 
-enum class carBody {
+enum class CarBody {
     HATCHBACK,
     SPORTSCAR,
     FOURDOORSEDAN,

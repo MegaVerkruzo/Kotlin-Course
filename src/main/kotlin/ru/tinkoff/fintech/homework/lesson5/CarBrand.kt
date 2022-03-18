@@ -1,6 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson5
 
-enum class carBrand {
+enum class CarBrand {
     AUDI,
     BMW,
     FORD,
