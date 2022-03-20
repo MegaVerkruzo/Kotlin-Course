@@ -10,3 +10,4 @@ class Main {
         Car("TTS", CarBrand.AUDI, CarBody.SPORTSCAR, 2740000.0, 6.4)
     )
 }
+
