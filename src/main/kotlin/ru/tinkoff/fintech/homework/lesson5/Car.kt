@@ -7,4 +7,3 @@ data class Car(
     val cost: Double,
     val gasolineConsumption: Double
 )
-
