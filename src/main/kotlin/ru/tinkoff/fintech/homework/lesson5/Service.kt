@@ -1,8 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson5
 
-class Service {
-    val exchangeRate: Int = 100
-
+class Service(val exchangeRate: Int = 100) {
     fun onEnglish(cars: List<Car>) = cars
         .map {
             Car(
