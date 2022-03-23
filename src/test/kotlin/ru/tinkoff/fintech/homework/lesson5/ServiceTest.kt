@@ -19,6 +19,7 @@ class ServiceTest : FeatureSpec() {
         feature("Проверка сервиса") {
             scenario("Проверка перевода на Американский рынок") {
                 val translatedDescription = service.onEnglish(cars)
+
                 print(translatedDescription)
                 translatedDescription[0] shouldBe Car(model="Vesta", brand="LADA", body="FOURDOORSEDAN", cost=10380.0, gasolineConsumption=6.3)
                 translatedDescription[1] shouldBe Car(model="TTS", brand="AUDI", body="SPORTSCAR", cost=27400.0, gasolineConsumption=6.4)
@@ -29,9 +30,26 @@ class ServiceTest : FeatureSpec() {
             }
 
             scenario("Проверка группировки по брэнду") {
-                val traslatedDescription = service
+                val groupedCars = service.groupByBrand(cars)
+
+                println(groupedCars)
             }
 
+            scenario("Проверка группировки по кузову") {
+                val groupedCars = service.groupByBrand(cars)
+
+                println(groupedCars)
+            }
+
+            scenario("Топ 3 дешёвых машины PORSCHE и BMW") {
+                val groupOfCars = service.suitableList(cars) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
+
+                println(groupOfCars)
+                groupOfCars.size shouldBe 3
+                groupOfCars[0] shouldBe Car(model="M4", brand="BMW", body="SPORTSCAR", cost=78000.0, gasolineConsumption=8.3)
+                groupOfCars[1] shouldBe Car(model="911 Carrera", brand="PORSCHE", body="SPORTSCAR", cost=87900.0, gasolineConsumption=9.6)
+                groupOfCars[2] shouldBe Car(model="730Ld xDrive", brand="BMW", body="LIMOUSINE", cost=101145.0, gasolineConsumption=3.0)
+            }
         }
     }
 }
