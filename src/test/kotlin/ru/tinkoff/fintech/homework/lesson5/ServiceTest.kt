@@ -3,9 +3,6 @@ package ru.tinkoff.fintech.homework.lesson5
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainAll
-import io.kotest.matchers.maps.shouldContainAll
-import io.kotest.matchers.should
-import io.kotest.matchers.shouldBe
 
 class ServiceTest : FeatureSpec() {
     val service = Service()
@@ -58,7 +55,7 @@ class ServiceTest : FeatureSpec() {
                     )
                 )
 
-                service.onEnglish(cars) shouldContainAll result
+                service.translateToEnglishSorted(cars) shouldContainAll result
             }
 
             scenario("Проверка группировки по брэнду") {

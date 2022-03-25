@@ -1,26 +1,19 @@
 package ru.tinkoff.fintech.homework.lesson5
 
 class Service(val exchangeRate: Int = 100) {
-    fun onEnglish(cars: List<Car>) = cars
-        .map {
-            Car(
-                modelToEnglish(it.model),
-                brandToEnglish(it.brand),
-                bodyToEnglish(it.body),
-                costToDollars(it.cost),
-                it.gasolineConsumption
-            )
-        }
-        .sortedWith(compareBy { it.cost })
+    fun translateToEnglishSorted(cars: List<Car>) = translateToEnglishSortedWithSequence(cars).toList()
 
     fun groupByBrand(cars: List<Car>) = cars.groupBy { it.brand }
 
     fun groupByBody(cars: List<Car>) = cars.groupBy { it.body }
 
     fun suitableList(cars: List<Car>, func: (Car) -> Boolean): List<Car> {
-        val fullList = onEnglish(cars.filter { func(it) })
-        return listOf(fullList[0], fullList[1], fullList[2])
+        return translateToEnglishSortedWithSequence(cars.filter { func(it) }).take(3).toList()
     }
+
+    private fun translateToEnglishSortedWithSequence(cars: List<Car>) = cars.asSequence()
+        .map { translateCarToEnglish(it) }
+        .sortedBy { it.cost }
 
     private fun brandToEnglish(name: String): String {
         return when (name) {
@@ -68,5 +61,15 @@ class Service(val exchangeRate: Int = 100) {
 
     private fun costToDollars(cost: Double): Double {
         return cost / exchangeRate
+    }
+
+    private fun translateCarToEnglish(car: Car): Car {
+        return Car(
+            modelToEnglish(car.model),
+            brandToEnglish(car.brand),
+            bodyToEnglish(car.body),
+            costToDollars(car.cost),
+            car.gasolineConsumption
+        )
     }
 }
