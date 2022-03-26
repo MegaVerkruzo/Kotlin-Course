@@ -1,19 +1,22 @@
 package ru.tinkoff.fintech.homework.lesson5
 
 class Service(val exchangeRate: Int = 100) {
-    fun translateToEnglishSorted(cars: List<Car>) = translateToEnglishSortedWithSequence(cars).toList()
+    fun translateToEnglishSorted(cars: List<Car>) = cars
+        .asSequence()
+        .map { translateCarToEnglish(it) }
+        .sortedBy { it.cost }
+        .toList()
 
     fun groupByBrand(cars: List<Car>) = cars.groupBy { it.brand }
 
     fun groupByBody(cars: List<Car>) = cars.groupBy { it.body }
 
-    fun suitableList(cars: List<Car>, func: (Car) -> Boolean): List<Car> {
-        return translateToEnglishSortedWithSequence(cars.filter { func(it) }).take(3).toList()
-    }
-
-    private fun translateToEnglishSortedWithSequence(cars: List<Car>) = cars.asSequence()
+    fun suitableList(cars: List<Car>, predicate: (Car) -> Boolean) = cars
+        .asSequence()
+        .filter { predicate(it) }
         .map { translateCarToEnglish(it) }
-        .sortedBy { it.cost }
+        .take(3)
+        .toList()
 
     private fun brandToEnglish(name: String) = brandOnEnglish.getValue(name)
 

@@ -196,10 +196,17 @@ class ServiceTest : FeatureSpec() {
                         body = "SPORTSCAR",
                         cost = 78000.0,
                         gasolineConsumption = 8.3
+                    ),
+                    Car(
+                        model = "X6 M50d M Special",
+                        brand = "BMW",
+                        body = "HARDTOP",
+                        cost = 179990.0,
+                        gasolineConsumption = 3.0
                     )
                 )
 
-                service.suitableList(cars) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" } shouldContainAll result
+                result shouldContainAll service.suitableList(cars) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
             }
         }
     }
