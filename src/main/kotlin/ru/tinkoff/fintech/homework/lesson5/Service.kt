@@ -15,11 +15,11 @@ class Service(val exchangeRate: Int = 100) {
         .map { translateCarToEnglish(it) }
         .sortedBy { it.cost }
 
-    private fun brandToEnglish(name: String) = brandOnEnglish[name]!!
+    private fun brandToEnglish(name: String) = brandOnEnglish.getValue(name)
 
-    private fun bodyToEnglish(name: String) = bodyOnEnglish[name]!!
+    private fun bodyToEnglish(name: String) = bodyOnEnglish.getValue(name)
 
-    private fun modelToEnglish(name: String) = modelOnEnglish[name]!!
+    private fun modelToEnglish(name: String) = modelOnEnglish.getValue(name)
 
     private fun costToDollars(cost: Double): Double {
         return cost / exchangeRate
