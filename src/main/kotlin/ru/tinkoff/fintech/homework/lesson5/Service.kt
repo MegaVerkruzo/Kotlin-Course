@@ -19,17 +19,7 @@ class Service(val exchangeRate: Int = 100) {
 
     private fun bodyToEnglish(name: String) = bodyOnEnglish[name]!!
 
-    private fun modelToEnglish(name: String): String {
-        return when (name) {
-            "730лд иксДрайв" -> "730Ld xDrive"
-            "икс6 М50д М спешиал" -> "X6 M50d M Special"
-            "911 каррера" -> "911 Carrera"
-            "Веста" -> "Vesta"
-            "М4" -> "M4"
-            "ТТС" -> "TTS"
-            else -> "UNKNOWN"
-        }
-    }
+    private fun modelToEnglish(name: String) = modelOnEnglish[name]!!
 
     private fun costToDollars(cost: Double): Double {
         return cost / exchangeRate
@@ -62,12 +52,21 @@ val brandOnEnglish: Map<String, String> = mapOf(
 )
 
 val bodyOnEnglish: Map<String, String> = mapOf(
-"ХЕТЧБЕК" to "HATCHBACK",
-"СПОРТКАР" to "SPORTSCAR",
-"ЧЕТЫРЁХДВЕРНОЙСЕДАН" to "FOURDOORSEDAN",
-"ЛИМУЗИН" to "LIMOUSINE",
-"КАБРИОЛЕТ" to "CONVERTIBLE",
-"СЕДАН" to "HARDTOP",
-"ФУРГОН" to "VAN",
-"ПИКАП" to "PICKUPTRUCK"
+    "ХЕТЧБЕК" to "HATCHBACK",
+    "СПОРТКАР" to "SPORTSCAR",
+    "ЧЕТЫРЁХДВЕРНОЙСЕДАН" to "FOURDOORSEDAN",
+    "ЛИМУЗИН" to "LIMOUSINE",
+    "КАБРИОЛЕТ" to "CONVERTIBLE",
+    "СЕДАН" to "HARDTOP",
+    "ФУРГОН" to "VAN",
+    "ПИКАП" to "PICKUPTRUCK"
+)
+
+val modelOnEnglish: Map<String, String> = mapOf(
+    "730лд иксДрайв" to "730Ld xDrive",
+    "икс6 М50д М спешиал" to "X6 M50d M Special",
+    "911 каррера" to "911 Carrera",
+    "Веста" to "Vesta",
+    "М4" to "M4",
+    "ТТС" to "TTS"
 )
