@@ -15,37 +15,9 @@ class Service(val exchangeRate: Int = 100) {
         .map { translateCarToEnglish(it) }
         .sortedBy { it.cost }
 
-    private fun brandToEnglish(name: String): String {
-        return when (name) {
-            "АУДИ" -> "AUDI"
-            "БМВ" -> "BMW"
-            "ФОРД" -> "FORD"
-            "ХОНДА" -> "HONDA"
-            "ХЁНДАЙ" -> "HYUNDAI"
-            "КИА" -> "KIA"
-            "ЛАДА" -> "LADA"
-            "МАЗДА" -> "MAZDA"
-            "ФОЛКСВАГЕН" -> "VOLKSWAGEN"
-            "КАДИЛАК" -> "CADILLAC"
-            "ТЕСЛА" -> "TESLA"
-            "ПОРШ" -> "PORSCHE"
-            else -> "UNKNOWN"
-        }
-    }
+    private fun brandToEnglish(name: String) = brandOnEnglish[name]!!
 
-    private fun bodyToEnglish(name: String): String {
-        return when (name) {
-            "ХЕТЧБЕК" -> "HATCHBACK"
-            "СПОРТКАР" -> "SPORTSCAR"
-            "ЧЕТЫРЁХДВЕРНОЙСЕДАН" -> "FOURDOORSEDAN"
-            "ЛИМУЗИН" -> "LIMOUSINE"
-            "КАБРИОЛЕТ" -> "CONVERTIBLE"
-            "СЕДАН" -> "HARDTOP"
-            "ФУРГОН" -> "VAN"
-            "ПИКАП" -> "PICKUPTRUCK"
-            else -> "UNKNOWN"
-        }
-    }
+    private fun bodyToEnglish(name: String) = bodyOnEnglish[name]!!
 
     private fun modelToEnglish(name: String): String {
         return when (name) {
@@ -73,3 +45,29 @@ class Service(val exchangeRate: Int = 100) {
         )
     }
 }
+
+val brandOnEnglish: Map<String, String> = mapOf(
+    "АУДИ" to "AUDI",
+    "БМВ" to "BMW",
+    "ФОРД" to "FORD",
+    "ХОНДА" to "HONDA",
+    "ХЁНДАЙ" to "HYUNDAI",
+    "КИА" to "KIA",
+    "ЛАДА" to "LADA",
+    "МАЗДА" to "MAZDA",
+    "ФОЛКСВАГЕН" to "VOLKSWAGEN",
+    "КАДИЛАК" to "CADILLAC",
+    "ТЕСЛА" to "TESLA",
+    "ПОРШ" to "PORSCHE"
+)
+
+val bodyOnEnglish: Map<String, String> = mapOf(
+"ХЕТЧБЕК" to "HATCHBACK",
+"СПОРТКАР" to "SPORTSCAR",
+"ЧЕТЫРЁХДВЕРНОЙСЕДАН" to "FOURDOORSEDAN",
+"ЛИМУЗИН" to "LIMOUSINE",
+"КАБРИОЛЕТ" to "CONVERTIBLE",
+"СЕДАН" to "HARDTOP",
+"ФУРГОН" to "VAN",
+"ПИКАП" to "PICKUPTRUCK"
+)
