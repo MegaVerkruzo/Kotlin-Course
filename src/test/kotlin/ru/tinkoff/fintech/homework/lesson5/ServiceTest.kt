@@ -11,212 +11,122 @@ class ServiceTest : FeatureSpec() {
         feature("Проверка сервиса") {
             scenario("Проверка перевода на Американский рынок") {
                 val result = listOf(
-                    Car(
-                        model = "TTS",
-                        brand = "AUDI",
-                        body = "SPORTSCAR",
-                        cost = 27400.0,
-                        gasolineConsumption = 6.4
-                    ),
-                    Car(
-                        model = "Vesta",
-                        brand = "LADA",
-                        body = "FOURDOORSEDAN",
-                        cost = 10380.0,
-                        gasolineConsumption = 6.3
-                    ),
-                    Car(
-                        model = "M4",
-                        brand = "BMW",
-                        body = "SPORTSCAR",
-                        cost = 78000.0,
-                        gasolineConsumption = 8.3
-                    ),
-                    Car(
-                        model = "911 Carrera",
-                        brand = "PORSCHE",
-                        body = "SPORTSCAR",
-                        cost = 87900.0,
-                        gasolineConsumption = 9.6
-                    ),
-                    Car(
-                        model = "730Ld xDrive",
-                        brand = "BMW",
-                        body = "LIMOUSINE",
-                        cost = 101145.0,
-                        gasolineConsumption = 3.0
-                    ),
-                    Car(
-                        model = "X6 M50d M Special",
-                        brand = "BMW",
-                        body = "HARDTOP",
-                        cost = 179990.0,
-                        gasolineConsumption = 3.0
-                    )
+                    audiTTSOnEng,
+                    ladaVestaOnEng,
+                    bmwM4OnEng,
+                    porshe911OnEng,
+                    bmwXDriveOnEng,
+                    bmwXSpecialOnEng
                 )
 
-                service.translateToEnglishSorted(cars) shouldContainAll result
+                service.translateToEnglishSorted(carsOnRus) shouldContainAll result
             }
 
             scenario("Проверка группировки по брэнду") {
                 val bmwCars = listOf(
-                    Car(
-                        "730лд иксДрайв",
-                        "БМВ",
-                        "ЛИМУЗИН",
-                        10114500.0,
-                        3.0
-                    ),
-                    Car(
-                        "икс6 М50д М спешиал",
-                        "БМВ",
-                        "СЕДАН",
-                        17999000.0,
-                        3.0
-                    ),
-                    Car(
-                        "М4",
-                        "БМВ",
-                        "СПОРТКАР",
-                        7800000.0,
-                        8.3
-                    )
+                    bmwXDriveOnRus,
+                    bmwXSpecialOnRus,
+                    bmwM4OnRus
                 )
 
-                val groupedCars = service.groupByBrand(cars)
+                val groupedCars = service.groupByBrand(carsOnRus)
 
                 groupedCars["БМВ"]?.shouldContainAll(bmwCars)
-                groupedCars["ПОРШ"]?.shouldContain(
-                    Car(
-                        "911 каррера",
-                        "ПОРШ",
-                        "СПОРТКАР",
-                        8790000.0,
-                        9.6
-                    )
-                )
-                groupedCars["ЛАДА"]?.shouldContain(
-                    Car(
-                        "Веста",
-                        "ЛАДА",
-                        "ЧЕТЫРЁХДВЕРНОЙСЕДАН",
-                        1038000.0,
-                        6.3
-                    )
-                )
-                groupedCars["АУДИ"]?.shouldContain(
-                    Car(
-                        "ТТС",
-                        "АУДИ",
-                        "СПОРТКАР",
-                        2740000.0,
-                        6.4
-                    )
-                )
+                groupedCars["ПОРШ"]?.shouldContain(porshe911OnRus)
+                groupedCars["ЛАДА"]?.shouldContain(ladaVestaOnRus)
+                groupedCars["АУДИ"]?.shouldContain(audiTTSOnRus)
             }
 
             scenario("Проверка группировки по кузову") {
                 val sportsCar = listOf(
-                    Car(
-                        "ТТС",
-                        "АУДИ",
-                        "СПОРТКАР",
-                        2740000.0,
-                        6.4
-                    ),
-                    Car(
-                        "911 каррера",
-                        "ПОРШ",
-                        "СПОРТКАР",
-                        8790000.0,
-                        9.6
-                    ),
-                    Car(
-                        "М4",
-                        "БМВ",
-                        "СПОРТКАР",
-                        7800000.0,
-                        8.3
-                    )
+                    audiTTSOnRus,
+                    porshe911OnRus,
+                    bmwM4OnRus
                 )
 
-                val groupedCars = service.groupByBody(cars)
+                val groupedCars = service.groupByBody(carsOnRus)
 
                 groupedCars["СПОРТКАР"]?.shouldContainAll(sportsCar)
-                groupedCars["ЧЕТЫРЁХДВЕРНОЙСЕДАН"]?.shouldContain(
-                    Car(
-                        "Веста",
-                        "ЛАДА",
-                        "ЧЕТЫРЁХДВЕРНОЙСЕДАН",
-                        1038000.0,
-                        6.3
-                    )
-                )
-                groupedCars["ЛИМУЗИН"]?.shouldContain(
-                    Car(
-                        "730лд иксДрайв",
-                        "БМВ",
-                        "ЛИМУЗИН",
-                        10114500.0,
-                        3.0
-                    )
-                )
-                groupedCars["СЕДАН"]?.shouldContain(
-                    Car(
-                        "икс6 М50д М спешиал",
-                        "БМВ",
-                        "СЕДАН",
-                        17999000.0,
-                        3.0
-                    )
-                )
+                groupedCars["ЧЕТЫРЁХДВЕРНОЙСЕДАН"]?.shouldContain(ladaVestaOnRus)
+                groupedCars["ЛИМУЗИН"]?.shouldContain(bmwXDriveOnRus)
+                groupedCars["СЕДАН"]?.shouldContain(bmwXSpecialOnRus)
 
 
             }
 
             scenario("Топ 3 дешёвых машины PORSCHE и BMW") {
                 val result = listOf(
-                    Car(
-                        model = "911 Carrera",
-                        brand = "PORSCHE",
-                        body = "SPORTSCAR",
-                        cost = 87900.0,
-                        gasolineConsumption = 9.6
-                    ),
-                    Car(
-                        model = "730Ld xDrive",
-                        brand = "BMW",
-                        body = "LIMOUSINE",
-                        cost = 101145.0,
-                        gasolineConsumption = 3.0
-                    ),
-                    Car(
-                        model = "M4",
-                        brand = "BMW",
-                        body = "SPORTSCAR",
-                        cost = 78000.0,
-                        gasolineConsumption = 8.3
-                    ),
-                    Car(
-                        model = "X6 M50d M Special",
-                        brand = "BMW",
-                        body = "HARDTOP",
-                        cost = 179990.0,
-                        gasolineConsumption = 3.0
-                    )
+                    porshe911OnEng,
+                    bmwXDriveOnEng,
+                    bmwM4OnEng,
+                    bmwXSpecialOnEng
                 )
 
-                result shouldContainAll service.suitableList(cars) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
+                result shouldContainAll service.suitableList(carsOnRus) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
             }
         }
     }
 }
 
-val cars = listOf(
+val carsOnRus = listOf(
     Car("730лд иксДрайв", "БМВ", "ЛИМУЗИН", 10114500.0, 3.0),
     Car("икс6 М50д М спешиал", "БМВ", "СЕДАН", 17999000.0, 3.0),
     Car("911 каррера", "ПОРШ", "СПОРТКАР", 8790000.0, 9.6),
     Car("Веста", "ЛАДА", "ЧЕТЫРЁХДВЕРНОЙСЕДАН", 1038000.0, 6.3),
     Car("М4", "БМВ", "СПОРТКАР", 7800000.0, 8.3),
     Car("ТТС", "АУДИ", "СПОРТКАР", 2740000.0, 6.4)
+)
+
+val bmwXDriveOnRus = Car("730лд иксДрайв", "БМВ", "ЛИМУЗИН", 10114500.0, 3.0)
+val bmwXDriveOnEng = Car(
+    model = "730Ld xDrive",
+    brand = "BMW",
+    body = "LIMOUSINE",
+    cost = 101145.0,
+    gasolineConsumption = 3.0
+)
+
+val bmwXSpecialOnRus = Car("икс6 М50д М спешиал", "БМВ", "СЕДАН", 17999000.0, 3.0)
+val bmwXSpecialOnEng = Car(
+    model = "X6 M50d M Special",
+    brand = "BMW",
+    body = "HARDTOP",
+    cost = 179990.0,
+    gasolineConsumption = 3.0
+)
+
+val porshe911OnRus = Car("911 каррера", "ПОРШ", "СПОРТКАР", 8790000.0, 9.6)
+val porshe911OnEng = Car(
+    model = "911 Carrera",
+    brand = "PORSCHE",
+    body = "SPORTSCAR",
+    cost = 87900.0,
+    gasolineConsumption = 9.6
+)
+
+val ladaVestaOnRus = Car("Веста", "ЛАДА", "ЧЕТЫРЁХДВЕРНОЙСЕДАН", 1038000.0, 6.3)
+val ladaVestaOnEng = Car(
+    model = "TTS",
+    brand = "AUDI",
+    body = "SPORTSCAR",
+    cost = 27400.0,
+    gasolineConsumption = 6.4
+)
+
+val bmwM4OnRus = Car("М4", "БМВ", "СПОРТКАР", 7800000.0, 8.3)
+val bmwM4OnEng = Car(
+    model = "M4",
+    brand = "BMW",
+    body = "SPORTSCAR",
+    cost = 78000.0,
+    gasolineConsumption = 8.3
+)
+
+val audiTTSOnRus = Car("ТТС", "АУДИ", "СПОРТКАР", 2740000.0, 6.4)
+val audiTTSOnEng = Car(
+    model = "Vesta",
+    brand = "LADA",
+    body = "FOURDOORSEDAN",
+    cost = 10380.0,
+    gasolineConsumption = 6.3
 )
