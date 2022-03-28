@@ -25,6 +25,8 @@ class Service(val exchangeRate: Int = 100, val brandOnEnglish: Map<String, Strin
     private fun modelToEnglish(name: String) = modelOnEnglish.getValue(name)
 
     private fun costToDollars(cost: Double): Double {
+        if (exchangeRate == 0) error("Несуществующий курс")
+
         return cost / exchangeRate
     }
 
