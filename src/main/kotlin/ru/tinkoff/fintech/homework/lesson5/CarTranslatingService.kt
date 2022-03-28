@@ -6,15 +6,15 @@ class CarTranslatingService(
     val modelOnEnglish: Map<String, String>,
     val exchangeRate: Double = 100.0
 ) {
-    fun translateCarToEnglish(car: Car): Car {
-        if (exchangeRate <= 0) error("Курс должен быть положительным")
+    fun translateCarToEnglish(car: Car) = Car(
+        modelOnEnglish.getValue(car.model),
+        brandOnEnglish.getValue(car.brand),
+        bodyOnEnglish.getValue(car.body),
+        car.cost / exchangeRate,
+        car.gasolineConsumption
+    )
 
-        return Car(
-            modelOnEnglish.getValue(car.model),
-            brandOnEnglish.getValue(car.brand),
-            bodyOnEnglish.getValue(car.body),
-            car.cost / exchangeRate,
-            car.gasolineConsumption
-        )
+    init {
+        if (exchangeRate <= 0) error("Курс должен быть положительным")
     }
 }
