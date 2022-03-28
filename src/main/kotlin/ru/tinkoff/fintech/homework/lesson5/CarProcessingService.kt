@@ -14,25 +14,7 @@ class CarProcessingService(val carTranslatingService: CarTranslatingService) {
     fun suitableList(cars: List<Car>, predicate: (Car) -> Boolean) = cars
         .asSequence()
         .filter { predicate(it) }
-        .map { translateCarToEnglishWithCost(it) }
+        .map { carTranslatingService.translateCarToEnglish(it) }
         .take(3)
         .toList()
-
-    private fun translateCarCostToDollars(car: Car): Car {
-        if (exchangeRate == 0) error("Несуществующий курс")
-
-        return Car(
-            car.model,
-            car.brand,
-            car.body,
-            car.cost / exchangeRate,
-            car.gasolineConsumption
-        )
-    }
-
-    private fun translateCarToEnglishWithCost(car: Car): Car {
-        return translateCarCostToDollars(
-            carTranslatingService.translateCarToEnglish(car)
-        )
-    }
 }

@@ -11,7 +11,6 @@ class ServiceTest : FeatureSpec() {
         modelOnEnglish
     )
     val carProcessingService = CarProcessingService(
-        100,
         carTranslatingService
     )
 

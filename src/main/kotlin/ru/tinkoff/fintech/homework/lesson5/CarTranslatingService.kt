@@ -1,8 +1,13 @@
 package ru.tinkoff.fintech.homework.lesson5
 
-class CarTranslatingService(val exchangeRate: Double = 100.0, val brandOnEnglish: Map<String, String>, val bodyOnEnglish: Map<String, String>, val modelOnEnglish: Map<String, String>) {
+class CarTranslatingService(
+    val brandOnEnglish: Map<String, String>,
+    val bodyOnEnglish: Map<String, String>,
+    val modelOnEnglish: Map<String, String>,
+    val exchangeRate: Double = 100.0
+) {
     fun translateCarToEnglish(car: Car): Car {
-        assert(exchangeRate > 0, error("Неверный курс")
+        if (exchangeRate <= 0) error("Курс должен быть положительным")
 
         return Car(
             modelOnEnglish.getValue(car.model),
