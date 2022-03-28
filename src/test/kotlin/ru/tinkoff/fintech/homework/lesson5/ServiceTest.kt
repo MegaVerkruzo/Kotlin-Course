@@ -5,10 +5,14 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainAll
 
 class ServiceTest : FeatureSpec() {
-    val service = Service(
-        brandOnEnglish = brandOnEnglish,
-        bodyOnEnglish = bodyOnEnglish,
-        modelOnEnglish = modelOnEnglish
+    val carTranslatingService = CarTranslatingService(
+        brandOnEnglish,
+        bodyOnEnglish,
+        modelOnEnglish
+    )
+    val carProcessingService = CarProcessingService(
+        100,
+        carTranslatingService
     )
 
     init {
@@ -23,7 +27,7 @@ class ServiceTest : FeatureSpec() {
                     bmwXSpecialOnEng
                 )
 
-                service.translateToEnglishSorted(carsOnRus) shouldContainAll result
+                carProcessingService.translateToEnglishSorted(carsOnRus) shouldContainAll result
             }
 
             scenario("Проверка группировки по брэнду") {
@@ -33,7 +37,7 @@ class ServiceTest : FeatureSpec() {
                     bmwM4OnRus
                 )
 
-                val groupedCars = service.groupByBrand(carsOnRus)
+                val groupedCars = carProcessingService.groupByBrand(carsOnRus)
 
                 groupedCars["БМВ"]?.shouldContainAll(bmwCars)
                 groupedCars["ПОРШ"]?.shouldContain(porshe911OnRus)
@@ -48,7 +52,7 @@ class ServiceTest : FeatureSpec() {
                     bmwM4OnRus
                 )
 
-                val groupedCars = service.groupByBody(carsOnRus)
+                val groupedCars = carProcessingService.groupByBody(carsOnRus)
 
                 groupedCars["СПОРТКАР"]?.shouldContainAll(sportsCar)
                 groupedCars["ЧЕТЫРЁХДВЕРНОЙСЕДАН"]?.shouldContain(ladaVestaOnRus)
@@ -66,7 +70,7 @@ class ServiceTest : FeatureSpec() {
                     bmwXSpecialOnEng
                 )
 
-                result shouldContainAll service.suitableList(carsOnRus) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
+                result shouldContainAll carProcessingService.suitableList(carsOnRus) { car: Car -> car.brand == "БМВ" || car.brand == "ПОРШ" }
             }
         }
     }
