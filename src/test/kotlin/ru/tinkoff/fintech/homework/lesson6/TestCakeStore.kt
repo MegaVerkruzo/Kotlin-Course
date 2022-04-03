@@ -23,13 +23,13 @@ import ru.tinkoff.fintech.homework.lesson6.company.service.client.FeedbackListCl
 class TestCakeStore : FeatureSpec(){
 
     @MockBean
-    private lateinit var cakeListClient: CakeListClient
+    private val cakeListClient = mockk<CakeListClient>()
 
     @MockBean
-    private lateinit var feedBackListClient: FeedbackListClient
+    private val feedBackListClient = mockk<FeedbackListClient>()
 
     @MockBean
-    private lateinit var storage: Storage
+    private val storage = mockk<Storage>()
 
     override fun beforeEach(testCase: TestCase) {
         every { cakeListClient.getCakesList() } returns cakeList
@@ -50,7 +50,7 @@ class TestCakeStore : FeatureSpec(){
         }
     }
 
-    val cakeList: Set<Cake> = setOf(
+    val cakeList = listOf(
         Cake(1, "Наполеон", 323.6),
         Cake(2, "Рабыня", 494.0)
     )

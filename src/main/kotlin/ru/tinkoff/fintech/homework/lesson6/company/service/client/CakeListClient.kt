@@ -14,8 +14,8 @@ class CakeListClient(
     @Value("\${cake.list.address}") private val cakeListClient: String
 ) {
 
-    fun getCakesList(): Set<Cake> =
-        restTemplate.exchange<Set<Cake>>("$cakeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
+    fun getCakesList(): List<Cake> =
+        restTemplate.exchange<List<Cake>>("$cakeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
 
     fun getCake(id: Int): Cake =
         getCakesList().find { it.id == id }!!

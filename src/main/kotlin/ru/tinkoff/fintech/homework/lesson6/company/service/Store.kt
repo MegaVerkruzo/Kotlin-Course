@@ -8,7 +8,7 @@ import ru.tinkoff.fintech.homework.lesson6.company.service.client.FeedbackListCl
 
 @Service
 class Store(val cakeListClient: CakeListClient, val feedbackListClient: FeedbackListClient, val storage: Storage) {
-    fun getCakesList(): Set<Cake> {
+    fun getCakesList(): List<Cake> {
         return cakeListClient.getCakesList()
     }
 

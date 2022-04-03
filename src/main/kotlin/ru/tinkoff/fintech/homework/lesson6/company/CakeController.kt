@@ -11,7 +11,7 @@ import ru.tinkoff.fintech.homework.lesson6.company.service.Store
 @RequestMapping("/cake")
 class CakeController(private val confectionery: Store) {
     @GetMapping("/list")
-    fun getCakeList(): Set<Cake> =
+    fun getCakeList(): List<Cake> =
         confectionery.getCakesList()
 
     @GetMapping("/{cakeId}")
