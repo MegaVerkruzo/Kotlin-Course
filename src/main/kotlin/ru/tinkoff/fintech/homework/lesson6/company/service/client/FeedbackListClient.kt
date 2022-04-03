@@ -14,7 +14,7 @@ class FeedbackListClient(
 
     }
 
-    fun getFeedbackList(): Set<Feedback> =
-        restTemplate.exchange<Set<Feedback>>("$feedbackListAddress$")
+//    fun getFeedbackList(): Set<Feedback> =
+//        restTemplate.exchange<Set<Feedback>>("$feedbackListAddress$")
 }
 
