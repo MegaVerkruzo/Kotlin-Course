@@ -3,12 +3,10 @@ package ru.tinkoff.fintech.homework.lesson6
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -16,23 +14,23 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.company.service.Storage
 import ru.tinkoff.fintech.homework.lesson6.company.service.Store
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.CakeListClient
-import ru.tinkoff.fintech.homework.lesson6.company.service.client.FeedbackListClient
+import ru.tinkoff.fintech.homework.lesson6.company.service.client.StorageClient
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class TestCakeStore : FeatureSpec(){
+class TestCakeStore : FeatureSpec() {
 
     @MockBean
     private val cakeListClient = mockk<CakeListClient>()
 
     @MockBean
-    private val feedBackListClient = mockk<FeedbackListClient>()
+    private val storageClient = mockk<StorageClient>()
 
-    @MockBean
-    private val storage = mockk<Storage>()
+    private val storage = Storage(storageClient)
+    private val store = Store(cakeListClient, storage)
 
     override fun beforeEach(testCase: TestCase) {
-        every { cakeListClient.getCakesList() } returns cakeList
+        every { storageClient.getCakesWithAmount() } returns cakeList
 
     }
 
@@ -43,15 +41,14 @@ class TestCakeStore : FeatureSpec(){
     init {
         feature("Тест класса Store") {
             scenario("Тест на вывод листа тортов") {
-                val cakeList = Store(cakeListClient, feedBackListClient, storage)
-
-                cakeList.getCakesList().shouldContainAll(cakeList)
+                store.getCakesList() shouldBe cakeList.map { it.key }
             }
         }
     }
 
-    val cakeList = listOf(
-        Cake(1, "Наполеон", 323.6),
-        Cake(2, "Рабыня", 494.0)
+    val cakeList: Map<Cake, Int> = mutableMapOf(
+        Cake("Наполеон", 323.6) to 1,
+        Cake("Рабыня", 494.0) to 3
     )
 }
+

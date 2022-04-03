@@ -1,10 +1,8 @@
 package ru.tinkoff.fintech.homework.lesson6.company
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.company.model.OrderedCake
 import ru.tinkoff.fintech.homework.lesson6.company.service.Store
 
 @RestController
@@ -15,7 +13,11 @@ class CakeController(private val confectionery: Store) {
         confectionery.getCakesList()
 
     @GetMapping("/{cakeId}")
-    fun getCake(@PathVariable cakeId: Int): Cake =
-        confectionery.getCake(cakeId)
+    fun getCake(@PathVariable name: String): Cake =
+        confectionery.getCake(name)
+
+    @PostMapping("/buy")
+    fun buyCake(@RequestParam name: String): OrderedCake =
+        confectionery.buyCake(name)!!
 
 }
