@@ -1,0 +1,7 @@
+spring:
+  application.name: cakesShop
+  profiles.active: dev
+server.port: 9000
+
+feedback.list.address: http://localhost:9001
+cake.list.address: http://localhost:9001
