@@ -13,14 +13,18 @@ class Confectionery(val cakeListClient: CakeListClient, val feedbackListClient: 
         return cakeListClient.getCakesList()
     }
 
-    fun consistCake(): Boolean {
-        return cakeListClient.consistCake()
+    fun getCake(id: Int): Cake {
+        return cakeListClient.getCake()
+    }
+
+    fun consistCake(cake: Cake): Boolean {
+        return cakeListClient.consistCake(cake)
     }
 
     fun addFeedback(feedback: Feedback) {
         feedbackListClient.addFeedback(feedback)
     }
 
-    fun getFeedbackList(): Set<Feedback> =
+    fun getFeedbackList(cake: Cake): Set<Feedback> =
         feedbackListClient.getFeed
 }

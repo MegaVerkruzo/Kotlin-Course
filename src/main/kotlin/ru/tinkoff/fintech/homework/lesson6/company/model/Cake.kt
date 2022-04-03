@@ -1,3 +1,3 @@
 package ru.tinkoff.fintech.homework.lesson6.company.model
 
-data class Cake(val name: String, val cost: Double)
+data class Cake(val id: Int, val name: String, val cost: Double)

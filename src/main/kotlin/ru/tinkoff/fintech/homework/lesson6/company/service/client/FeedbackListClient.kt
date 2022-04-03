@@ -8,12 +8,13 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Feedback
 @Service
 class FeedbackListClient(
     val restTemplate: RestTemplate,
-    @Value("feedback.list.address") private val feedbackListAddress: String
+    @Value("\${feedback.list.address}") private val feedbackListAddress: String
 ) {
     fun addFeedback(feedback: Feedback) {
 
     }
 
     fun getFeedbackList(): Set<Feedback> =
-        restTemplate.exchange<Set<Feedback>>("$feedbackListAddress$");
+        restTemplate.exchange<Set<Feedback>>("$feedbackListAddress$")
 }
+
