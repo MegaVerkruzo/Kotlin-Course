@@ -7,10 +7,10 @@ import org.springframework.web.client.RestTemplate
 import java.time.Duration
 
 @Configuration
-open class ServiceConfiguration {
+class ServiceConfiguration {
 
     @Bean
-    open fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
+    fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
         .setConnectTimeout(Duration.ofSeconds(CONNECT_TIMEOUT_IN_SECONDS))
         .setReadTimeout(Duration.ofSeconds(READ_TIMEOUT_IN_SECONDS))
         .build()
