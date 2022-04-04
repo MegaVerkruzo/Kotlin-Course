@@ -17,6 +17,8 @@ class ConfigureExceptions {
         return errorResponse(e)
     }
 
+
+
     private fun errorResponse(e: Exception): Map<String, String> = mapOf(
         "status" to "error",
         "exception" to e.javaClass.simpleName,

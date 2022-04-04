@@ -18,14 +18,18 @@ class Storage(val storageClient: StorageClient) {
         storageClient.addOrUpdateCake(name, cost)
     }
 
-    fun addCakes(name: String, count: Int) {
+    fun changeCakesCount(name: String, count: Int) {
         require(consistCakeType(name)) { throw IllegalArgumentException("Такого типа торта нет на складе") }
 
-        storageClient.addCakes(name, count)
+        storageClient.changeCakesCount(name, count)
     }
 
     fun addCakes(name: String, cost: Double, count: Int) {
         addOrUpdateCake(name, cost)
-        addCakes(name, count)
+        changeCakesCount(name, count)
+    }
+
+    fun deleteCakes(name: String, count: Int) {
+        changeCakesCount(name, -count)
     }
 }

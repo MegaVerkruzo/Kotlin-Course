@@ -23,7 +23,7 @@ class StorageClient(
         return data[cakeCost[name]]!! > 0
     }
 
-    fun addCakes(name: String, count: Int) {
+    fun changeCakesCount(name: String, count: Int) {
         require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException() }
 
         data[cakeCost[name]!!] = count + data[cakeCost[name]!!]!!
@@ -42,9 +42,6 @@ class StorageClient(
         data[cakeCost[name]!!] = count
     }
 
-    private val cakeCost: MutableMap<String, Cake> = mutableMapOf()
-    private val data: MutableMap<Cake, Int> = mutableMapOf()
+    private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 43.0))
+    private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 43.0) to 50)
 }
-
-private const val GET_CAKE_MAP = "/cake/list"
-private const val CHECK = "/cake/check/{name}"
