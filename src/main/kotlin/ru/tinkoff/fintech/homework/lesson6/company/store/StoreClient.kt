@@ -9,7 +9,7 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 
 @Service
 class StoreClient(
-    val restTemplate: RestTemplate,
+    private val restTemplate: RestTemplate,
     @Value("\${store.list.address}") private val storeListClient: String
 ) {
 

@@ -16,13 +16,13 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import ru.tinkoff.fintech.homework.lesson6.company.storage.Storage
 import ru.tinkoff.fintech.homework.lesson6.company.store.Store
-import ru.tinkoff.fintech.homework.lesson6.company.service.client.StoreClient
 import ru.tinkoff.fintech.homework.lesson6.company.storage.StorageClient
+import ru.tinkoff.fintech.homework.lesson6.company.store.StoreClient
 import java.lang.IllegalArgumentException
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class TestCakeStore : FeatureSpec() {
+class CakeStoreTest : FeatureSpec() {
 
     @MockBean
     private val storeClient = mockk<StoreClient>()
@@ -31,7 +31,7 @@ class TestCakeStore : FeatureSpec() {
     private val storageClient = mockk<StorageClient>()
 
     private val storage = Storage(storageClient)
-    private val store = Store(storeClient, storage)
+    private val store = Store(storeClient)
 
     override fun beforeEach(testCase: TestCase) {
         every { storageClient.getCakesList() } returns data

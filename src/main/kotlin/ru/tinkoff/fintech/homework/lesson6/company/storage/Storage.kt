@@ -6,7 +6,7 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import java.lang.IllegalArgumentException
 
 @Service
-class Storage(val storageClient: StorageClient) {
+class Storage(private val storageClient: StorageClient) {
 
     fun getCakesList(): Map<Cake, Int> = storageClient.getCakesList()
 

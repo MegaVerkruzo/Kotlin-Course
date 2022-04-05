@@ -9,7 +9,7 @@ import java.lang.IllegalArgumentException
 
 @Service
 class StorageClient(
-    val restTemplate: RestTemplate,
+    private val restTemplate: RestTemplate,
     @Value("\${storage.list.address}") private val storageListClient: String
 ) {
     fun getCakesList(): MutableMap<Cake, Int> = data.toMutableMap()
