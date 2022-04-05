@@ -10,14 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ConfigureExceptions {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleIllegalArgumentException(e: IllegalArgumentException): Map<String, String> {
         log.warn(e.message, e)
         return errorResponse(e)
     }
-
-
 
     private fun errorResponse(e: Exception): Map<String, String> = mapOf(
         "status" to "error",

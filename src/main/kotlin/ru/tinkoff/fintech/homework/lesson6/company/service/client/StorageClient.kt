@@ -11,9 +11,7 @@ class StorageClient(
     val restTemplate: RestTemplate,
     @Value("\${storage.list.address}") private val storageListClient: String
 ) {
-    fun getCakesList(): MutableMap<Cake, Int> {
-        return data
-    }
+    fun getCakesList(): MutableMap<Cake, Int> = data.toMutableMap()
 
     fun consistCakeType(name: String): Boolean = cakeCost.containsKey(name)
 
@@ -24,7 +22,7 @@ class StorageClient(
     }
 
     fun changeCakesCount(name: String, count: Int) {
-        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException() }
+        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException("fuck") }
 
         data[cakeCost[name]!!] = count + data[cakeCost[name]!!]!!
     }
@@ -42,6 +40,6 @@ class StorageClient(
         data[cakeCost[name]!!] = count
     }
 
-    private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 43.0))
-    private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 43.0) to 50)
+    private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0))
+    private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 432.0) to 20)
 }

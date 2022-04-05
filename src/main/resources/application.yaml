@@ -3,5 +3,5 @@ spring:
   profiles.active: dev
 server.port: 9000
 
-storage.list.address: http://localhost:9001
-cake.list.address: http://localhost:9001
+store.list.address: http://localhost:9000
+storage.list.address: http://localhost:9000
