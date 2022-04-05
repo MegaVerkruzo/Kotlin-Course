@@ -11,7 +11,7 @@ class StoreController(private val store: Store) {
     fun getCakesList(): Map<Cake, Int> =
         store.getCakesList()
 
-    @GetMapping("/buy")
+    @PostMapping("/buy")
     fun buyCakes(@RequestParam name: String, @RequestParam count: Int): Order =
         store.buyCakes(name, count)
 }

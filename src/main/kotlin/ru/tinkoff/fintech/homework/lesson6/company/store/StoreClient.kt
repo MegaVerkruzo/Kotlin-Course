@@ -17,7 +17,7 @@ class StoreClient(
 
     fun buyCakes(name: String, count: Int): Order {
 
-        return restTemplate.getForObject("$storeListClient$ADD_ORDER", name, count)
+        return restTemplate.postForObject("$storeListClient$ADD_ORDER", name, count)
     }
 
 
