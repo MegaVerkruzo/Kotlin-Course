@@ -8,7 +8,7 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 @RequestMapping("/store")
 class StoreController(private val store: Store) {
     @GetMapping("/list")
-    fun getCakesList(): Map<Cake, Int> =
+    fun getCakesList(): Map<String, Pair<Cake, Int>> =
         store.getCakesList()
 
     @PostMapping("/buy")

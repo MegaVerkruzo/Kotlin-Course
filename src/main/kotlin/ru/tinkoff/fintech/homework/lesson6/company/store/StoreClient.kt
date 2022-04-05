@@ -13,14 +13,11 @@ class StoreClient(
     @Value("\${store.list.address}") private val storeListClient: String
 ) {
 
-    fun getCakesList(): Map<Cake, Int> = restTemplate.getForObject("$storeListClient$GET_CAKE_LIST", HttpMethod.GET)
+    fun getCakesList(): Map<String, Pair<Cake, Int>> =
+        restTemplate.exchange<Map<String, Pair<Cake, Int>>>("$storeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
 
-    fun buyCakes(name: String, count: Int): Order {
-
-        return restTemplate.postForObject("$storeListClient$ADD_ORDER", name, count)
-    }
-
-
+    fun buyCakes(name: String, count: Int): Order =
+        restTemplate.postForObject("$storeListClient$ADD_ORDER", HttpMethod.POST, name, count)
 }
 
 private const val GET_CAKE_LIST = "/storage/list"
