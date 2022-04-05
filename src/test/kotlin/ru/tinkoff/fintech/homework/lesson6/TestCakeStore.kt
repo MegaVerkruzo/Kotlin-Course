@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import ru.tinkoff.fintech.homework.lesson6.company.service.Storage
 import ru.tinkoff.fintech.homework.lesson6.company.service.Store
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.StoreClient
@@ -29,7 +30,7 @@ class TestCakeStore : FeatureSpec() {
     private val storageClient = mockk<StorageClient>()
 
     private val storage = Storage(storageClient)
-    private val store = Store(storeClient)
+    private val store = Store(storeClient, storage)
 
     override fun beforeEach(testCase: TestCase) {
         every { storageClient.getCakesList() } returns data
@@ -48,6 +49,25 @@ class TestCakeStore : FeatureSpec() {
             cakeCost[firstArg()] = Cake(firstArg(), secondArg<Double>().toString().toDouble())
             data[cakeCost[firstArg()]!!] = count
         }
+        every { storageClient.cakeCount(any()) } answers { data[firstArg()]!! }
+        every { storageClient.getCake(any()) } answers { cakeCost[firstArg()]!! }
+        every { storageClient.getNumberOrder() } returns orders.size
+        every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
+        every { storageClient.doneOrder(any()) } answers {
+            require(firstArg<Int>() < orders.size) { throw IllegalArgumentException("Заказа не существует")}
+            require(!orders[firstArg()].packed) { throw IllegalArgumentException("Заказ уже был выполнен")}
+            require(data[orders[firstArg()].cake]!! >= orders[firstArg()].cakesCount) {
+                throw IllegalArgumentException("Не хватает кол-во тортов на складе")
+            }
+
+            orders[firstArg()].packed = true
+            data[orders[firstArg()].cake] = data[orders[firstArg()].cake]!! - orders[firstArg()].cakesCount
+        }
+        every { storageClient.addOrder(any(), any()) } answers {
+            orders.add(Order(storageClient.getNumberOrder(), storageClient.getCake(firstArg()), secondArg(), false))
+            orders[orders.size - 1]
+        }
+        every { storeClient.getCakesList() } returns data
     }
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
@@ -86,7 +106,23 @@ class TestCakeStore : FeatureSpec() {
                 verify(exactly = 1) { storageClient.changeCakesCount(any(), any()) }
             }
         }
+
+        feature("Тест свзяки класса Storage и Store") {
+            scenario("Удачный отвоз тортов из склада в магазин") {
+                store.buyCakes("napoleon", 1)
+
+                storage.doneOrder(0)
+
+                orders[0].packed shouldBe true
+            }
+
+            scenario("Не хватает тортов для выполнения заказа") {
+
+            }
+        }
     }
+
+    val orders: MutableList<Order> = mutableListOf()
 
     val cakeCost: MutableMap<String, Cake> = mutableMapOf(
         firstCake.name to firstCake,

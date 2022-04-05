@@ -47,9 +47,13 @@ class StorageClient(
 
     fun getNumberOrder(): Int = orders.size
 
-    fun getOrder(orderId: Int): Order = orders[orderId]
+    fun getOrder(orderId: Int): Order {
+        require(orderId < orders.size) { throw IllegalArgumentException() }
+        return  orders[orderId]
+    }
 
     fun doneOrder(orderId: Int) {
+        require(orderId < orders.size) { throw IllegalArgumentException("Заказа не существует")}
         require(!orders[orderId].packed) { throw IllegalArgumentException("Заказ уже был выполнен")}
         require(data[orders[orderId].cake]!! > orders[orderId].cakesCount) {
             throw IllegalArgumentException("Не хватает кол-во тортов на складе")
