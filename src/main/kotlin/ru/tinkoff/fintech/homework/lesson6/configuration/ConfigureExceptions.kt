@@ -26,7 +26,14 @@ class ConfigureExceptions {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleIllegalArgumentException(e: ArrayIndexOutOfBoundsException): Map<String, String> {
+    fun handleIllegalArgumentException(e: IndexOutOfBoundsException): Map<String, String> {
+        log.warn(e.message, e)
+        return errorResponse(e)
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleIllegalArgumentException(e: Exception): Map<String, String> {
         log.warn(e.message, e)
         return errorResponse(e)
     }

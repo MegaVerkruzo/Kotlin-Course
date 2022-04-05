@@ -30,44 +30,39 @@ class CakeStoreTest : FeatureSpec() {
     @MockBean
     private val storageClient = mockk<StorageClient>()
 
+    private val slot = slot<Int>()
+
     private val storage = Storage(storageClient)
     private val store = Store(storeClient)
 
     override fun beforeEach(testCase: TestCase) {
         every { storageClient.getCakesList() } returns data
-        every { storageClient.consistCake(any()) } answers { cakeCost.containsKey(firstArg<String>().toString()) && data[cakeCost[firstArg()]]!! > 0}
-        every { storageClient.consistCakeType(any()) } answers { cakeCost.containsKey(firstArg()) }
-        every { storageClient.changeCakesCount(any(), any()) } answers { data[cakeCost[firstArg()]!!] = secondArg<Int>().toString().toInt() + data[cakeCost[firstArg()]]!! }
-        every { storageClient.addOrUpdateCake(any(), any()) } answers {
-            var count = 0
-            if (cakeCost.containsKey(firstArg())) {
-                require(data.containsKey(cakeCost[firstArg()])) { throw IllegalArgumentException() }
-
-                count = data[cakeCost[firstArg()]]!!
-                data.remove(cakeCost[firstArg()]!!)
-            }
-            cakeCost.remove(firstArg())
-            cakeCost[firstArg()] = Cake(firstArg(), secondArg<Double>().toString().toDouble())
-            data[cakeCost[firstArg()]!!] = count
+        every { storageClient.getCakeCount(any()) } answers { data[firstArg()]!!.second }
+        every { storageClient.getCakeCost(any()) } answers { data[firstArg()]!!.first.cost }
+        every {
+            storageClient.consistCakes(
+                any(),
+                any()
+            )
+        } answers { data.containsKey(firstArg()) && storageClient.getCakeCount(firstArg()) >= secondArg<Int>() }
+        every { storageClient.addNewCakeType(any(), any(), any()) } answers {
+            data[firstArg()] = Pair(Cake(firstArg(), secondArg()), thirdArg())
         }
-        every { storageClient.cakeCount(any()) } answers { data[firstArg()]!! }
-        every { storageClient.getCake(any()) } answers { cakeCost[firstArg()]!! }
+        every { storageClient.addCakesCount(any(), any()) } answers {
+            data[firstArg()] = Pair(data[firstArg()]!!.first, storageClient.getCakeCount(firstArg()) + secondArg<Int>())
+        }
+        every { storageClient.changeCakePrice(any(), any()) } answers {
+            data[firstArg()] = Pair(Cake(firstArg(), secondArg()), storageClient.getCakeCount(firstArg()))
+        }
         every { storageClient.getNumberOrder() } returns orders.size
-        every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
+        every { storageClient.getOrder(slot) } returns orders[slot.captured]
         every { storageClient.doneOrder(any()) } answers {
-            require(firstArg<Int>() < orders.size) { throw IllegalArgumentException("Заказа не существует")}
-            require(data[orders[firstArg()].cake]!! >= orders[firstArg()].cakesCount) {
-                throw IllegalArgumentException("Не хватает кол-во тортов на складе")
-            }
-
             orders[firstArg()].packed = true
-            data[orders[firstArg()].cake] = data[orders[firstArg()].cake]!! - orders[firstArg()].cakesCount
         }
-        every { storageClient.addOrder(any(), any()) } answers {
-            orders.add(Order(storageClient.getNumberOrder(), storageClient.getCake(firstArg()), secondArg(), false))
-            orders[orders.size - 1]
-        }
-        every { storeClient.getCakesList() } returns data
+//        every { storageClient.addOrder(any(), any()) } answers {
+//            orders.add(Order(orders.size, firstArg(), secondArg(), false))
+//
+//        }
     }
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
@@ -124,14 +119,9 @@ class CakeStoreTest : FeatureSpec() {
 
     val orders: MutableList<Order> = mutableListOf()
 
-    val cakeCost: MutableMap<String, Cake> = mutableMapOf(
-        firstCake.name to firstCake,
-        secondCake.name to secondCake
-    )
-
-    val data: MutableMap<Cake, Int> = mutableMapOf(
-        firstCake to 1,
-        secondCake to 3
+    val data: MutableMap<String, Pair<Cake, Int>> = mutableMapOf(
+        firstCake.name to Pair(firstCake, 1),
+        secondCake.name to Pair(secondCake, 3)
     )
 }
 

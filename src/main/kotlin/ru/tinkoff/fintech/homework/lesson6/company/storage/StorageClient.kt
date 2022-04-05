@@ -18,7 +18,7 @@ class StorageClient(
 
     fun getCakeCost(name: String): Double = data[name]!!.first.cost
 
-    fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && data[name]!!.second >= count
+    fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && getCakeCount(name) >= count
 
     fun addNewCakeType(name: String, cost: Double, count: Int) {
         data[name] = Pair(Cake(name, cost), count)
@@ -38,7 +38,7 @@ class StorageClient(
         try {
             return orders[orderId]
         } catch (e: ArrayIndexOutOfBoundsException) {
-            throw ArrayIndexOutOfBoundsException("Попытка обратиться к заказу под несуществующим номером $orderId")
+            throw IndexOutOfBoundsException("Попытка обратиться к заказу под несуществующим номером $orderId")
         }
     }
 
