@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6.company.service.client
+package ru.tinkoff.fintech.homework.lesson6.company.storage
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

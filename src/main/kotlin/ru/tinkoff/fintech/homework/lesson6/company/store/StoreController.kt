@@ -1,9 +1,8 @@
-package ru.tinkoff.fintech.homework.lesson6.company
+package ru.tinkoff.fintech.homework.lesson6.company.store
 
 import org.springframework.web.bind.annotation.*
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.company.model.Order
-import ru.tinkoff.fintech.homework.lesson6.company.service.Store
 
 @RestController
 @RequestMapping("/store")

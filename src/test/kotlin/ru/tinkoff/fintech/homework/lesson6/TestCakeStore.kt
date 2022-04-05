@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.company.model.Order
-import ru.tinkoff.fintech.homework.lesson6.company.service.Storage
-import ru.tinkoff.fintech.homework.lesson6.company.service.Store
+import ru.tinkoff.fintech.homework.lesson6.company.storage.Storage
+import ru.tinkoff.fintech.homework.lesson6.company.store.Store
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.StoreClient
-import ru.tinkoff.fintech.homework.lesson6.company.service.client.StorageClient
+import ru.tinkoff.fintech.homework.lesson6.company.storage.StorageClient
 import java.lang.IllegalArgumentException
 
 @SpringBootTest
