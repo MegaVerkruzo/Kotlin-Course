@@ -1,5 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson6
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
@@ -55,7 +56,6 @@ class TestCakeStore : FeatureSpec() {
         every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
         every { storageClient.doneOrder(any()) } answers {
             require(firstArg<Int>() < orders.size) { throw IllegalArgumentException("Заказа не существует")}
-            require(!orders[firstArg()].packed) { throw IllegalArgumentException("Заказ уже был выполнен")}
             require(data[orders[firstArg()].cake]!! >= orders[firstArg()].cakesCount) {
                 throw IllegalArgumentException("Не хватает кол-во тортов на складе")
             }
@@ -109,7 +109,7 @@ class TestCakeStore : FeatureSpec() {
 
         feature("Тест свзяки класса Storage и Store") {
             scenario("Удачный отвоз тортов из склада в магазин") {
-                store.buyCakes("napoleon", 1)
+                store.buyCakes(firstCake.name, 1)
 
                 storage.doneOrder(0)
 
@@ -117,7 +117,7 @@ class TestCakeStore : FeatureSpec() {
             }
 
             scenario("Не хватает тортов для выполнения заказа") {
-
+                shouldThrow<IllegalArgumentException> { store.buyCakes(firstCake.name, 654) }
             }
         }
     }
