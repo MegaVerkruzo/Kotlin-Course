@@ -11,8 +11,22 @@ class ConfigureExceptions {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleIllegalArgumentException(e: IllegalArgumentException): Map<String, String> {
+        log.warn(e.message, e)
+        return errorResponse(e)
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleIllegalArgumentException(e: NoSuchElementException): Map<String, String> {
+        log.warn(e.message, e)
+        return errorResponse(e)
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleIllegalArgumentException(e: ArrayIndexOutOfBoundsException): Map<String, String> {
         log.warn(e.message, e)
         return errorResponse(e)
     }

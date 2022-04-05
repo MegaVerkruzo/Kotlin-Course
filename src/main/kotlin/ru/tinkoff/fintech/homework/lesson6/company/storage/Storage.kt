@@ -31,7 +31,14 @@ class Storage(private val storageClient: StorageClient) {
     fun deleteCakes(name: String, count: Int) {
         if (!consistCakeType(name))
             throw NoSuchElementException("Нельзя уменьшить кол-во несуществующих тортов с названием \"$name\"")
+
         storageClient.addCakesCount(name, -count)
+    }
+
+    fun changeCakesCount(name: String, count: Int) {
+        if (!consistCakeType(name)) throw NoSuchElementException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
+
+        storageClient.addCakesCount(name, count)
     }
 
     fun addOrder(name: String, count: Int): Order {
@@ -43,18 +50,11 @@ class Storage(private val storageClient: StorageClient) {
         }
     }
 
-    fun getOrder(orderId: Int): Order {
-
-        return storageClient.getOrder(orderId)
-    }
+    fun getOrder(orderId: Int): Order = storageClient.getOrder(orderId)
 
     fun doneOrder(orderId: Int) {
-        storageClient.doneOrder(orderId)
         val order = getOrder(orderId)
+        storageClient.doneOrder(orderId)
         deleteCakes(order.cake.name, order.cakesCount)
-    }
-
-    fun changeCakesCount(name: String, count: Int) {
-        storageClient.addCakesCount(name, count)
     }
 }

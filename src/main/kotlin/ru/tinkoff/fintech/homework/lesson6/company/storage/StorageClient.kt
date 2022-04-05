@@ -34,7 +34,13 @@ class StorageClient(
 
     fun getNumberOrder(): Int = orders.size
 
-    fun getOrder(orderId: Int): Order = orders[orderId]
+    fun getOrder(orderId: Int): Order {
+        try {
+            return orders[orderId]
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            throw ArrayIndexOutOfBoundsException("Попытка обратиться к заказу под несуществующим номером $orderId")
+        }
+    }
 
     fun doneOrder(orderId: Int) {
         orders[orderId].packed = true
