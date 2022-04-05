@@ -6,9 +6,9 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.StoreClient
 
 @Service
-class Store(val storeClient: StoreClient) {
+class Store(val storeClient: StoreClient, val storage: Storage) {
     fun getCakesList(): Map<Cake, Int> = storeClient.getCakesList()
 
     fun buyCakes(name: String, count: Int): Order =
-        storeClient.buyCakes(name, count)!!
+        storage.addOrder(name, count)
 }

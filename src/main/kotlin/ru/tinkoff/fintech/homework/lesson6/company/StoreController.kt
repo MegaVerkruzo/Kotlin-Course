@@ -13,23 +13,6 @@ class StoreController(private val store: Store) {
         store.getCakesList()
 
     @GetMapping("/buy")
-    fun buyCakes(@PathVariable name: String, @PathVariable count: Int): Order =
+    fun buyCakes(@RequestParam name: String, @RequestParam count: Int): Order =
         store.buyCakes(name, count)
-
-//    @GetMapping("/list")
-//    fun getCakeList(): List<Cake> =
-//        confectionery.getCakesList()
-//
-//    @GetMapping("/{cakeId}")
-//    fun getCake(@PathVariable name: String): Cake =
-//        confectionery.getCake(name)
-//
-//    @PostMapping("/buy")
-//    fun buyCake(@RequestParam name: String): OrderedCake =
-//        confectionery.buyCake(name)!!
-
-//    @GetMapping("/check")
-//    fun check(@RequestParam name: String): String =
-//        confectionery.check(name);
-
 }
