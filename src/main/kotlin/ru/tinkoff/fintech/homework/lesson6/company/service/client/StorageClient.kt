@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import java.lang.IllegalArgumentException
 
 @Service
@@ -40,6 +41,19 @@ class StorageClient(
         data[cakeCost[name]!!] = count
     }
 
+    fun cakeCount(cake: Cake): Int = data[cake]!!
+
+    fun getCake(name: String): Cake = cakeCost[name]!!
+
+    fun getNumberOrder(): Int = orders.size
+
+    fun getOrder(orderId: Int): Order = orders[orderId]
+
+    fun doneOrder(orderId: Int) {
+        orders[orderId].packed = true
+    }
+
     private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0))
     private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 432.0) to 20)
+    private val orders: List<Order> = mutableListOf()
 }

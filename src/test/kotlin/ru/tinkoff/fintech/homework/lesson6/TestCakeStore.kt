@@ -83,7 +83,7 @@ class TestCakeStore : FeatureSpec() {
 
                 storage.consistCake(thirdCake.name) shouldBe true
 
-                verify { storageClient.changeCakesCount(any(), any()) }
+                verify(exactly = 1) { storageClient.changeCakesCount(any(), any()) }
             }
         }
     }

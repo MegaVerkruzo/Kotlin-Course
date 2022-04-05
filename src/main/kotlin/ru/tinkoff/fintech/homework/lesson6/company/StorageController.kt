@@ -2,6 +2,7 @@ package ru.tinkoff.fintech.homework.lesson6.company
 
 import org.springframework.web.bind.annotation.*
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import ru.tinkoff.fintech.homework.lesson6.company.service.Storage
 
 @RestController
@@ -31,4 +32,16 @@ class StorageController(private val storage: Storage) {
         storage.deleteCakes(name, count)
     }
 
+    @PostMapping("/add-order")
+    fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
+        storage.addOrder(name, count)
+
+    @GetMapping("/order/{orderId}")
+    fun getOrder(@PathVariable orderId: Int): Order =
+        storage.getOrder(orderId)
+
+    @GetMapping("/order/{orderId}/done")
+    fun doneOrder(@PathVariable orderId: Int) {
+        storage.doneOrder(orderId)
+    }
 }

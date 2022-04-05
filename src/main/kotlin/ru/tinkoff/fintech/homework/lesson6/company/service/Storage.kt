@@ -2,6 +2,7 @@ package ru.tinkoff.fintech.homework.lesson6.company.service
 
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.StorageClient
 import java.lang.IllegalArgumentException
 
@@ -13,6 +14,10 @@ class Storage(val storageClient: StorageClient) {
     fun consistCakeType(name: String): Boolean = storageClient.consistCakeType(name)
 
     fun consistCake(name: String): Boolean = storageClient.consistCake(name)
+
+    fun cakeCount(name: String): Int = storageClient.cakeCount(getCake(name))
+
+    fun getCake(name: String): Cake = storageClient.getCake(name)
 
     fun addOrUpdateCake(name: String, cost: Double) {
         storageClient.addOrUpdateCake(name, cost)
@@ -31,5 +36,19 @@ class Storage(val storageClient: StorageClient) {
 
     fun deleteCakes(name: String, count: Int) {
         changeCakesCount(name, -count)
+    }
+
+    fun addOrder(name: String, count: Int): Order {
+        require(cakeCount(name) >= count) { throw IllegalArgumentException() }
+
+        return Order(storageClient.getNumberOrder(), getCake(name), count, false)
+    }
+
+    fun getOrder(orderId: Int): Order {
+        return storageClient.getOrder(orderId)
+    }
+
+    fun doneOrder(orderId: Int) {
+        storageClient.doneOrder(orderId)
     }
 }
