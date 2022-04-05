@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.company.service.Storage
 import ru.tinkoff.fintech.homework.lesson6.company.service.Store
-import ru.tinkoff.fintech.homework.lesson6.company.service.client.CakeListClient
+import ru.tinkoff.fintech.homework.lesson6.company.service.client.StoreClient
 import ru.tinkoff.fintech.homework.lesson6.company.service.client.StorageClient
 
 @SpringBootTest
@@ -21,17 +21,17 @@ import ru.tinkoff.fintech.homework.lesson6.company.service.client.StorageClient
 class TestCakeStore : FeatureSpec() {
 
     @MockBean
-    private val cakeListClient = mockk<CakeListClient>()
+    private val storeClient = mockk<StoreClient>()
 
     @MockBean
     private val storageClient = mockk<StorageClient>()
 
     private val storage = Storage(storageClient)
-    private val store = Store(cakeListClient, storage)
+    private val store = Store(storeClient)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageClient.getCakesWithAmount() } returns cakeList
-
+        every { storageClient.getCakesList() } returns cakeList
+//        every { storageClient.consistCakeType(any()) } answers { cakeList.get(storage)}
     }
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
@@ -39,16 +39,23 @@ class TestCakeStore : FeatureSpec() {
     }
 
     init {
-        feature("Тест класса Store") {
-            scenario("Тест на вывод листа тортов") {
-                store.getCakesList() shouldBe cakeList.map { it.key }
+        feature("Тест класса Storage") {
+            scenario("Тест на проверку существования товара") {
+                storage.consistCake(firstCake.name) shouldBe true
+                storage.consistCake(secondCake.name) shouldBe true
+                storage.consistCake("morgensternCake") shouldBe false
             }
         }
     }
 
-    val cakeList: Map<Cake, Int> = mutableMapOf(
-        Cake("Наполеон", 323.6) to 1,
-        Cake("Рабыня", 494.0) to 3
+    val cakeList: MutableMap<Cake, Int> = mutableMapOf(
+        firstCake to 1,
+        secondCake to 3
     )
+
+
 }
+
+val firstCake = Cake("napoleon", 623.5)
+val secondCake = Cake("medovik", 300.4)
 

@@ -12,6 +12,7 @@ class StoreController(private val store: Store) {
     fun getCakesList(): Map<Cake, Int> =
         store.getCakesList()
 
+
 //    @GetMapping("/list")
 //    fun getCakeList(): List<Cake> =
 //        confectionery.getCakesList()

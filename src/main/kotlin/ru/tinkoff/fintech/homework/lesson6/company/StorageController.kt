@@ -16,16 +16,19 @@ class StorageController(private val storage: Storage) {
         return storage.consistCake(name)
     }
 
-    @PostMapping("/add-cakes-with-cost")
-    fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) =
+    @GetMapping("/add-cakes-with-cost")
+    fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) {
         storage.addCakes(name, cost, count)
+    }
 
     @GetMapping("/add-cakes")
-    fun addCakes(@RequestParam name: String, @RequestParam count: Int) =
+    fun addCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.changeCakesCount(name, count)
+    }
 
     @GetMapping("/delete-cakes")
-    fun deleteCakes(@RequestParam name: String, @RequestParam count: Int) =
+    fun deleteCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.deleteCakes(name, count)
+    }
 
 }
