@@ -22,7 +22,7 @@ class StorageClient(
     }
 
     fun changeCakesCount(name: String, count: Int) {
-        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException("fuck") }
+        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException("Такого типа торта нет на складе") }
 
         data[cakeCost[name]!!] = count + data[cakeCost[name]!!]!!
     }
