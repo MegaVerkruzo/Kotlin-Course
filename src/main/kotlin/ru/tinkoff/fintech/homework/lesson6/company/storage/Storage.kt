@@ -8,39 +8,30 @@ import java.lang.IllegalArgumentException
 @Service
 class Storage(private val storageClient: StorageClient) {
 
-    fun getCakesList(): Map<Cake, Int> = storageClient.getCakesList()
+    fun getCakesList(): Map<String, Pair<Cake, Int>> = storageClient.getCakesList()
 
-    fun consistCakeType(name: String): Boolean = storageClient.consistCakeType(name)
+    fun consistCakeType(name: String): Boolean = storageClient.consistCakes(name, 0)
 
-    fun consistCake(name: String): Boolean = storageClient.consistCake(name)
+    fun getCake(name: String): Cake = Cake(name, storageClient.getCakeCost(name))
 
-    fun cakeCount(name: String): Int = storageClient.cakeCount(getCake(name))
-
-    fun getCake(name: String): Cake = storageClient.getCake(name)
-
-    fun addOrUpdateCake(name: String, cost: Double) {
-        storageClient.addOrUpdateCake(name, cost)
-    }
-
-    fun changeCakesCount(name: String, count: Int) {
-        require(consistCakeType(name)) { throw IllegalArgumentException("Такого типа торта нет на складе") }
-
-        storageClient.changeCakesCount(name, count)
-    }
+    fun consistCakes(name: String, count: Int) = storageClient.consistCakes(name, count)
 
     fun addCakes(name: String, cost: Double, count: Int) {
-        addOrUpdateCake(name, cost)
-        changeCakesCount(name, count)
+        if (storageClient.consistCakes(name, 0)) {
+            storageClient.changeCakePrice(name, cost)
+            storageClient.addCakesCount(name, count)
+        } else {
+            storageClient.addNewCakeType(name, cost, count)
+        }
     }
 
     fun deleteCakes(name: String, count: Int) {
-        changeCakesCount(name, -count)
+        storageClient.addCakesCount(name, -count)
     }
 
     fun addOrder(name: String, count: Int): Order {
-        require(cakeCount(name) >= count) { throw IllegalArgumentException() }
-
-        return storageClient.addOrder(name, count)
+        val orderId = storageClient.addOrder(getCake(name), count)
+        return getOrder(orderId)
     }
 
     fun getOrder(orderId: Int): Order {
@@ -49,5 +40,11 @@ class Storage(private val storageClient: StorageClient) {
 
     fun doneOrder(orderId: Int) {
         storageClient.doneOrder(orderId)
+        val order = getOrder(orderId)
+        deleteCakes(order.cake.name, order.cakesCount)
+    }
+
+    fun changeCakesCount(name: String, count: Int) {
+        storageClient.addCakesCount(name, count)
     }
 }

@@ -12,62 +12,39 @@ class StorageClient(
     private val restTemplate: RestTemplate,
     @Value("\${storage.list.address}") private val storageListClient: String
 ) {
-    fun getCakesList(): MutableMap<Cake, Int> = data.toMutableMap()
+    fun getCakesList(): MutableMap<String, Pair<Cake, Int>> = data.toMutableMap()
 
-    fun consistCakeType(name: String): Boolean = cakeCost.containsKey(name)
+    fun getCakeCount(name: String): Int = data[name]!!.second
 
-    fun consistCake(name: String): Boolean {
-        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { return false }
+    fun getCakeCost(name: String): Double = data[name]!!.first.cost
 
-        return data[cakeCost[name]]!! > 0
+    fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && data[name]!!.second >= count
+
+    fun addNewCakeType(name: String, cost: Double, count: Int) {
+        data[name] = Pair(Cake(name, cost), count)
     }
 
-    fun changeCakesCount(name: String, count: Int) {
-        require(cakeCost.containsKey(name) && data.containsKey(cakeCost[name])) { throw IllegalArgumentException("Такого типа торта нет на складе") }
-
-        data[cakeCost[name]!!] = count + data[cakeCost[name]!!]!!
+    fun addCakesCount(name: String, count: Int) {
+        data[name] = Pair(data[name]!!.first, data[name]!!.second + count)
     }
 
-    fun addOrUpdateCake(name: String, cost: Double) {
-        var count = 0
-        if (cakeCost.containsKey(name)) {
-            require(data.containsKey(cakeCost[name])) { throw IllegalArgumentException() }
-
-            count = data[cakeCost[name]]!!
-            data.remove(cakeCost[name]!!)
-        }
-        cakeCost.remove(name)
-        cakeCost[name] = Cake(name, cost)
-        data[cakeCost[name]!!] = count
+    fun changeCakePrice(name: String, cost: Double) {
+        data[name] = Pair(Cake(name, cost), data[name]!!.second)
     }
-
-    fun cakeCount(cake: Cake): Int = data[cake]!!
-
-    fun getCake(name: String): Cake = cakeCost[name]!!
 
     fun getNumberOrder(): Int = orders.size
 
-    fun getOrder(orderId: Int): Order {
-        require(orderId < orders.size) { throw IllegalArgumentException() }
-        return  orders[orderId]
-    }
+    fun getOrder(orderId: Int): Order = orders[orderId]
 
     fun doneOrder(orderId: Int) {
-        require(orderId < orders.size) { throw IllegalArgumentException("Заказа не существует")}
-        require(data[orders[orderId].cake]!! > orders[orderId].cakesCount) {
-            throw IllegalArgumentException("Не хватает кол-во тортов на складе")
-        }
-
         orders[orderId].packed = true
-        data[orders[orderId].cake] = data[orders[orderId].cake]!! - orders[orderId].cakesCount
     }
 
-    fun addOrder(name: String, count: Int): Order {
-        orders.add(Order(getNumberOrder(), getCake(name), count, false))
-        return orders[orders.size - 1]
+    fun addOrder(cake: Cake, count: Int): Int {
+        orders.add(Order(getNumberOrder(), cake, count, false))
+        return orders.size - 1
     }
 
-    private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0))
-    private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 432.0) to 20)
+    private val data: MutableMap<String, Pair<Cake, Int>> = mutableMapOf("cesar" to Pair(Cake("cesar", 432.0), 20))
     private val orders: MutableList<Order> = mutableListOf()
 }

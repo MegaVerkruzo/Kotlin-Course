@@ -8,12 +8,11 @@ import ru.tinkoff.fintech.homework.lesson6.company.model.Order
 @RequestMapping("/storage")
 class StorageController(private val storage: Storage) {
     @GetMapping("/list")
-    fun getCakesList(): Map<Cake, Int> =
-        storage.getCakesList()
+    fun getCakesList(): Map<String, Pair<Cake, Int>> = storage.getCakesList()
 
     @GetMapping("/consist-cake")
     fun consistCake(@RequestParam name: String): Boolean {
-        return storage.consistCake(name)
+        return storage.consistCakes(name, 1)
     }
 
     @PostMapping("/add-cakes-with-cost")
