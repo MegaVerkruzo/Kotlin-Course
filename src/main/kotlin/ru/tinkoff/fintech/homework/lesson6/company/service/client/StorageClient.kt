@@ -50,10 +50,21 @@ class StorageClient(
     fun getOrder(orderId: Int): Order = orders[orderId]
 
     fun doneOrder(orderId: Int) {
+        require(!orders[orderId].packed) { throw IllegalArgumentException("Заказ уже был выполнен")}
+        require(data[orders[orderId].cake]!! > orders[orderId].cakesCount) {
+            throw IllegalArgumentException("Не хватает кол-во тортов на складе")
+        }
+
         orders[orderId].packed = true
+        data[orders[orderId].cake] = data[orders[orderId].cake]!! - orders[orderId].cakesCount
+    }
+
+    fun addOrder(name: String, count: Int): Order {
+        orders.add(Order(getNumberOrder(), getCake(name), count, false))
+        return orders[orders.size - 1]
     }
 
     private val cakeCost: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0))
     private val data: MutableMap<Cake, Int> = mutableMapOf(Cake("cesar", 432.0) to 20)
-    private val orders: List<Order> = mutableListOf()
+    private val orders: MutableList<Order> = mutableListOf()
 }

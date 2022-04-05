@@ -41,7 +41,7 @@ class Storage(val storageClient: StorageClient) {
     fun addOrder(name: String, count: Int): Order {
         require(cakeCount(name) >= count) { throw IllegalArgumentException() }
 
-        return Order(storageClient.getNumberOrder(), getCake(name), count, false)
+        return storageClient.addOrder(name, count)
     }
 
     fun getOrder(orderId: Int): Order {

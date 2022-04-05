@@ -10,5 +10,5 @@ class Store(val storeClient: StoreClient) {
     fun getCakesList(): Map<Cake, Int> = storeClient.getCakesList()
 
     fun buyCakes(name: String, count: Int): Order =
-        storeClient.buyCakes(name, count)
+        storeClient.buyCakes(name, count)!!
 }

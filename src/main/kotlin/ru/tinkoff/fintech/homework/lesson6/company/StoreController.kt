@@ -12,7 +12,7 @@ class StoreController(private val store: Store) {
     fun getCakesList(): Map<Cake, Int> =
         store.getCakesList()
 
-    @PostMapping("/buy")
+    @GetMapping("/buy")
     fun buyCakes(@PathVariable name: String, @PathVariable count: Int): Order =
         store.buyCakes(name, count)
 

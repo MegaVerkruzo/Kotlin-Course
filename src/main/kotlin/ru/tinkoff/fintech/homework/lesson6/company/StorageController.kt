@@ -32,7 +32,7 @@ class StorageController(private val storage: Storage) {
         storage.deleteCakes(name, count)
     }
 
-    @PostMapping("/add-order")
+    @GetMapping("/add-order")
     fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
         storage.addOrder(name, count)
 
