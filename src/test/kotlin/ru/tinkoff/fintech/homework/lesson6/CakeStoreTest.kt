@@ -30,8 +30,6 @@ class CakeStoreTest : FeatureSpec() {
     @MockBean
     private val storageClient = mockk<StorageClient>()
 
-    private val slot = slot<Int>()
-
     private val storage = Storage(storageClient)
     private val store = Store(storeClient)
 
@@ -55,14 +53,19 @@ class CakeStoreTest : FeatureSpec() {
             data[firstArg()] = Pair(Cake(firstArg(), secondArg()), storageClient.getCakeCount(firstArg()))
         }
         every { storageClient.getNumberOrder() } returns orders.size
-        every { storageClient.getOrder(slot) } returns orders[slot.captured]
+        every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
         every { storageClient.doneOrder(any()) } answers {
             orders[firstArg()].packed = true
         }
-//        every { storageClient.addOrder(any(), any()) } answers {
-//            orders.add(Order(orders.size, firstArg(), secondArg(), false))
-//
-//        }
+        every { storageClient.addOrder(any(), any()) } answers {
+            orders.add(Order(orders.size, firstArg(), secondArg(), false))
+            orders.size - 1
+        }
+        every { storeClient.getCakesList() } returns data
+        every { storeClient.buyCakes(any(), any()) } answers {
+            orders.add(Order(orders.size, firstArg(), secondArg(), false))
+            orders.last()
+        }
     }
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
@@ -72,52 +75,45 @@ class CakeStoreTest : FeatureSpec() {
     init {
         feature("Тест класса Storage") {
             scenario("Тест на проверку существования товара") {
-                storage.consistCake(firstCake.name) shouldBe true
-                storage.consistCake(secondCake.name) shouldBe true
-                storage.consistCake("morgensternCake") shouldBe false
-                storage.consistCake("smth") shouldBe false
+                storage.consistCakeType(firstCake.name) shouldBe true
+                storage.consistCakeType(secondCake.name) shouldBe true
+                storage.consistCakeType("morgensternCake") shouldBe false
+                storage.consistCakeType("smth") shouldBe false
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                data[firstCake] = 0
+                storage.deleteCakes(
+                    firstCake.name, storage.getCakesCount(firstCake.name)
+                )
 
                 storage.consistCakeType(firstCake.name) shouldBe true
-                storage.consistCake(firstCake.name) shouldBe false
+                storage.consistCakes(firstCake.name, 1) shouldBe false
             }
 
             scenario("Проверка добавления кол-ва определённого вида торта") {
-                val count = data[firstCake]!!
+                val count = storage.getCakesCount(firstCake.name)
 
                 storage.changeCakesCount(firstCake.name, 5)
 
-                data[firstCake] shouldBe 5 + count
+                storage.getCakesCount(firstCake.name) shouldBe 5 + count
             }
 
             scenario("Пример добавления торта") {
                 storage.addCakes(thirdCake.name, thirdCake.cost, 9)
 
-                storage.consistCake(thirdCake.name) shouldBe true
+                storage.consistCakeType(thirdCake.name) shouldBe true
 
-                verify(exactly = 1) { storageClient.changeCakesCount(any(), any()) }
-            }
-        }
-
-        feature("Тест свзяки класса Storage и Store") {
-            scenario("Удачный отвоз тортов из склада в магазин") {
-                store.buyCakes(firstCake.name, 1)
-
-                storage.doneOrder(0)
-
-                orders[0].packed shouldBe true
-            }
-
-            scenario("Не хватает тортов для выполнения заказа") {
-                shouldThrow<IllegalArgumentException> { store.buyCakes(firstCake.name, 654) }
+                verify(exactly = 1) { storageClient.addNewCakeType(any(), any(), any()) }
             }
         }
     }
 
     val orders: MutableList<Order> = mutableListOf()
+
+    val firstCake = Cake("napoleon", 623.5)
+    val secondCake = Cake("medovik", 300.4)
+    val thirdCake = Cake("Shokoladnie", 2405.4)
+
 
     val data: MutableMap<String, Pair<Cake, Int>> = mutableMapOf(
         firstCake.name to Pair(firstCake, 1),
@@ -125,6 +121,3 @@ class CakeStoreTest : FeatureSpec() {
     )
 }
 
-val firstCake = Cake("napoleon", 623.5)
-val secondCake = Cake("medovik", 300.4)
-val thirdCake = Cake("Shokoladnie", 2405.4)

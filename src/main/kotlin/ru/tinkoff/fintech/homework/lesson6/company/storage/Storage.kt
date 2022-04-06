@@ -14,6 +14,8 @@ class Storage(private val storageClient: StorageClient) {
 
     fun consistCakes(name: String, count: Int) = storageClient.consistCakes(name, count)
 
+    fun getCakesCount(name: String) = storageClient.getCakeCount(name)
+
     fun getCake(name: String): Cake {
         if (!consistCakeType(name)) throw NoSuchElementException("Не существует торта с таким названием \"$name\"")
         return Cake(name, storageClient.getCakeCost(name))
@@ -54,6 +56,9 @@ class Storage(private val storageClient: StorageClient) {
 
     fun doneOrder(orderId: Int) {
         val order = getOrder(orderId)
+        if (order.cakesCount > storageClient.getCakeCount(order.cake.name)) {
+            throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
+        }
         storageClient.doneOrder(orderId)
         deleteCakes(order.cake.name, order.cakesCount)
     }
