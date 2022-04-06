@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6.company.model
+package ru.tinkoff.fintech.homework.lesson6.model
 
 data class Order(
     val orderId: Int,

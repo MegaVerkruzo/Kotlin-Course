@@ -1,10 +1,10 @@
-package ru.tinkoff.fintech.homework.lesson6.company.storage
+package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
-import ru.tinkoff.fintech.homework.lesson6.company.model.Order
+import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.lang.IllegalArgumentException
 
 @Service

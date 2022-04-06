@@ -12,12 +12,12 @@ import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import ru.tinkoff.fintech.homework.lesson6.company.model.Cake
-import ru.tinkoff.fintech.homework.lesson6.company.model.Order
-import ru.tinkoff.fintech.homework.lesson6.company.storage.Storage
-import ru.tinkoff.fintech.homework.lesson6.company.store.Store
-import ru.tinkoff.fintech.homework.lesson6.company.storage.StorageClient
-import ru.tinkoff.fintech.homework.lesson6.company.store.StoreClient
+import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.model.Order
+import ru.tinkoff.fintech.homework.lesson6.storage.Storage
+import ru.tinkoff.fintech.homework.lesson6.store.Store
+import ru.tinkoff.fintech.homework.lesson6.storage.StorageClient
+import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
 import java.lang.IllegalArgumentException
 
 @SpringBootTest
