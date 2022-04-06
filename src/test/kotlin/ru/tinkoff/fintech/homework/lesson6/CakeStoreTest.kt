@@ -11,6 +11,7 @@ import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import ru.tinkoff.fintech.homework.lesson6.model.CakeResponse
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.Storage
 import ru.tinkoff.fintech.homework.lesson6.store.Store
@@ -31,9 +32,9 @@ class CakeStoreTest : FeatureSpec() {
     private val store = Store(storeClient)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageClient.getCakesList() } returns data
-        every { storageClient.getCakeCount(any()) } answers { data[firstArg()]!!.second }
-        every { storageClient.getCakeCost(any()) } answers { data[firstArg()]!!.first.cost }
+        every { storageClient.getCakesList() } returns data.map { it.value }
+        every { storageClient.getCakeCount(any()) } answers { data[firstArg()]!!.count }
+        every { storageClient.getCakeCost(any()) } answers { data[firstArg()]!!.cost }
         every {
             storageClient.consistCakes(
                 any(),
@@ -41,13 +42,14 @@ class CakeStoreTest : FeatureSpec() {
             )
         } answers { data.containsKey(firstArg()) && storageClient.getCakeCount(firstArg()) >= secondArg<Int>() }
         every { storageClient.addNewCakeType(any(), any(), any()) } answers {
-            data[firstArg()] = Pair(Cake(firstArg(), secondArg()), thirdArg())
+            data[firstArg()] = CakeResponse(firstArg(), secondArg(), thirdArg())
         }
         every { storageClient.addCakesCount(any(), any()) } answers {
-            data[firstArg()] = Pair(data[firstArg()]!!.first, storageClient.getCakeCount(firstArg()) + secondArg<Int>())
+            data[firstArg()]!!.count += secondArg<Int>()
+            data[firstArg()]!!
         }
         every { storageClient.changeCakePrice(any(), any()) } answers {
-            data[firstArg()] = Pair(Cake(firstArg(), secondArg()), storageClient.getCakeCount(firstArg()))
+            data[firstArg()] = CakeResponse(firstArg(), secondArg(), storageClient.getCakeCount(firstArg()))
         }
         every { storageClient.getNumberOrder() } returns orders.size
         every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
@@ -55,12 +57,14 @@ class CakeStoreTest : FeatureSpec() {
             orders[firstArg()].packed = true
         }
         every { storageClient.addOrder(any(), any()) } answers {
-            orders.add(Order(orders.size, firstArg(), secondArg(), false))
+            firstArg<CakeResponse>().count = secondArg()
+            orders.add(Order(orders.size, firstArg(), false))
             orders.size - 1
         }
-        every { storeClient.getCakesList() } returns data
+        every { storeClient.getCakesList() } returns data.map { it -> it.value }
         every { storeClient.buyCakes(any(), any()) } answers {
-            orders.add(Order(orders.size, firstArg(), secondArg(), false))
+            firstArg<CakeResponse>().count = secondArg()
+            orders.add(Order(orders.size, firstArg(), false))
             orders.last()
         }
     }
@@ -107,14 +111,14 @@ class CakeStoreTest : FeatureSpec() {
 
     val orders: MutableList<Order> = mutableListOf()
 
-    val firstCake = Cake("napoleon", 623.5)
-    val secondCake = Cake("medovik", 300.4)
-    val thirdCake = Cake("Shokoladnie", 2405.4)
+    val firstCake = CakeResponse("napoleon", 623.5, 1)
+    val secondCake = CakeResponse("medovik", 300.4, 3)
+    val thirdCake = CakeResponse("Shokoladnie", 2405.4, 5)
 
 
-    val data: MutableMap<String, Pair<Cake, Int>> = mutableMapOf(
-        firstCake.name to Pair(firstCake, 1),
-        secondCake.name to Pair(secondCake, 3)
+    val data: MutableMap<String, CakeResponse> = mutableMapOf(
+        firstCake.name to firstCake,
+        secondCake.name to secondCake
     )
 }
 
