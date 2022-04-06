@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.*
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.model.CakeResponse
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 
 @Service
@@ -13,8 +13,8 @@ class StoreClient(
     @Value("\${store.list.address}") private val storeListClient: String
 ) {
 
-    fun getCakesList(): Map<String, Pair<Cake, Int>> =
-        restTemplate.exchange<Map<String, Pair<Cake, Int>>>("$storeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
+    fun getCakesList(): List<CakeResponse> =
+        restTemplate.exchange<List<CakeResponse>>("$storeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
 
     fun buyCakes(name: String, count: Int): Order =
         restTemplate.postForObject("$storeListClient$ADD_ORDER", HttpMethod.POST, name, count)

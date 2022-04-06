@@ -1,6 +1,5 @@
 package ru.tinkoff.fintech.homework.lesson6
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
@@ -12,13 +11,11 @@ import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.Storage
 import ru.tinkoff.fintech.homework.lesson6.store.Store
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
-import java.lang.IllegalArgumentException
 
 @SpringBootTest
 @AutoConfigureMockMvc

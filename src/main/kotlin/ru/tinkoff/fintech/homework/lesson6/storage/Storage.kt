@@ -1,14 +1,14 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.stereotype.Service
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.model.CakeResponse
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.lang.IllegalArgumentException
 
 @Service
 class Storage(private val storageClient: StorageClient) {
 
-    fun getCakesList(): Map<String, Pair<Cake, Int>> = storageClient.getCakesList()
+    fun getCakesList(): List<CakeResponse> = storageClient.getCakesList()
 
     fun consistCakeType(name: String): Boolean = storageClient.consistCakes(name, 0)
 
@@ -16,9 +16,10 @@ class Storage(private val storageClient: StorageClient) {
 
     fun getCakesCount(name: String) = storageClient.getCakeCount(name)
 
-    fun getCake(name: String): Cake {
+    fun getCake(name: String): CakeResponse {
         if (!consistCakeType(name)) throw NoSuchElementException("Не существует торта с таким названием \"$name\"")
-        return Cake(name, storageClient.getCakeCost(name))
+
+        return CakeResponse(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
     }
 
     fun addCakes(name: String, cost: Double, count: Int) {
@@ -56,10 +57,10 @@ class Storage(private val storageClient: StorageClient) {
 
     fun doneOrder(orderId: Int) {
         val order = getOrder(orderId)
-        if (order.cakesCount > storageClient.getCakeCount(order.cake.name)) {
+        if (order.cakeResponse.count > storageClient.getCakeCount(order.cakeResponse.name)) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         storageClient.doneOrder(orderId)
-        deleteCakes(order.cake.name, order.cakesCount)
+        deleteCakes(order.cakeResponse.name, order.cakeResponse.count)
     }
 }

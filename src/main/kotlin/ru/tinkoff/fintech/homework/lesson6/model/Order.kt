@@ -2,7 +2,6 @@ package ru.tinkoff.fintech.homework.lesson6.model
 
 data class Order(
     val orderId: Int,
-    val cake: Cake,
-    val cakesCount: Int,
+    val cakeResponse: CakeResponse,
     var packed: Boolean
 )
