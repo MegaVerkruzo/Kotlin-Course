@@ -15,31 +15,18 @@ class StorageController(private val storage: Storage) {
         return storage.consistCakes(name, 1)
     }
 
-    @PostMapping("/add-cakes-with-cost")
+    @PostMapping("/add-cakes-with-new-cost")
     fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) {
         storage.addCakes(name, cost, count)
     }
 
-    @PostMapping("/add-cakes")
+    @PostMapping("/add-cakes-without-cost")
     fun addCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.changeCakesCount(name, count)
     }
 
-    @PostMapping("/delete-cakes")
+    @PostMapping("/remove-cakes")
     fun deleteCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.deleteCakes(name, count)
-    }
-
-    @PostMapping("/add-order")
-    fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
-        storage.addOrder(name, count)
-
-    @GetMapping("/order/{orderId}")
-    fun getOrder(@PathVariable orderId: Int): Order =
-        storage.getOrder(orderId)
-
-    @PostMapping("/order/{orderId}/done")
-    fun doneOrder(@PathVariable orderId: Int) {
-        storage.doneOrder(orderId)
     }
 }

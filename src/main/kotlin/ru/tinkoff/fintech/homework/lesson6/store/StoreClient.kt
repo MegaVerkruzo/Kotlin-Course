@@ -18,7 +18,8 @@ class StoreClient(
 
     fun buyCakes(name: String, count: Int): Order =
         restTemplate.postForObject("$storeListClient$ADD_ORDER", HttpMethod.POST, name, count)
+
 }
 
 private const val GET_CAKE_LIST = "/storage/list"
-private const val ADD_ORDER = "/storage/add-order?name={name}&count={count}"
+private const val ADD_ORDER = "/order/add-order?name={name}&count={count}"

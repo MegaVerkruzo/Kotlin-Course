@@ -16,12 +16,6 @@ class Storage(private val storageClient: StorageClient) {
 
     fun getCakesCount(name: String) = storageClient.getCakeCount(name)
 
-    fun getCake(name: String): CakeResponse {
-        if (!consistCakeType(name)) throw NoSuchElementException("Не существует торта с таким названием \"$name\"")
-
-        return CakeResponse(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
-    }
-
     fun addCakes(name: String, cost: Double, count: Int) {
         if (consistCakeType(name)) {
             storageClient.changeCakePrice(name, cost)
@@ -51,6 +45,12 @@ class Storage(private val storageClient: StorageClient) {
         } catch (e: NoSuchElementException) {
             throw NoSuchElementException("Не удалось добавить заказ с несуществующим тортом \"$name\"")
         }
+    }
+
+    fun getCake(name: String): CakeResponse {
+        if (!consistCakeType(name)) throw NoSuchElementException("Не существует торта с таким названием \"$name\"")
+
+        return CakeResponse(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
     }
 
     fun getOrder(orderId: Int): Order = storageClient.getOrder(orderId)
