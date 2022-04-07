@@ -25,13 +25,6 @@ class Storage(private val storageClient: StorageClient) {
         }
     }
 
-    fun deleteCakes(name: String, count: Int) {
-        if (!consistCakeType(name))
-            throw NoSuchElementException("Нельзя уменьшить кол-во несуществующих тортов с названием \"$name\"")
-
-        storageClient.addCakesCount(name, -count)
-    }
-
     fun changeCakesCount(name: String, count: Int) {
         if (!consistCakeType(name)) throw NoSuchElementException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
 
@@ -61,6 +54,6 @@ class Storage(private val storageClient: StorageClient) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         storageClient.completeOrder(orderId)
-        deleteCakes(order.cake.name, order.cake.count)
+        changeCakesCount(order.cake.name, - order.cake.count)
     }
 }

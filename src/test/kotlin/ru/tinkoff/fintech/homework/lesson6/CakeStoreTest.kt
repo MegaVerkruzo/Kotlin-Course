@@ -82,8 +82,8 @@ class CakeStoreTest : FeatureSpec() {
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                storage.deleteCakes(
-                    firstCake.name, storage.getCakesCount(firstCake.name)
+                storage.changeCakesCount(
+                    firstCake.name, - storage.getCakesCount(firstCake.name)
                 )
 
                 storage.consistCakeType(firstCake.name) shouldBe true

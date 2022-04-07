@@ -14,7 +14,7 @@ class OrderController (private val storage: Storage){
     fun getOrder(@PathVariable orderId: Int): Order =
         storage.getOrder(orderId)
 
-    @PostMapping("/{orderId}/complete")
+    @PatchMapping("/{orderId}/complete")
     fun doneOrder(@PathVariable orderId: Int) {
         storage.completeOrder(orderId)
     }
