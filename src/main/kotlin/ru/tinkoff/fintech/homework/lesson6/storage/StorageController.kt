@@ -1,14 +1,13 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.web.bind.annotation.*
-import ru.tinkoff.fintech.homework.lesson6.model.CakeResponse
-import ru.tinkoff.fintech.homework.lesson6.model.Order
+import ru.tinkoff.fintech.homework.lesson6.model.Cake
 
 @RestController
 @RequestMapping("/storage")
 class StorageController(private val storage: Storage) {
     @GetMapping("/list")
-    fun getCakesList(): List<CakeResponse> = storage.getCakesList()
+    fun getCakesList(): List<Cake> = storage.getCakesList()
 
     @GetMapping("/consist-cake")
     fun consistCake(@RequestParam name: String): Boolean {
