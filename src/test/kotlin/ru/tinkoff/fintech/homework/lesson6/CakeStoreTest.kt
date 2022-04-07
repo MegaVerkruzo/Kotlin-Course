@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.Storage
-import ru.tinkoff.fintech.homework.lesson6.store.Store
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
 
@@ -29,7 +28,6 @@ class CakeStoreTest : FeatureSpec() {
     private val storageClient = mockk<StorageClient>()
 
     private val storage = Storage(storageClient)
-    private val store = Store(storeClient)
 
     override fun beforeEach(testCase: TestCase) {
         every { storageClient.getCakesList() } returns data.map { it.value }

@@ -6,12 +6,12 @@ import ru.tinkoff.fintech.homework.lesson6.model.Order
 
 @RestController
 @RequestMapping("/store/cake")
-class StoreController(private val store: Store) {
+class StoreController(private val storeClient: StoreClient) {
     @GetMapping("/list")
     fun getCakesList(): List<Cake> =
-        store.getCakesList()
+        storeClient.getCakesList()
 
     @PostMapping("/buy")
     fun buyCakes(@RequestParam name: String, @RequestParam count: Int): Order =
-        store.buyCakes(name, count)
+        storeClient.buyCakes(name, count)
 }
