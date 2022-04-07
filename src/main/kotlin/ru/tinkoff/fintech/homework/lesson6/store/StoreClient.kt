@@ -22,4 +22,4 @@ class StoreClient(
 }
 
 private const val GET_CAKE_LIST = "/storage/list"
-private const val ADD_ORDER = "/order/add-order?name={name}&count={count}"
+private const val ADD_ORDER = "/order/add?name={name}&count={count}"
