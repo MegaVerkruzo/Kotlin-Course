@@ -11,6 +11,9 @@ class StorageClient(
     private val restTemplate: RestTemplate,
     @Value("\${storage.list.address}") private val storageListClient: String
 ) {
+    private val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
+    private val orders: MutableList<Order> = mutableListOf()
+
     fun getCakesList(): List<Cake> = data.map { it.value }
 
     fun getCakeCount(name: String): Int = data[name]!!.count
@@ -52,7 +55,4 @@ class StorageClient(
         orders.add(Order(getNumberOrder(), Cake(cake.name, cake.cost, count), false))
         return orders.size - 1
     }
-
-    private val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
-    private val orders: MutableList<Order> = mutableListOf()
 }

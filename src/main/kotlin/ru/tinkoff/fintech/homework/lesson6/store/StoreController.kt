@@ -5,7 +5,7 @@ import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 
 @RestController
-@RequestMapping("/store")
+@RequestMapping("/store/cake")
 class StoreController(private val store: Store) {
     @GetMapping("/list")
     fun getCakesList(): List<Cake> =

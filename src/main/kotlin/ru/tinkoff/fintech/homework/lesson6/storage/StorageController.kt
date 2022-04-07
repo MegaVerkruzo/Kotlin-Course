@@ -4,27 +4,27 @@ import org.springframework.web.bind.annotation.*
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 
 @RestController
-@RequestMapping("/storage")
+@RequestMapping("/storage/cake")
 class StorageController(private val storage: Storage) {
     @GetMapping("/list")
     fun getCakesList(): List<Cake> = storage.getCakesList()
 
-    @GetMapping("/consist-cake")
+    @GetMapping("/consist")
     fun consistCake(@RequestParam name: String): Boolean {
         return storage.consistCakes(name, 1)
     }
 
-    @PostMapping("/add-cakes-with-new-cost")
+    @PostMapping("/add-with-new-cost")
     fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) {
         storage.addCakes(name, cost, count)
     }
 
-    @PostMapping("/add-cakes-without-cost")
+    @PostMapping("/add-without-cost")
     fun addCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.changeCakesCount(name, count)
     }
 
-    @PostMapping("/remove-cakes")
+    @PostMapping("/remove")
     fun deleteCakes(@RequestParam name: String, @RequestParam count: Int) {
         storage.deleteCakes(name, count)
     }
