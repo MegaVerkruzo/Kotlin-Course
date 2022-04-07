@@ -24,11 +24,13 @@ class StorageClient(
     }
 
     fun addCakesCount(name: String, count: Int) {
-        data[name]!!.count += count
+        val initialValue = data[name]!!
+        data[name] = Cake(initialValue.name, initialValue.cost, initialValue.count + count)
     }
 
     fun changeCakePrice(name: String, cost: Double) {
-        data[name]!!.cost = cost
+        val initialValue = data[name]!!
+        data[name] = Cake(initialValue.name, cost, initialValue.count)
     }
 
     fun getNumberOrder(): Int = orders.size
@@ -42,12 +44,12 @@ class StorageClient(
     }
 
     fun doneOrder(orderId: Int) {
-        orders[orderId].packed = true
+        val initialValue = orders[orderId]
+        orders[orderId] = Order(initialValue.orderId, initialValue.cake, true)
     }
 
     fun addOrder(cake: Cake, count: Int): Int {
-        cake.count = count
-        orders.add(Order(getNumberOrder(), cake, false))
+        orders.add(Order(getNumberOrder(), Cake(cake.name, cake.cost, count), false))
         return orders.size - 1
     }
 

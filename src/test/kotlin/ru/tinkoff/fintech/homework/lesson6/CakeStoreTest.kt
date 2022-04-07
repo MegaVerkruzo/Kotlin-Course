@@ -45,8 +45,8 @@ class CakeStoreTest : FeatureSpec() {
             data[firstArg()] = Cake(firstArg(), secondArg(), thirdArg())
         }
         every { storageClient.addCakesCount(any(), any()) } answers {
-            data[firstArg()]!!.count += secondArg<Int>()
-            data[firstArg()]!!
+            val initialValue = data[firstArg()]!!
+            data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
         }
         every { storageClient.changeCakePrice(any(), any()) } answers {
             data[firstArg()] = Cake(firstArg(), secondArg(), storageClient.getCakeCount(firstArg()))
@@ -54,17 +54,16 @@ class CakeStoreTest : FeatureSpec() {
         every { storageClient.getNumberOrder() } returns orders.size
         every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
         every { storageClient.doneOrder(any()) } answers {
-            orders[firstArg()].packed = true
+            val initialValue = orders[firstArg()]
+            orders[firstArg()] = Order(initialValue.orderId, initialValue.cake, true)
         }
         every { storageClient.addOrder(any(), any()) } answers {
-            firstArg<Cake>().count = secondArg()
-            orders.add(Order(orders.size, firstArg(), false))
+            orders.add(Order(orders.size, Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
             orders.size - 1
         }
         every { storeClient.getCakesList() } returns data.map { it -> it.value }
         every { storeClient.buyCakes(any(), any()) } answers {
-            firstArg<Cake>().count = secondArg()
-            orders.add(Order(orders.size, firstArg(), false))
+            orders.add(Order(orders.size, Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
             orders.last()
         }
     }
