@@ -53,7 +53,7 @@ class CakeStoreTest : FeatureSpec() {
         }
         every { storageClient.getNumberOrder() } returns orders.size
         every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
-        every { storageClient.doneOrder(any()) } answers {
+        every { storageClient.completeOrder(any()) } answers {
             val initialValue = orders[firstArg()]
             orders[firstArg()] = Order(initialValue.orderId, initialValue.cake, true)
         }

@@ -43,7 +43,7 @@ class StorageClient(
         }
     }
 
-    fun doneOrder(orderId: Int) {
+    fun completeOrder(orderId: Int) {
         val initialValue = orders[orderId]
         orders[orderId] = Order(initialValue.orderId, initialValue.cake, true)
     }

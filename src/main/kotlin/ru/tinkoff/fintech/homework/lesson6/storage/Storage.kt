@@ -55,12 +55,12 @@ class Storage(private val storageClient: StorageClient) {
 
     fun getOrder(orderId: Int): Order = storageClient.getOrder(orderId)
 
-    fun doneOrder(orderId: Int) {
+    fun completeOrder(orderId: Int) {
         val order = getOrder(orderId)
         if (order.cake.count > storageClient.getCakeCount(order.cake.name)) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
-        storageClient.doneOrder(orderId)
+        storageClient.completeOrder(orderId)
         deleteCakes(order.cake.name, order.cake.count)
     }
 }
