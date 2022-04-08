@@ -5,17 +5,17 @@ import ru.tinkoff.fintech.homework.lesson6.model.Order
 
 @RestController
 @RequestMapping("/order")
-class OrderController (private val storage: Storage){
+class OrderController (private val storageService: StorageService){
     @PostMapping("/add")
     fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
-        storage.addOrder(name, count)
+        storageService.addOrder(name, count)
 
     @GetMapping("/{orderId}")
     fun getOrder(@PathVariable orderId: Int): Order =
-        storage.getOrder(orderId)
+        storageService.getOrder(orderId)
 
     @PostMapping("/{orderId}/complete")
     fun completeOrder(@PathVariable orderId: Int) {
-        storage.completeOrder(orderId)
+        storageService.completeOrder(orderId)
     }
 }

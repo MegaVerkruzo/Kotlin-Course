@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
-import ru.tinkoff.fintech.homework.lesson6.storage.Storage
+import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
 
@@ -27,7 +27,7 @@ class CakeStoreTest : FeatureSpec() {
     @MockBean
     private val storageClient = mockk<StorageClient>()
 
-    private val storage = Storage(storageClient)
+    private val storageService = StorageService(storageClient)
 
     override fun beforeEach(testCase: TestCase) {
         every { storageClient.getCakesList() } returns data.map { it.value }
@@ -73,33 +73,33 @@ class CakeStoreTest : FeatureSpec() {
     init {
         feature("Тест класса Storage") {
             scenario("Тест на проверку существования товара") {
-                storage.consistCakeType(firstCake.name) shouldBe true
-                storage.consistCakeType(secondCake.name) shouldBe true
-                storage.consistCakeType("morgensternCake") shouldBe false
-                storage.consistCakeType("smth") shouldBe false
+                storageService.consistCakeType(firstCake.name) shouldBe true
+                storageService.consistCakeType(secondCake.name) shouldBe true
+                storageService.consistCakeType("morgensternCake") shouldBe false
+                storageService.consistCakeType("smth") shouldBe false
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                storage.changeCakesCount(
-                    firstCake.name, - storage.getCakesCount(firstCake.name)
+                storageService.changeCakesCount(
+                    firstCake.name, - storageService.getCakesCount(firstCake.name)
                 )
 
-                storage.consistCakeType(firstCake.name) shouldBe true
-                storage.consistCakes(firstCake.name, 1) shouldBe false
+                storageService.consistCakeType(firstCake.name) shouldBe true
+                storageService.consistCakes(firstCake.name, 1) shouldBe false
             }
 
             scenario("Проверка добавления кол-ва определённого вида торта") {
-                val count = storage.getCakesCount(firstCake.name)
+                val count = storageService.getCakesCount(firstCake.name)
 
-                storage.changeCakesCount(firstCake.name, 5)
+                storageService.changeCakesCount(firstCake.name, 5)
 
-                storage.getCakesCount(firstCake.name) shouldBe 5 + count
+                storageService.getCakesCount(firstCake.name) shouldBe 5 + count
             }
 
             scenario("Пример добавления торта") {
-                storage.addCakes(thirdCake.name, thirdCake.cost, 9)
+                storageService.addCakes(thirdCake.name, thirdCake.cost, 9)
 
-                storage.consistCakeType(thirdCake.name) shouldBe true
+                storageService.consistCakeType(thirdCake.name) shouldBe true
 
                 verify(exactly = 1) { storageClient.addNewCakeType(any(), any(), any()) }
             }
