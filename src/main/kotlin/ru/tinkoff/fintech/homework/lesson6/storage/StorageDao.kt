@@ -1,13 +1,15 @@
-package ru.tinkoff.fintech.homework.lesson6.store
+package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
+import ru.tinkoff.fintech.homework.lesson6.store.data
+import ru.tinkoff.fintech.homework.lesson6.store.orders
 import java.lang.IllegalArgumentException
 
 @Service
-class StorageClient {
-    fun getCakesList(): List<Cake> = data.map { it.value }
+class StorageDao {
+    fun getCakes(): MutableCollection<Cake> = data.values
 
     fun getCakeCount(name: String): Int = data[name]!!.count
 

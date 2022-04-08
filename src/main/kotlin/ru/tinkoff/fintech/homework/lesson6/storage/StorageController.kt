@@ -7,7 +7,7 @@ import ru.tinkoff.fintech.homework.lesson6.model.Cake
 @RequestMapping("/storage/cake")
 class StorageController(private val storageService: StorageService) {
     @GetMapping
-    fun getCakesList(): List<Cake> = storageService.getCakesList()
+    fun getCakes(): MutableCollection<Cake> = storageService.getCakes()
 
     @PutMapping
     fun addCakes(@RequestBody cake: Cake) {

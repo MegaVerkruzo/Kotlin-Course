@@ -3,46 +3,45 @@ package ru.tinkoff.fintech.homework.lesson6.storage
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
-import ru.tinkoff.fintech.homework.lesson6.store.StorageClient
 import java.lang.IllegalArgumentException
 
 @Service
-class StorageService(private val storageClient: StorageClient) {
+class StorageService(private val storageDao: StorageDao) {
 
-    fun getCakesList(): List<Cake> = storageClient.getCakesList()
+    fun getCakes(): MutableCollection<Cake> = storageDao.getCakes()
 
-    fun consistCakeType(name: String): Boolean = storageClient.consistCakes(name, 0)
+    fun consistCakeType(name: String): Boolean = storageDao.consistCakes(name, 0)
 
-    fun consistCakes(name: String, count: Int): Boolean = storageClient.consistCakes(name, count)
+    fun consistCakes(name: String, count: Int): Boolean = storageDao.consistCakes(name, count)
 
-    fun getCakesCount(name: String): Int = storageClient.getCakeCount(name)
+    fun getCakesCount(name: String): Int = storageDao.getCakeCount(name)
 
     fun addCakes(cake: Cake) {
         if (consistCakeType(cake.name)) {
-            storageClient.updateCakesPrice(cake.name, cake.cost)
-            storageClient.updateCakesCount(cake.name, cake.count)
+            storageDao.updateCakesPrice(cake.name, cake.cost)
+            storageDao.updateCakesCount(cake.name, cake.count)
         } else {
-            storageClient.addNewCakeType(cake)
+            storageDao.addNewCakeType(cake)
         }
     }
 
     fun updateCakeParams(name: String, cost: Double?, count: Int?) {
         if (!consistCakeType(name)) {
             require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
-            storageClient.addNewCakeType(Cake(name, cost, count))
+            storageDao.addNewCakeType(Cake(name, cost, count))
         } else {
             if (cost != null) {
-                storageClient.updateCakesPrice(name, cost)
+                storageDao.updateCakesPrice(name, cost)
             }
             if (count != null) {
-                storageClient.updateCakesCount(name, count)
+                storageDao.updateCakesCount(name, count)
             }
         }
     }
 
     fun addOrder(name: String, count: Int): Order {
         try {
-            val orderId = storageClient.addOrder(getCake(name), count)
+            val orderId = storageDao.addOrder(getCake(name), count)
             return getOrder(orderId)
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Не удалось добавить заказ с несуществующим тортом \"$name\"")
@@ -52,17 +51,17 @@ class StorageService(private val storageClient: StorageClient) {
     fun getCake(name: String): Cake {
         if (!consistCakeType(name)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
 
-        return Cake(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
+        return Cake(name, storageDao.getCakeCost(name), storageDao.getCakeCount(name))
     }
 
-    fun getOrder(orderId: Int): Order = storageClient.getOrder(orderId)
+    fun getOrder(orderId: Int): Order = storageDao.getOrder(orderId)
 
     fun completeOrder(orderId: Int) {
         val order = getOrder(orderId)
-        if (order.cake.count > storageClient.getCakeCount(order.cake.name)) {
+        if (order.cake.count > storageDao.getCakeCount(order.cake.name)) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
-        storageClient.completeOrder(orderId)
+        storageDao.completeOrder(orderId)
         updateCakeParams(order.cake.name, null, -order.cake.count)
     }
 }

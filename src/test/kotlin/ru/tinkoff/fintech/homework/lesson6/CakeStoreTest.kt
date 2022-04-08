@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
-import ru.tinkoff.fintech.homework.lesson6.store.StorageClient
+import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
 
 @SpringBootTest
@@ -25,35 +25,35 @@ class CakeStoreTest : FeatureSpec() {
     private val storeClient = mockk<StoreClient>()
 
     @MockBean
-    private val storageClient = mockk<StorageClient>()
+    private val storageDao = mockk<StorageDao>()
 
-    private val storageService = StorageService(storageClient)
+    private val storageService = StorageService(storageDao)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageClient.getCakesList() } returns data.map { it.value }
-        every { storageClient.getCakeCount(any()) } answers { data[firstArg()]!!.count }
-        every { storageClient.getCakeCost(any()) } answers { data[firstArg()]!!.cost }
+        every { storageDao.getCakes() } returns data.values
+        every { storageDao.getCakeCount(any()) } answers { data[firstArg()]!!.count }
+        every { storageDao.getCakeCost(any()) } answers { data[firstArg()]!!.cost }
         every {
-            storageClient.consistCakes(
+            storageDao.consistCakes(
                 any(),
                 any()
             )
-        } answers { data.containsKey(firstArg()) && storageClient.getCakeCount(firstArg()) >= secondArg<Int>() }
-        every { storageClient.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
-        every { storageClient.updateCakesCount(any(), any()) } answers {
+        } answers { data.containsKey(firstArg()) && storageDao.getCakeCount(firstArg()) >= secondArg<Int>() }
+        every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
+        every { storageDao.updateCakesCount(any(), any()) } answers {
             val initialValue = data[firstArg()]!!
             data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
         }
-        every { storageClient.updateCakesPrice(any(), any()) } answers {
-            data[firstArg()] = Cake(firstArg(), secondArg(), storageClient.getCakeCount(firstArg()))
+        every { storageDao.updateCakesPrice(any(), any()) } answers {
+            data[firstArg()] = Cake(firstArg(), secondArg(), storageDao.getCakeCount(firstArg()))
         }
-        every { storageClient.getNumberOrder() } returns orders.size
-        every { storageClient.getOrder(any()) } answers { orders[firstArg()] }
-        every { storageClient.completeOrder(any()) } answers {
+        every { storageDao.getNumberOrder() } returns orders.size
+        every { storageDao.getOrder(any()) } answers { orders[firstArg()] }
+        every { storageDao.completeOrder(any()) } answers {
             val initialValue = orders[firstArg()]
             orders[firstArg()] = Order(initialValue.orderId, initialValue.cake, true)
         }
-        every { storageClient.addOrder(any(), any()) } answers {
+        every { storageDao.addOrder(any(), any()) } answers {
             orders.add(Order(orders.size, Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
             orders.size - 1
         }
@@ -99,7 +99,7 @@ class CakeStoreTest : FeatureSpec() {
 
                 storageService.consistCakeType(thirdCake.name) shouldBe true
 
-                verify(exactly = 1) { storageClient.addNewCakeType(any()) }
+                verify(exactly = 1) { storageDao.addNewCakeType(any()) }
             }
         }
     }
