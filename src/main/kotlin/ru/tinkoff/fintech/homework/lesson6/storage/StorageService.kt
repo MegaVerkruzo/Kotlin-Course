@@ -14,7 +14,7 @@ class StorageService(private val storageDao: StorageDao) {
 
     fun consistCakes(name: String, count: Int): Boolean = storageDao.consistCakes(name, count)
 
-    fun getCakesCount(name: String): Int = storageDao.getCakeCount(name)
+    fun getCakesCount(name: String): Int = storageDao.getCake(name).count
 
     fun addCakes(cake: Cake) {
         if (consistCakeType(cake.name)) {
@@ -51,14 +51,14 @@ class StorageService(private val storageDao: StorageDao) {
     fun getCake(name: String): Cake {
         if (!consistCakeType(name)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
 
-        return Cake(name, storageDao.getCakeCost(name), storageDao.getCakeCount(name))
+        return Cake(name, storageDao.getCake(name).cost, storageDao.getCake(name).count)
     }
 
     fun getOrder(orderId: Int): Order = storageDao.getOrder(orderId)
 
     fun completeOrder(orderId: Int) {
         val order = getOrder(orderId)
-        if (order.cake.count > storageDao.getCakeCount(order.cake.name)) {
+        if (order.cake.count > storageDao.getCake(order.cake.name).count) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         storageDao.completeOrder(orderId)

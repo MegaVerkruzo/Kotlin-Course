@@ -11,11 +11,9 @@ import java.lang.IllegalArgumentException
 class StorageDao {
     fun getCakes(): MutableCollection<Cake> = data.values
 
-    fun getCakeCount(name: String): Int = data[name]!!.count
+    fun getCake(name: String): Cake = data[name]!!
 
-    fun getCakeCost(name: String): Double = data[name]!!.cost
-
-    fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && getCakeCount(name) >= count
+    fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && getCake(name).count >= count
 
     fun addNewCakeType(cake: Cake) {
         data[cake.name] = cake

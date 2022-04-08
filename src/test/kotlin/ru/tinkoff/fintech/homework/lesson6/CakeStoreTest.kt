@@ -31,21 +31,20 @@ class CakeStoreTest : FeatureSpec() {
 
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakes() } returns data.values
-        every { storageDao.getCakeCount(any()) } answers { data[firstArg()]!!.count }
-        every { storageDao.getCakeCost(any()) } answers { data[firstArg()]!!.cost }
+        every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
         every {
             storageDao.consistCakes(
                 any(),
                 any()
             )
-        } answers { data.containsKey(firstArg()) && storageDao.getCakeCount(firstArg()) >= secondArg<Int>() }
+        } answers { data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>() }
         every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
         every { storageDao.updateCakesCount(any(), any()) } answers {
             val initialValue = data[firstArg()]!!
             data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
         }
         every { storageDao.updateCakesPrice(any(), any()) } answers {
-            data[firstArg()] = Cake(firstArg(), secondArg(), storageDao.getCakeCount(firstArg()))
+            data[firstArg()] = Cake(firstArg(), secondArg(), storageDao.getCake(firstArg()).count)
         }
         every { storageDao.getNumberOrder() } returns orders.size
         every { storageDao.getOrder(any()) } answers { orders[firstArg()] }
