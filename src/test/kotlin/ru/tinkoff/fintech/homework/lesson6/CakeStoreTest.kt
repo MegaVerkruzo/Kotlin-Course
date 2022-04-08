@@ -39,14 +39,12 @@ class CakeStoreTest : FeatureSpec() {
                 any()
             )
         } answers { data.containsKey(firstArg()) && storageClient.getCakeCount(firstArg()) >= secondArg<Int>() }
-        every { storageClient.addNewCakeType(any(), any(), any()) } answers {
-            data[firstArg()] = Cake(firstArg(), secondArg(), thirdArg())
-        }
+        every { storageClient.addNewCakeType(any()) } answers { data[firstArg()] = firstArg() }
         every { storageClient.updateCakesCount(any(), any()) } answers {
             val initialValue = data[firstArg()]!!
             data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
         }
-        every { storageClient.changeCakePrice(any(), any()) } answers {
+        every { storageClient.updateCakesPrice(any(), any()) } answers {
             data[firstArg()] = Cake(firstArg(), secondArg(), storageClient.getCakeCount(firstArg()))
         }
         every { storageClient.getNumberOrder() } returns orders.size
@@ -80,8 +78,8 @@ class CakeStoreTest : FeatureSpec() {
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                storageService.updateCakesCount(
-                    firstCake.name, - storageService.getCakesCount(firstCake.name)
+                storageService.updateCakeParams(
+                    firstCake.name, null, -storageService.getCakesCount(firstCake.name)
                 )
 
                 storageService.consistCakeType(firstCake.name) shouldBe true
@@ -91,17 +89,17 @@ class CakeStoreTest : FeatureSpec() {
             scenario("Проверка добавления кол-ва определённого вида торта") {
                 val count = storageService.getCakesCount(firstCake.name)
 
-                storageService.updateCakesCount(firstCake.name, 5)
+                storageService.updateCakeParams(firstCake.name, null, 5)
 
                 storageService.getCakesCount(firstCake.name) shouldBe 5 + count
             }
 
             scenario("Пример добавления торта") {
-                storageService.addCakes(thirdCake.name, thirdCake.cost, 9)
+                storageService.updateCakeParams(thirdCake.name, thirdCake.cost, 9)
 
                 storageService.consistCakeType(thirdCake.name) shouldBe true
 
-                verify(exactly = 1) { storageClient.addNewCakeType(any(), any(), any()) }
+                verify(exactly = 1) { storageClient.addNewCakeType(any()) }
             }
         }
     }

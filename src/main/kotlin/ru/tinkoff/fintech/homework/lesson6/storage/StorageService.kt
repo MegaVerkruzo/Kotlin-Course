@@ -19,17 +19,25 @@ class StorageService(private val storageClient: StorageClient) {
 
     fun addCakes(cake: Cake) {
         if (consistCakeType(cake.name)) {
-            storageClient.changeCakePrice(cake.name, cake.cost)
+            storageClient.updateCakesPrice(cake.name, cake.cost)
             storageClient.updateCakesCount(cake.name, cake.count)
         } else {
             storageClient.addNewCakeType(cake)
         }
     }
 
-    fun updateCakesCount(name: String, count: Int) {
-        if (!consistCakeType(name)) throw IllegalArgumentException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
-
-        storageClient.updateCakesCount(name, count)
+    fun updateCakeParams(name: String, cost: Double?, count: Int?) {
+        if (!consistCakeType(name)) {
+            require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
+            storageClient.addNewCakeType(Cake(name, cost, count))
+        } else {
+            if (cost != null) {
+                storageClient.updateCakesPrice(name, cost)
+            }
+            if (count != null) {
+                storageClient.updateCakesCount(name, count)
+            }
+        }
     }
 
     fun addOrder(name: String, count: Int): Order {
@@ -55,6 +63,6 @@ class StorageService(private val storageClient: StorageClient) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         storageClient.completeOrder(orderId)
-        updateCakesCount(order.cake.name, - order.cake.count)
+        updateCakeParams(order.cake.name, null, -order.cake.count)
     }
 }

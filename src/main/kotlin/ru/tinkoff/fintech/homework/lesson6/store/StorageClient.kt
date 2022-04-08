@@ -24,7 +24,7 @@ class StorageClient {
         data[name] = Cake(initialValue.name, initialValue.cost, initialValue.count + count)
     }
 
-    fun changeCakePrice(name: String, cost: Double) {
+    fun updateCakesPrice(name: String, cost: Double) {
         val initialValue = data[name]!!
         data[name] = Cake(initialValue.name, cost, initialValue.count)
     }
