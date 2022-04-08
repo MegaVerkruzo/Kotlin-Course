@@ -9,12 +9,7 @@ class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
     fun getCakesList(): List<Cake> = storageService.getCakesList()
 
-    @GetMapping("/consist")
-    fun consistCake(@RequestParam name: String): Boolean {
-        return storageService.consistCakes(name, 1)
-    }
-
-    @PutMapping("/change-count-with-new-cost")
+    @PostMapping("/change-count-with-new-cost")
     fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) {
         storageService.addCakes(name, cost, count)
     }
