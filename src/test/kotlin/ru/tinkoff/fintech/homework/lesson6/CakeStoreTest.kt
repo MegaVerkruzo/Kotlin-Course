@@ -39,7 +39,7 @@ class CakeStoreTest : FeatureSpec() {
                 any()
             )
         } answers { data.containsKey(firstArg()) && storageClient.getCakeCount(firstArg()) >= secondArg<Int>() }
-        every { storageClient.addNewCakeType(any()) } answers { data[firstArg()] = firstArg() }
+        every { storageClient.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
         every { storageClient.updateCakesCount(any(), any()) } answers {
             val initialValue = data[firstArg()]!!
             data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
@@ -95,7 +95,7 @@ class CakeStoreTest : FeatureSpec() {
             }
 
             scenario("Пример добавления торта") {
-                storageService.updateCakeParams(thirdCake.name, thirdCake.cost, 9)
+                storageService.updateCakeParams(thirdCake.name, thirdCake.cost, thirdCake.count)
 
                 storageService.consistCakeType(thirdCake.name) shouldBe true
 
