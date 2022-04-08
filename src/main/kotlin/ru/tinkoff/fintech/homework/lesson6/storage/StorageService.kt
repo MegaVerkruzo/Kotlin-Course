@@ -10,12 +10,14 @@ class StorageService(private val storageClient: StorageClient) {
 
     fun getCakesList(): List<Cake> = storageClient.getCakesList()
 
-    fun consistCakes(name: String, count: Int) = storageClient.consistCakes(name, count)
+    fun consistCakeType(name: String): Boolean = storageClient.consistCakes(name, 0)
 
-    fun getCakesCount(name: String) = storageClient.getCakeCount(name)
+    fun consistCakes(name: String, count: Int): Boolean = storageClient.consistCakes(name, count)
+
+    fun getCakesCount(name: String): Int = storageClient.getCakeCount(name)
 
     fun addCakes(name: String, cost: Double, count: Int) {
-        if (consistCakes(name, 0)) {
+        if (consistCakeType(name)) {
             storageClient.changeCakePrice(name, cost)
             storageClient.addCakesCount(name, count)
         } else {
@@ -24,7 +26,7 @@ class StorageService(private val storageClient: StorageClient) {
     }
 
     fun changeCakesCount(name: String, count: Int) {
-        if (!consistCakes(name, 0)) throw IllegalArgumentException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
+        if (!consistCakeType(name)) throw IllegalArgumentException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
 
         storageClient.addCakesCount(name, count)
     }
@@ -39,7 +41,7 @@ class StorageService(private val storageClient: StorageClient) {
     }
 
     fun getCake(name: String): Cake {
-        if (!consistCakes(name, 0)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
+        if (!consistCakeType(name)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
 
         return Cake(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
     }
