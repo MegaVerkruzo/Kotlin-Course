@@ -17,12 +17,12 @@ class StorageService(private val storageClient: StorageClient) {
 
     fun getCakesCount(name: String): Int = storageClient.getCakeCount(name)
 
-    fun addCakes(name: String, cost: Double, count: Int) {
-        if (consistCakeType(name)) {
-            storageClient.changeCakePrice(name, cost)
-            storageClient.updateCakesCount(name, count)
+    fun addCakes(cake: Cake) {
+        if (consistCakeType(cake.name)) {
+            storageClient.changeCakePrice(cake.name, cake.cost)
+            storageClient.updateCakesCount(cake.name, cake.count)
         } else {
-            storageClient.addNewCakeType(name, cost, count)
+            storageClient.addNewCakeType(cake)
         }
     }
 

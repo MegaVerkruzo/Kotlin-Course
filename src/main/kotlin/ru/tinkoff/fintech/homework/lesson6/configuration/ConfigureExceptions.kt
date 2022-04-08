@@ -18,8 +18,8 @@ class ConfigureExceptions {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleIllegalArgumentException(e: Exception): Map<String, String> {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleAnyException(e: Exception): Map<String, String> {
         log.warn(e.message, e)
         return errorResponse(e)
     }

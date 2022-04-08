@@ -15,8 +15,8 @@ class StorageClient {
 
     fun consistCakes(name: String, count: Int): Boolean = data.containsKey(name) && getCakeCount(name) >= count
 
-    fun addNewCakeType(name: String, cost: Double, count: Int) {
-        data[name] = Cake(name, cost, count)
+    fun addNewCakeType(cake: Cake) {
+        data[cake.name] = cake
     }
 
     fun updateCakesCount(name: String, count: Int) {
