@@ -20,16 +20,16 @@ class StorageService(private val storageClient: StorageClient) {
     fun addCakes(name: String, cost: Double, count: Int) {
         if (consistCakeType(name)) {
             storageClient.changeCakePrice(name, cost)
-            storageClient.addCakesCount(name, count)
+            storageClient.updateCakesCount(name, count)
         } else {
             storageClient.addNewCakeType(name, cost, count)
         }
     }
 
-    fun changeCakesCount(name: String, count: Int) {
+    fun updateCakesCount(name: String, count: Int) {
         if (!consistCakeType(name)) throw IllegalArgumentException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
 
-        storageClient.addCakesCount(name, count)
+        storageClient.updateCakesCount(name, count)
     }
 
     fun addOrder(name: String, count: Int): Order {
@@ -55,6 +55,6 @@ class StorageService(private val storageClient: StorageClient) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         storageClient.completeOrder(orderId)
-        changeCakesCount(order.cake.name, - order.cake.count)
+        updateCakesCount(order.cake.name, - order.cake.count)
     }
 }

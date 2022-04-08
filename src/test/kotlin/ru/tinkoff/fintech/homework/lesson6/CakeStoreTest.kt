@@ -42,7 +42,7 @@ class CakeStoreTest : FeatureSpec() {
         every { storageClient.addNewCakeType(any(), any(), any()) } answers {
             data[firstArg()] = Cake(firstArg(), secondArg(), thirdArg())
         }
-        every { storageClient.addCakesCount(any(), any()) } answers {
+        every { storageClient.updateCakesCount(any(), any()) } answers {
             val initialValue = data[firstArg()]!!
             data[firstArg()] = Cake(initialValue.name, initialValue.cost, initialValue.count + secondArg<Int>())
         }
@@ -80,7 +80,7 @@ class CakeStoreTest : FeatureSpec() {
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                storageService.changeCakesCount(
+                storageService.updateCakesCount(
                     firstCake.name, - storageService.getCakesCount(firstCake.name)
                 )
 
@@ -91,7 +91,7 @@ class CakeStoreTest : FeatureSpec() {
             scenario("Проверка добавления кол-ва определённого вида торта") {
                 val count = storageService.getCakesCount(firstCake.name)
 
-                storageService.changeCakesCount(firstCake.name, 5)
+                storageService.updateCakesCount(firstCake.name, 5)
 
                 storageService.getCakesCount(firstCake.name) shouldBe 5 + count
             }

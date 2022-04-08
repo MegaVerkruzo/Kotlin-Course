@@ -9,13 +9,13 @@ class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
     fun getCakesList(): List<Cake> = storageService.getCakesList()
 
-    @PostMapping("/change-count-with-new-cost")
+    @PostMapping("/add")
     fun addCakes(@RequestParam name: String, @RequestParam cost: Double, @RequestParam count: Int) {
         storageService.addCakes(name, cost, count)
     }
 
-    @PatchMapping("/change-count-without-cost")
+    @PatchMapping("/update-count")
     fun addCakes(@RequestParam name: String, @RequestParam count: Int) {
-        storageService.changeCakesCount(name, count)
+        storageService.updateCakesCount(name, count)
     }
 }

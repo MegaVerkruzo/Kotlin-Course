@@ -1,8 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson6.store
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.lang.IllegalArgumentException
@@ -21,7 +19,7 @@ class StorageClient {
         data[name] = Cake(name, cost, count)
     }
 
-    fun addCakesCount(name: String, count: Int) {
+    fun updateCakesCount(name: String, count: Int) {
         val initialValue = data[name]!!
         data[name] = Cake(initialValue.name, initialValue.cost, initialValue.count + count)
     }
