@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6.storage
+package ru.tinkoff.fintech.homework.lesson6.store
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -8,13 +8,7 @@ import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.lang.IllegalArgumentException
 
 @Service
-class StorageClient(
-    private val restTemplate: RestTemplate,
-    @Value("\${storage.list.address}") private val storageListClient: String
-) {
-    private val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
-    private val orders: MutableList<Order> = mutableListOf()
-
+class StorageClient {
     fun getCakesList(): List<Cake> = data.map { it.value }
 
     fun getCakeCount(name: String): Int = data[name]!!.count

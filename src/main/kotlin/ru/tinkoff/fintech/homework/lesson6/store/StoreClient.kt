@@ -10,14 +10,14 @@ import ru.tinkoff.fintech.homework.lesson6.model.Order
 @Service
 class StoreClient(
     private val restTemplate: RestTemplate,
-    @Value("\${store.list.address}") private val storeListClient: String
+    @Value("\${store.list.address}") private val storeListAddress: String
 ) {
 
     fun getCakesList(): List<Cake> =
-        restTemplate.exchange<List<Cake>>("$storeListClient$GET_CAKE_LIST", HttpMethod.GET).body!!
+        restTemplate.exchange<List<Cake>>("$storeListAddress$GET_CAKE_LIST", HttpMethod.GET).body!!
 
     fun buyCakes(name: String, count: Int): Order =
-        restTemplate.postForObject("$storeListClient$ADD_ORDER", HttpMethod.POST, name, count)
+        restTemplate.postForObject("$storeListAddress$ADD_ORDER", HttpMethod.POST, name, count)
 
 }
 
