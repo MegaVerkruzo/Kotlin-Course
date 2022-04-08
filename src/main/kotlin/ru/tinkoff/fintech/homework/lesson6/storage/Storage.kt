@@ -26,7 +26,7 @@ class Storage(private val storageClient: StorageClient) {
     }
 
     fun changeCakesCount(name: String, count: Int) {
-        if (!consistCakeType(name)) throw NoSuchElementException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
+        if (!consistCakeType(name)) throw IllegalArgumentException("Нельзя изменить кол-во тортов, неизвестного типа \"$name\"")
 
         storageClient.addCakesCount(name, count)
     }
@@ -35,13 +35,13 @@ class Storage(private val storageClient: StorageClient) {
         try {
             val orderId = storageClient.addOrder(getCake(name), count)
             return getOrder(orderId)
-        } catch (e: NoSuchElementException) {
-            throw NoSuchElementException("Не удалось добавить заказ с несуществующим тортом \"$name\"")
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Не удалось добавить заказ с несуществующим тортом \"$name\"")
         }
     }
 
     fun getCake(name: String): Cake {
-        if (!consistCakeType(name)) throw NoSuchElementException("Не существует торта с таким названием \"$name\"")
+        if (!consistCakeType(name)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
 
         return Cake(name, storageClient.getCakeCost(name), storageClient.getCakeCount(name))
     }

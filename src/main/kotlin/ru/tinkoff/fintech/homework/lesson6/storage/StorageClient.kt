@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
+import java.lang.IllegalArgumentException
 
 @Service
 class StorageClient(
@@ -42,7 +43,7 @@ class StorageClient(
         try {
             return orders[orderId]
         } catch (e: ArrayIndexOutOfBoundsException) {
-            throw IndexOutOfBoundsException("Попытка обратиться к заказу под несуществующим номером $orderId")
+            throw IllegalArgumentException("Попытка обратиться к заказу под несуществующим номером $orderId")
         }
     }
 
