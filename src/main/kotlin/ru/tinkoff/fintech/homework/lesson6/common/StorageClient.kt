@@ -12,21 +12,23 @@ class StorageClient(
     @Value("\${storage.address}") private val storageAddress: String
 ) {
 
-    fun getCakesSet(): Set<Cake> =
+    fun getCakesList(): Set<Cake> =
         restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKE_SET", HttpMethod.GET).body!!
 
     fun consistCakeType(name: String): Boolean =
-        restTemplate.getForObject("$storageAddress$GET_CONSIST_CAKE", HttpMethod.GET, name)
+        restTemplate.getForObject("$storageAddress$GET_CONSIST_CAKE", name)
 
     fun getCake(name: String): Cake =
-        restTemplate.getForObject("$storageAddress$GET_CAKE", HttpMethod.GET, name)
+        restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
     fun updateCakesParams(name: String, cost: Double, count: Int) {
-        restTemplate.patchForObject<Unit>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, name, cost, count)
+        restTemplate.exchange<Any>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, null, name, cost, count)
+
+       // restTemplate.patchForObject<Unit>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, name, cost, count)
     }
 }
 
-private const val GET_CAKE_SET = "/storage/cake/set"
+private const val GET_CAKE_SET = "/storage/cake/list"
 private const val GET_CONSIST_CAKE = "/storage/cake/consist?name={name}"
-private const val GET_CAKE = "/storage/cake?name={name}"
+private const val GET_CAKE = "/storage/cake/get?name={name}"
 private const val PATCH_CAKE = "?name={name}&cost={cost}&count={count}"

@@ -7,7 +7,7 @@ import ru.tinkoff.fintech.homework.lesson6.model.Cake
 class StorageDao {
     val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
 
-    fun getCakesSet(): Set<Cake> = data.values.toSet()
+    fun getCakesList(): Set<Cake> = data.values.toSet()
 
     fun getCake(name: String): Cake = data[name]!!
 

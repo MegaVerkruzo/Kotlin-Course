@@ -7,7 +7,7 @@ import java.lang.IllegalArgumentException
 @Service
 class StorageService(private val storageDao: StorageDao) {
 
-    fun getCakesSet(): Set<Cake> = storageDao.getCakesSet()
+    fun getCakesList(): Set<Cake> = storageDao.getCakesList()
 
     fun getCake(name: String): Cake {
         if (!consistCakes(name, 0)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
