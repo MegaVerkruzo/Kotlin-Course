@@ -4,10 +4,18 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
+import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.time.Duration
 
 @Configuration
 class ServiceConfiguration {
+
+    @Bean
+    val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
+
+    @Bean
+    val orders: MutableList<Order> = mutableListOf()
 
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder

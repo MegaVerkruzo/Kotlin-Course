@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6
+package ru.tinkoff.fintech.homework.lesson6.storage
 
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
@@ -15,14 +15,14 @@ import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
-import ru.tinkoff.fintech.homework.lesson6.store.StoreClient
+import ru.tinkoff.fintech.homework.lesson6.store.StorageClient
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class CakeStoreTest : FeatureSpec() {
+class StorageTest : FeatureSpec() {
 
     @MockBean
-    private val storeClient = mockk<StoreClient>()
+    private val storageClient = mockk<StorageClient>()
 
     @MockBean
     private val storageDao = mockk<StorageDao>()
@@ -56,8 +56,8 @@ class CakeStoreTest : FeatureSpec() {
             orders.add(Order(orders.size, Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
             orders.size - 1
         }
-        every { storeClient.getCakesList() } returns data.map { it -> it.value }
-        every { storeClient.buyCakes(any(), any()) } answers {
+        every { storageClient.getCakesList() } returns data.map { it -> it.value }
+        every { storageClient.buyCakes(any(), any()) } answers {
             orders.add(Order(orders.size, Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
             orders.last()
         }
