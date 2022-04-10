@@ -2,7 +2,6 @@ package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
-import ru.tinkoff.fintech.homework.lesson6.model.Order
 import java.lang.IllegalArgumentException
 
 @Service
@@ -27,7 +26,7 @@ class StorageService(private val storageDao: StorageDao) {
         }
     }
 
-    fun updateCakeParams(name: String, cost: Double?, count: Int?) {
+    fun updateCakesParams(name: String, cost: Double?, count: Int?) {
         if (!consistCakes(name, 0)) {
             require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
             storageDao.addNewCakeType(Cake(name, cost, count))

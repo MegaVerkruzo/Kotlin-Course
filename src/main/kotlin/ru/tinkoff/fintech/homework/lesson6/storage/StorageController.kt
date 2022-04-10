@@ -24,6 +24,6 @@ class StorageController(private val storageService: StorageService) {
 
     @PatchMapping
     fun updateCakeParams(@RequestParam name: String, @RequestParam  cost: Double?, @RequestParam count: Int?) {
-        storageService.updateCakeParams(name, cost, count)
+        storageService.updateCakesParams(name, cost, count)
     }
 }

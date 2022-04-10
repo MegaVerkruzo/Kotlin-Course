@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
-import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
-import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.StorageClient
 
 @SpringBootTest
@@ -77,7 +75,7 @@ class StorageTest : FeatureSpec() {
             }
 
             scenario("Тест на существования типа торта, но не имения его на складе") {
-                storageService.updateCakeParams(
+                storageService.updateCakesParams(
                     firstCake.name, null, -storageService.getCakesCount(firstCake.name)
                 )
 
@@ -88,13 +86,13 @@ class StorageTest : FeatureSpec() {
             scenario("Проверка добавления кол-ва определённого вида торта") {
                 val count = storageService.getCakesCount(firstCake.name)
 
-                storageService.updateCakeParams(firstCake.name, null, 5)
+                storageService.updateCakesParams(firstCake.name, null, 5)
 
                 storageService.getCakesCount(firstCake.name) shouldBe 5 + count
             }
 
             scenario("Пример добавления торта") {
-                storageService.updateCakeParams(thirdCake.name, thirdCake.cost, thirdCake.count)
+                storageService.updateCakesParams(thirdCake.name, thirdCake.cost, thirdCake.count)
 
                 storageService.consistCakeType(thirdCake.name) shouldBe true
 

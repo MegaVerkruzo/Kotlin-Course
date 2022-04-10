@@ -18,7 +18,7 @@ class StorageDao {
     }
 
     fun updateCakesCount(name: String, count: Int) {
-        data[name] = Cake(data[name]!!.name, data[name]!!.cost, count)
+        data[name] = Cake(data[name]!!.name, data[name]!!.cost, data[name]!!.count + count)
     }
 
     fun updateCakesPrice(name: String, cost: Double) {
