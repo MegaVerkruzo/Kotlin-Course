@@ -20,7 +20,7 @@ class StorageService(private val storageDao: StorageDao) {
     fun addCakes(cake: Cake) {
         if (consistCakes(cake.name, 0)) {
             storageDao.updateCakesPrice(cake.name, cake.cost)
-            storageDao.updateCakesCount(cake.name, cake.count + getCake(cake.name).count)
+            storageDao.updateCakesCount(cake.name, cake.count)
         } else {
             storageDao.addNewCakeType(cake)
         }

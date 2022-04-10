@@ -1,8 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson6.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
@@ -11,11 +9,9 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.http.client.methods.RequestBuilder.post
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
@@ -27,7 +23,7 @@ import kotlin.text.Charsets.UTF_8
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrderControllerTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
+class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
     @MockBean
     private val storageDao = mockk<StorageDao>()
@@ -99,7 +95,7 @@ class OrderControllerTest(private val mockMvc: MockMvc, private val objectMapper
     }
 
     init {
-        feature("Тестируем OrderController") {
+        feature("Тестируем OrderService") {
             scenario("Проверяем добавление заказа, на существующий тип торта") {
                 orderService.addOrder(firstCake.name, firstCake.count)
 
