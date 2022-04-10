@@ -26,7 +26,7 @@ class StorageService(private val storageDao: StorageDao) {
         }
     }
 
-    fun updateCakesParams(name: String, cost: Double?, count: Int?) {
+    fun updateCakesParams(name: String, cost: Double?, count: Int?): Cake {
         if (!consistCakes(name, 0)) {
             require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
             storageDao.addNewCakeType(Cake(name, cost, count))
@@ -35,8 +35,9 @@ class StorageService(private val storageDao: StorageDao) {
                 storageDao.updateCakesPrice(name, cost)
             }
             if (count != null) {
-                storageDao.updateCakesCount(name, count + getCake(name).count)
+                storageDao.updateCakesCount(name, count)
             }
         }
+        return getCake(name)
     }
 }

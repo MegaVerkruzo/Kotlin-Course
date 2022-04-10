@@ -20,8 +20,7 @@ class OrderDao {
     }
 
     fun completeOrder(orderId: Int) {
-        val initialValue = orders[orderId]
-        orders[orderId] = Order(initialValue.orderId, initialValue.cake, true)
+        orders[orderId] = Order(orders[orderId].orderId, orders[orderId].cake, true)
     }
 
     fun addOrder(cake: Cake, count: Int): Int {

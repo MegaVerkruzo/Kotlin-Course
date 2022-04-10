@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.common
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.*
@@ -21,9 +22,15 @@ class StorageClient(
     fun getCake(name: String): Cake =
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
-    fun updateCakesParams(name: String, cost: Double, count: Int) {
-        restTemplate.patchForObject<Unit>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, name, cost, count)
-    }
+    fun updateCakesParams(name: String, cost: Double, count: Int): Cake =
+        restTemplate.exchange<Cake>(
+            "$storageAddress$PATCH_CAKE",
+            HttpMethod.PATCH,
+            HttpEntity.EMPTY,
+            name,
+            cost,
+            count
+        ).body!!
 }
 
 private const val GET_CAKE_SET = "/storage/cake/list"

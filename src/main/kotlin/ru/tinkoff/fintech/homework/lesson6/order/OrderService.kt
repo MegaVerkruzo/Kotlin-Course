@@ -19,12 +19,12 @@ class OrderService(private val orderDao: OrderDao, private val storageClient: St
 
     fun getOrder(orderId: Int): Order = orderDao.getOrder(orderId)
 
-    fun completeOrder(orderId: Int) {
+    fun completeOrder(orderId: Int): Cake {
         val order = getOrder(orderId)
         if (order.cake.count > storageClient.getCake(order.cake.name).count) {
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         orderDao.completeOrder(orderId)
-        storageClient.updateCakesParams(order.cake.name, order.cake.cost, -order.cake.count)
+        return storageClient.updateCakesParams(order.cake.name, order.cake.cost, -order.cake.count)
     }
 }
