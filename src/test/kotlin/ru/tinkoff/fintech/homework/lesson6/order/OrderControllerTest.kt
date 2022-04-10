@@ -1,28 +1,29 @@
 package ru.tinkoff.fintech.homework.lesson6.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.HttpStatus
+import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
+import kotlin.text.Charsets.UTF_8
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
+class OrderControllerTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
     @MockBean
     private val storageDao = mockk<StorageDao>()
@@ -60,7 +61,13 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             orders[firstArg()] = Order(orders[firstArg()].orderId, orders[firstArg()].cake, true)
         }
         every { orderDao.addOrder(any(), any()) } answers {
-            orders.add(Order(orderDao.getNumberOrder(), Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()), false))
+            orders.add(
+                Order(
+                    orderDao.getNumberOrder(),
+                    Cake(firstArg<Cake>().name, firstArg<Cake>().cost, secondArg()),
+                    false
+                )
+            )
             orders.size - 1
         }
     }
@@ -70,12 +77,54 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     }
 
     init {
-
+        feature("Тестируем OrderController") {
+            scenario("Проверяем добавление существующего типа торта") {
+                addOrder(firstCake.name, 3)
+            }
+            scenario("Проверяем добавление несуществующего типа торта") {
+                addOrder("takogoNet", 4)
+            }
+        }
     }
+
+
+    private fun addOrder(name: String, count: Int): Order =
+        mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse()
+
+    private fun getOrder(orderId: Int): Order =
+        mockMvc.get("/order/{orderId}", orderId).readResponse()
+
+    private fun completeOrder(orderId: Int): Cake =
+        mockMvc.post("/order/{orderId}/complete", orderId).readResponse()
+
+    private fun getCakesList(): Set<Cake> =
+        mockMvc.get("/storage/cake/list").readResponse()
+
+    private fun addCakesOrder(name: String, count: Int): Order =
+        mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
+
+    private fun consistCakeType(name: String): Boolean =
+        mockMvc.get("/storage/cake/consist?name={name}", name).readResponse()
+
+    private fun getCakes(name: String): Cake =
+        mockMvc.get("/storage/cake/get?name={name}", name).readResponse()
+
+    private fun addCakes(cake: Cake) {
+        mockMvc.put("/storage/cake?cake={cake}", cake)
+    }
+
+    private fun updateCakeParams(name: String, cost: Double?, count: Int?): Cake =
+        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
+
+
+    private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
+        .andExpect { status { isEqualTo(expectedStatus.value()) } }
+        .andReturn().response.getContentAsString(UTF_8)
+        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 
     val orders: MutableList<Order> = mutableListOf()
 
-    val firstCake = Cake("napoleon", 623.5, 1)
+    val firstCake = Cake("napoleon", 623.5, 8)
     val secondCake = Cake("medovik", 300.4, 3)
     val thirdCake = Cake("Shokoladnie", 2405.4, 5)
 
