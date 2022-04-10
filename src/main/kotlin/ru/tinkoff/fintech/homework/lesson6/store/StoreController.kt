@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.store
 
 import org.springframework.web.bind.annotation.*
+import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 

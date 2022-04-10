@@ -6,8 +6,16 @@ import ru.tinkoff.fintech.homework.lesson6.model.Cake
 @RestController
 @RequestMapping("/storage/cake")
 class StorageController(private val storageService: StorageService) {
+    @GetMapping("/set")
+    fun getCakesSet(): Set<Cake> = storageService.getCakesSet()
+
+    @GetMapping("/consist")
+    fun consistCakeType(@RequestParam name: String): Boolean =
+        storageService.consistCakes(name, 0)
+
     @GetMapping
-    fun getCakes(): MutableCollection<Cake> = storageService.getCakes()
+    fun getCakes(@RequestParam name: String): Cake =
+        storageService.getCake(name)
 
     @PutMapping
     fun addCakes(@RequestBody cake: Cake) {

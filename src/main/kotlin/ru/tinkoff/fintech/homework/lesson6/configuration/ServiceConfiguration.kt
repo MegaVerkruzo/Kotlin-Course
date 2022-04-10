@@ -10,13 +10,6 @@ import java.time.Duration
 
 @Configuration
 class ServiceConfiguration {
-
-    @Bean
-    val data: MutableMap<String, Cake> = mutableMapOf("cesar" to Cake("cesar", 432.0, 20))
-
-    @Bean
-    val orders: MutableList<Order> = mutableListOf()
-
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
         .setConnectTimeout(Duration.ofSeconds(CONNECT_TIMEOUT_IN_SECONDS))

@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6.store
+package ru.tinkoff.fintech.homework.lesson6.common
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
@@ -13,8 +13,8 @@ class StorageClient(
     @Value("\${storage.address}") private val storageAddress: String
 ) {
 
-    fun getCakesList(): MutableCollection<Cake> =
-        restTemplate.exchange<MutableCollection<Cake>>("$storageAddress$GET_CAKE_LIST", HttpMethod.GET).body!!
+    fun getCakesList(): Set<Cake> =
+        restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKE_LIST", HttpMethod.GET).body!!
 
     fun buyCakes(name: String, count: Int): Order =
         restTemplate.postForObject("$storageAddress$ADD_ORDER", HttpMethod.POST, name, count)

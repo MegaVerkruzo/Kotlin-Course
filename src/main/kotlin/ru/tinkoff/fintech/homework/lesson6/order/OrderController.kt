@@ -1,21 +1,21 @@
-package ru.tinkoff.fintech.homework.lesson6.storage
+package ru.tinkoff.fintech.homework.lesson6.order
 
 import org.springframework.web.bind.annotation.*
 import ru.tinkoff.fintech.homework.lesson6.model.Order
 
 @RestController
 @RequestMapping("/order")
-class OrderController (private val storageService: StorageService){
+class OrderController (private val orderService: OrderService){
     @PostMapping("/add")
     fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
-        storageService.addOrder(name, count)
+        orderService.addOrder(name, count)
 
     @GetMapping("/{orderId}")
     fun getOrder(@PathVariable orderId: Int): Order =
-        storageService.getOrder(orderId)
+        orderService.getOrder(orderId)
 
     @PostMapping("/{orderId}/complete")
     fun completeOrder(@PathVariable orderId: Int) {
-        storageService.completeOrder(orderId)
+        orderService.completeOrder(orderId)
     }
 }
