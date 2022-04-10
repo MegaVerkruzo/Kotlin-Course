@@ -7,7 +7,7 @@ import java.lang.IllegalArgumentException
 
 @Service
 class OrderDao {
-    val orders: MutableList<Order> = mutableListOf()
+    val orders: MutableList<Order> = mutableListOf(Order(0, Cake("cesar", 432.0, 3), false))
 
     fun getNumberOrder(): Int = orders.size
 

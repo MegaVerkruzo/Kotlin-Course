@@ -22,13 +22,11 @@ class StorageClient(
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
     fun updateCakesParams(name: String, cost: Double, count: Int) {
-        restTemplate.exchange<Any>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, null, name, cost, count)
-
-       // restTemplate.patchForObject<Unit>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, name, cost, count)
+        restTemplate.patchForObject<Unit>("$storageAddress$PATCH_CAKE", HttpMethod.PATCH, name, cost, count)
     }
 }
 
 private const val GET_CAKE_SET = "/storage/cake/list"
 private const val GET_CONSIST_CAKE = "/storage/cake/consist?name={name}"
 private const val GET_CAKE = "/storage/cake/get?name={name}"
-private const val PATCH_CAKE = "?name={name}&cost={cost}&count={count}"
+private const val PATCH_CAKE = "/storage/cake?name={name}&cost={cost}&count={count}"
