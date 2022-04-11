@@ -40,7 +40,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
     private val orderService = OrderService(orderDao, storageClient)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakeList() } returns data.values.toSet()
+        every { storageDao.getCakes() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
         every { storageDao.containCake(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
@@ -73,7 +73,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
         every { orderClient.addCakeOrder(any(), any()) } answers {
             orderService.addOrder(firstArg(), secondArg())
         }
-        every { storageClient.getCakeList() } answers { storageService.getCakeList() }
+        every { storageClient.getCakes() } answers { storageService.getCakes() }
         every { storageClient.containCakeType(any()) } answers { storageService.containCake(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
         every { storageClient.updateCakeParams(any(), any(), any()) } answers {

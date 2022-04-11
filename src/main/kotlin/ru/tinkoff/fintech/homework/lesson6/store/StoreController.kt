@@ -9,8 +9,8 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 @RequestMapping("/store/cake")
 class StoreController(private val storageClient: StorageClient, private val orderClient: OrderClient) {
     @GetMapping("/list")
-    fun getCakeList(): Set<Cake> =
-        storageClient.getCakeList()
+    fun getCakes(): Set<Cake> =
+        storageClient.getCakes()
 
     @PostMapping("/add-order")
     fun addCakeOrder(@RequestParam name: String, @RequestParam count: Int): Order =

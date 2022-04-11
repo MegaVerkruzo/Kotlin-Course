@@ -7,7 +7,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 @RequestMapping("/storage/cake")
 class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
-    fun getCakeList(): Set<Cake> = storageService.getCakeList()
+    fun getCakes(): Set<Cake> = storageService.getCakes()
 
     @GetMapping("/contain")
     fun containCakeType(@RequestParam name: String): Boolean =
