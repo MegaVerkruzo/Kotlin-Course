@@ -18,12 +18,14 @@ class StorageDao {
     }
 
     fun updateCakeCount(name: String, count: Int) {
-        val cake: Cake = data.getValue(name)
+        val cake: Cake? = getCake(name)
+        requireNotNull(cake) { throw IllegalArgumentException("Не существующий тип торта") }
         data[name] = Cake(cake.name, cake.cost, cake.count + count)
     }
 
     fun updateCakePrice(name: String, cost: Double) {
-        val cake: Cake = data.getValue(name)
+        val cake: Cake? = getCake(name)
+        requireNotNull(cake) { throw IllegalArgumentException("Не существующий тип торта") }
         data[name] = Cake(cake.name, cost, cake.count)
     }
 }
