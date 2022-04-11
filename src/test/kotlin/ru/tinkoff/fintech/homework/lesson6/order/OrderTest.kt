@@ -19,7 +19,6 @@ import ru.tinkoff.fintech.homework.lesson6.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
-import kotlin.text.Charsets.UTF_8
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,7 +42,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakesList() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
-        every { storageDao.consistCakes(any(), any()) } answers {
+        every { storageDao.containCakes(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
         }
         every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
@@ -75,7 +74,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             orderService.addOrder(firstArg(), secondArg())
         }
         every { storageClient.getCakesList() } answers { storageService.getCakesList() }
-        every { storageClient.consistCakeType(any()) } answers { storageService.consistCakes(firstArg(), 0) }
+        every { storageClient.containCakeType(any()) } answers { storageService.containCakes(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
         every { storageClient.updateCakesParams(any(), any(), any()) } answers {
             storageService.updateCakesParams(

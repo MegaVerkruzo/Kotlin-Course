@@ -10,15 +10,15 @@ class StorageService(private val storageDao: StorageDao) {
     fun getCakesList(): Set<Cake> = storageDao.getCakesList()
 
     fun getCake(name: String): Cake {
-        if (!consistCakes(name, 0)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
+        if (!containCakes(name, 0)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
 
         return Cake(name, storageDao.getCake(name).cost, storageDao.getCake(name).count)
     }
 
-    fun consistCakes(name: String, count: Int): Boolean = storageDao.consistCakes(name, count)
+    fun containCakes(name: String, count: Int): Boolean = storageDao.containCakes(name, count)
 
     fun addCakes(cake: Cake) {
-        if (consistCakes(cake.name, 0)) {
+        if (containCakes(cake.name, 0)) {
             storageDao.updateCakesPrice(cake.name, cake.cost)
             storageDao.updateCakesCount(cake.name, cake.count)
         } else {
@@ -27,7 +27,7 @@ class StorageService(private val storageDao: StorageDao) {
     }
 
     fun updateCakesParams(name: String, cost: Double?, count: Int?): Cake {
-        if (!consistCakes(name, 0)) {
+        if (!containCakes(name, 0)) {
             require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
             storageDao.addNewCakeType(Cake(name, cost, count))
         } else {

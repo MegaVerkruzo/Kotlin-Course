@@ -16,7 +16,7 @@ class StorageClient(
     fun getCakesList(): Set<Cake> =
         restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKE_SET", HttpMethod.GET).body!!
 
-    fun consistCakeType(name: String): Boolean =
+    fun containCakeType(name: String): Boolean =
         restTemplate.getForObject("$storageAddress$GET_CONSIST_CAKE", name)
 
     fun getCake(name: String): Cake =
@@ -34,6 +34,6 @@ class StorageClient(
 }
 
 private const val GET_CAKE_SET = "/storage/cake/list"
-private const val GET_CONSIST_CAKE = "/storage/cake/consist?name={name}"
+private const val GET_CONSIST_CAKE = "/storage/cake/contain?name={name}"
 private const val GET_CAKE = "/storage/cake/get?name={name}"
 private const val PATCH_CAKE = "/storage/cake?name={name}&cost={cost}&count={count}"

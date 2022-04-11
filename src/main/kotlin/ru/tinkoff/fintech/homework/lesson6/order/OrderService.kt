@@ -9,7 +9,7 @@ import java.lang.IllegalArgumentException
 @Service
 class OrderService(private val orderDao: OrderDao, private val storageClient: StorageClient) {
     fun addOrder(name: String, count: Int): Order {
-        require (storageClient.consistCakeType(name)) { throw IllegalArgumentException("Не удалось добавить заказ с несуществующим тортом \"$name\"") }
+        require (storageClient.containCakeType(name)) { throw IllegalArgumentException("Не удалось добавить заказ с несуществующим тортом \"$name\"") }
 
         val orderId = orderDao.addOrder(storageClient.getCake(name), count)
 

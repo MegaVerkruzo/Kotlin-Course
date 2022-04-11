@@ -9,9 +9,9 @@ class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
     fun getCakesList(): Set<Cake> = storageService.getCakesList()
 
-    @GetMapping("/consist")
-    fun consistCakeType(@RequestParam name: String): Boolean =
-        storageService.consistCakes(name, 0)
+    @GetMapping("/contain")
+    fun containCakeType(@RequestParam name: String): Boolean =
+        storageService.containCakes(name, 0)
 
     @GetMapping("/get")
     fun getCakes(@RequestParam name: String): Cake =

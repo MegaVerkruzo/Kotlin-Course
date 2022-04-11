@@ -5,7 +5,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -43,7 +42,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakesList() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
-        every { storageDao.consistCakes(any(), any()) } answers {
+        every { storageDao.containCakes(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
         }
         every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
@@ -75,7 +74,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             orderService.addOrder(firstArg(), secondArg())
         }
         every { storageClient.getCakesList() } answers { storageService.getCakesList() }
-        every { storageClient.consistCakeType(any()) } answers { storageService.consistCakes(firstArg(), 0) }
+        every { storageClient.containCakeType(any()) } answers { storageService.containCakes(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
         every { storageClient.updateCakesParams(any(), any(), any()) } answers {
             storageService.updateCakesParams(
@@ -103,8 +102,8 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
                 shouldThrow<IllegalArgumentException> { storageService.getCake("noElement") }
             }
             scenario("Проверка существования торта") {
-                storageService.consistCakes("noElement", 0) shouldBe false
-                storageService.consistCakes(firstCake.name, 0) shouldBe true
+                storageService.containCakes("noElement", 0) shouldBe false
+                storageService.containCakes(firstCake.name, 0) shouldBe true
             }
             scenario("Проверка добавления тортов") {
                 println(data[firstCake.name])
