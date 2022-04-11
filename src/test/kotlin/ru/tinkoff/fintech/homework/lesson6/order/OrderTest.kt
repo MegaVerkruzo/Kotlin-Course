@@ -20,7 +20,7 @@ import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
