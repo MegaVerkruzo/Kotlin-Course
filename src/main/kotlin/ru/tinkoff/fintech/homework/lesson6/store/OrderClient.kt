@@ -14,7 +14,6 @@ class OrderClient(
 ) {
     fun addCakesOrder(name: String, count: Int): Order =
         restTemplate.postForObject("$orderAddress$ADD_ORDER", HttpMethod.POST, name, count)
-
 }
 
 private const val ADD_ORDER = "/order/add?name={name}&count={count}"

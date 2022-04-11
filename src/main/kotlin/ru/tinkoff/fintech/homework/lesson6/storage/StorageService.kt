@@ -11,8 +11,9 @@ class StorageService(private val storageDao: StorageDao) {
 
     fun getCake(name: String): Cake {
         if (!containCakes(name, 0)) throw IllegalArgumentException("Не существует торта с таким названием \"$name\"")
+        val currentCake: Cake = storageDao.getCake(name)
 
-        return Cake(name, storageDao.getCake(name).cost, storageDao.getCake(name).count)
+        return Cake(name, currentCake.cost, currentCake.count)
     }
 
     fun containCakes(name: String, count: Int): Boolean = storageDao.containCakes(name, count)

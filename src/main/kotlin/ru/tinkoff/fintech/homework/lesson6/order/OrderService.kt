@@ -10,9 +10,8 @@ import java.lang.IllegalArgumentException
 class OrderService(private val orderDao: OrderDao, private val storageClient: StorageClient) {
     fun addOrder(name: String, count: Int): Order {
         require (storageClient.containCakeType(name)) { throw IllegalArgumentException("Не удалось добавить заказ с несуществующим тортом \"$name\"") }
-
-        val orderId = orderDao.addOrder(storageClient.getCake(name), count)
-
+        val currentCake: Cake = storageClient.getCake(name)
+        val orderId = orderDao.addOrder(currentCake, count)
 
         return getOrder(orderId)
     }
