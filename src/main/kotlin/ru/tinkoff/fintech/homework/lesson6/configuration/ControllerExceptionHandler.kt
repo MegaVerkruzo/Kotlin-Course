@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class ConfigureExceptions {
+class ControllerExceptionHandler {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleIllegalArgumentException(e: IllegalArgumentException): Map<String, String> {
         log.warn("Некорректные введённые данные: " + e.message, e)
         return errorResponse(e)
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleAnyException(e: Exception): Map<String, String> {
-        log.warn(e.message, e)
+        log.error(e.message, e)
         return errorResponse(e)
     }
 
