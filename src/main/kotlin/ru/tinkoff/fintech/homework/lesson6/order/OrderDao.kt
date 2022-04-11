@@ -11,16 +11,16 @@ class OrderDao {
 
     fun getNumberOrder(): Int = orders.size
 
-    fun getOrder(orderId: Int): Order {
-        try {
-            return orders[orderId]
+    fun getOrder(orderId: Int): Order? = try {
+            orders[orderId]
         } catch (e: ArrayIndexOutOfBoundsException) {
-            throw IllegalArgumentException("Попытка обратиться к заказу под несуществующим номером $orderId")
+            null
         }
-    }
 
     fun completeOrder(orderId: Int) {
-        orders[orderId] = Order(orders[orderId].orderId, orders[orderId].cake, true)
+        val order: Order? = getOrder(orderId)
+        requireNotNull(order) { "Нет такого заказа в базе!" }
+        orders[orderId] = Order(order.orderId, order.cake, true)
     }
 
     fun addOrder(cake: Cake, count: Int): Int {

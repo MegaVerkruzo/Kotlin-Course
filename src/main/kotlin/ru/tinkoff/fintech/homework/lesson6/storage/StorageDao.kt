@@ -18,10 +18,12 @@ class StorageDao {
     }
 
     fun updateCakeCount(name: String, count: Int) {
-        data[name] = Cake(data.getValue(name).name, data.getValue(name).cost, data.getValue(name).count + count)
+        val cake: Cake = data.getValue(name)
+        data[name] = Cake(cake.name, cake.cost, cake.count + count)
     }
 
     fun updateCakePrice(name: String, cost: Double) {
-        data[name] = Cake(data.getValue(name).name, cost, data.getValue(name).count)
+        val cake: Cake = data.getValue(name)
+        data[name] = Cake(cake.name, cost, cake.count)
     }
 }
