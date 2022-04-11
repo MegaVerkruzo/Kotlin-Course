@@ -12,7 +12,7 @@ class StorageService(private val storageDao: StorageDao) {
     fun getCake(name: String): Cake {
         val cake: Cake? = storageDao.getCake(name)
         requireNotNull(cake) { throw IllegalArgumentException("Не существует торта с таким названием \"$name\"") }
-        return Cake(name, cake.cost, cake.count)
+        return cake.copy(name = name)
     }
 
     fun containCake(name: String, count: Int): Boolean = storageDao.containCake(name, count)

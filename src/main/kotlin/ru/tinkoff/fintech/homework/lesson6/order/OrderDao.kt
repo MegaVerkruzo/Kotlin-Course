@@ -12,20 +12,20 @@ class OrderDao {
     fun getNumberOrder(): Int = orders.size
 
     fun getOrder(orderId: Int): Order? = try {
-            orders[orderId]
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            null
-        }
+        orders[orderId]
+    } catch (e: ArrayIndexOutOfBoundsException) {
+        null
+    }
 
     fun completeOrder(orderId: Int) {
         val order: Order? = getOrder(orderId)
         requireNotNull(order) { "Нет такого заказа в базе!" }
-        orders[orderId] = Order(order.orderId, order.cake, true)
+        orders[orderId] = order.copy(completed = true)
     }
 
     fun addOrder(cake: Cake, count: Int): Int {
         val orderIndex: Int = getNumberOrder()
-        val orderCake = Cake(cake.name, cake.cost, count)
+        val orderCake = cake.copy(count = count)
         orders.add(Order(orderIndex, orderCake, false))
         return orders.size - 1
     }
