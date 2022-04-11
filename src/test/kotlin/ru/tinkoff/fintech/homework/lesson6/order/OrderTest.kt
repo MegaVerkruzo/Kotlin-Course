@@ -43,16 +43,9 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         every { storageDao.getCakes() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
         every { storageDao.containCake(any(), any()) } answers {
-            data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
+            data.containsKey(firstArg()) && storageDao.getCake(firstArg())!!.count >= secondArg<Int>()
         }
-        every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
-        every { storageDao.updateCakeCount(any(), any()) } answers {
-            data[firstArg()] =
-                Cake(data[firstArg()]!!.name, data[firstArg()]!!.cost, data[firstArg()]!!.count + secondArg<Int>())
-        }
-        every { storageDao.updateCakePrice(any(), any()) } answers {
-            data[firstArg()] = Cake(data[firstArg()]!!.name, secondArg(), data[firstArg()]!!.count)
-        }
+        every { storageDao.updateCakeParams(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
 
         every { orderDao.getNumberOrder() } returns orders.size
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }

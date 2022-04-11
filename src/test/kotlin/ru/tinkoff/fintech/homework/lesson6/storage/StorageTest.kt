@@ -41,18 +41,11 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
 
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakes() } returns data.values.toSet()
-        every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
+        every { storageDao.getCake(any()) } answers { data[firstArg()] }
         every { storageDao.containCake(any(), any()) } answers {
-            data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
+            data.containsKey(firstArg()) && storageDao.getCake(firstArg())!!.count >= secondArg<Int>()
         }
-        every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
-        every { storageDao.updateCakeCount(any(), any()) } answers {
-            data[firstArg()] =
-                Cake(data[firstArg()]!!.name, data[firstArg()]!!.cost, data[firstArg()]!!.count + secondArg<Int>())
-        }
-        every { storageDao.updateCakePrice(any(), any()) } answers {
-            data[firstArg()] = Cake(data[firstArg()]!!.name, secondArg(), data[firstArg()]!!.count)
-        }
+        every { storageDao.updateCakeParams(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
 
         every { orderDao.getNumberOrder() } returns orders.size
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
@@ -107,7 +100,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             }
             scenario("Проверка добавления тортов") {
                 println(data[firstCake.name])
-                storageService.addCake(firstCake)
+                storageService.updateCakeParams(firstCake.name, firstCake.cost, firstCake.count)
                 println(data[firstCake.name])
                 storageService.getCake(firstCake.name).count shouldBe firstCake.count * 2
             }

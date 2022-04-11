@@ -17,27 +17,20 @@ class StorageService(private val storageDao: StorageDao) {
 
     fun containCake(name: String, count: Int): Boolean = storageDao.containCake(name, count)
 
-    fun addCake(cake: Cake) {
-        if (containCake(cake.name, 0)) {
-            storageDao.updateCakePrice(cake.name, cake.cost)
-            storageDao.updateCakeCount(cake.name, cake.count)
-        } else {
-            storageDao.addNewCakeType(cake)
-        }
-    }
-
     fun updateCakeParams(name: String, cost: Double?, count: Int?): Cake {
-        if (!containCake(name, 0)) {
+        var cake: Cake? = storageDao.getCake(name)
+        if (cake == null) {
             require(cost != null && count != null) { throw IllegalArgumentException("Не хватает данных для торта") }
-            storageDao.addNewCakeType(Cake(name, cost, count))
+            cake = Cake(name, cost, count)
         } else {
             if (cost != null) {
-                storageDao.updateCakePrice(name, cost)
+                cake = cake.copy(cost = cost)
             }
             if (count != null) {
-                storageDao.updateCakeCount(name, count)
+                cake = cake.copy(count = cake.count + count)
             }
         }
-        return getCake(name)
+        storageDao.updateCakeParams(cake)
+        return cake
     }
 }

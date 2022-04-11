@@ -13,19 +13,7 @@ class StorageDao {
 
     fun containCake(name: String, count: Int): Boolean = data.containsKey(name) && getCake(name)!!.count >= count
 
-    fun addNewCakeType(cake: Cake) {
+    fun updateCakeParams(cake: Cake) {
         data[cake.name] = cake
-    }
-
-    fun updateCakeCount(name: String, count: Int) {
-        val cake: Cake? = getCake(name)
-        requireNotNull(cake) { throw IllegalArgumentException("Не существующий тип торта") }
-        data[name] = cake.copy(count = cake.count + count)
-    }
-
-    fun updateCakePrice(name: String, cost: Double) {
-        val cake: Cake? = getCake(name)
-        requireNotNull(cake) { throw IllegalArgumentException("Не существующий тип торта") }
-        data[name] = cake.copy(cost = cost)
     }
 }
