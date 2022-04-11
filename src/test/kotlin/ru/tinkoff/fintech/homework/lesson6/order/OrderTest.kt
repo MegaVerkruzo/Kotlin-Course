@@ -40,17 +40,17 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     private val orderService = OrderService(orderDao, storageClient)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakesList() } returns data.values.toSet()
+        every { storageDao.getCakeList() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
-        every { storageDao.containCakes(any(), any()) } answers {
+        every { storageDao.containCake(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
         }
         every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
-        every { storageDao.updateCakesCount(any(), any()) } answers {
+        every { storageDao.updateCakeCount(any(), any()) } answers {
             data[firstArg()] =
                 Cake(data[firstArg()]!!.name, data[firstArg()]!!.cost, data[firstArg()]!!.count + secondArg<Int>())
         }
-        every { storageDao.updateCakesPrice(any(), any()) } answers {
+        every { storageDao.updateCakePrice(any(), any()) } answers {
             data[firstArg()] = Cake(data[firstArg()]!!.name, secondArg(), data[firstArg()]!!.count)
         }
 
@@ -70,14 +70,14 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             orders.size - 1
         }
 
-        every { orderClient.addCakesOrder(any(), any()) } answers {
+        every { orderClient.addCakeOrder(any(), any()) } answers {
             orderService.addOrder(firstArg(), secondArg())
         }
-        every { storageClient.getCakesList() } answers { storageService.getCakesList() }
-        every { storageClient.containCakeType(any()) } answers { storageService.containCakes(firstArg(), 0) }
+        every { storageClient.getCakeList() } answers { storageService.getCakeList() }
+        every { storageClient.containCakeType(any()) } answers { storageService.containCake(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
-        every { storageClient.updateCakesParams(any(), any(), any()) } answers {
-            storageService.updateCakesParams(
+        every { storageClient.updateCakeParams(any(), any(), any()) } answers {
+            storageService.updateCakeParams(
                 firstArg(),
                 secondArg(),
                 thirdArg()

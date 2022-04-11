@@ -24,6 +24,7 @@ class OrderService(private val orderDao: OrderDao, private val storageClient: St
             throw IllegalArgumentException("Заказ нельзя выполнить из-за большого кол-ва тортов")
         }
         orderDao.completeOrder(orderId)
-        return storageClient.updateCakesParams(order.cake.name, order.cake.cost, -order.cake.count)
+        val orderCake: Cake = order.cake
+        return storageClient.updateCakeParams(orderCake.name, orderCake.cost, -orderCake.count)
     }
 }

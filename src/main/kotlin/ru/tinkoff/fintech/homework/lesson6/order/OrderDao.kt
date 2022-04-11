@@ -24,7 +24,9 @@ class OrderDao {
     }
 
     fun addOrder(cake: Cake, count: Int): Int {
-        orders.add(Order(getNumberOrder(), Cake(cake.name, cake.cost, count), false))
+        val orderIndex: Int = getNumberOrder()
+        val orderCake = Cake(cake.name, cake.cost, count)
+        orders.add(Order(orderIndex, orderCake, false))
         return orders.size - 1
     }
 }

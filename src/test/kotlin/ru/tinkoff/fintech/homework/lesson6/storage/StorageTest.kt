@@ -40,17 +40,17 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
     private val orderService = OrderService(orderDao, storageClient)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakesList() } returns data.values.toSet()
+        every { storageDao.getCakeList() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()]!! }
-        every { storageDao.containCakes(any(), any()) } answers {
+        every { storageDao.containCake(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg()).count >= secondArg<Int>()
         }
         every { storageDao.addNewCakeType(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
-        every { storageDao.updateCakesCount(any(), any()) } answers {
+        every { storageDao.updateCakeCount(any(), any()) } answers {
             data[firstArg()] =
                 Cake(data[firstArg()]!!.name, data[firstArg()]!!.cost, data[firstArg()]!!.count + secondArg<Int>())
         }
-        every { storageDao.updateCakesPrice(any(), any()) } answers {
+        every { storageDao.updateCakePrice(any(), any()) } answers {
             data[firstArg()] = Cake(data[firstArg()]!!.name, secondArg(), data[firstArg()]!!.count)
         }
 
@@ -70,14 +70,14 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             orders.size - 1
         }
 
-        every { orderClient.addCakesOrder(any(), any()) } answers {
+        every { orderClient.addCakeOrder(any(), any()) } answers {
             orderService.addOrder(firstArg(), secondArg())
         }
-        every { storageClient.getCakesList() } answers { storageService.getCakesList() }
-        every { storageClient.containCakeType(any()) } answers { storageService.containCakes(firstArg(), 0) }
+        every { storageClient.getCakeList() } answers { storageService.getCakeList() }
+        every { storageClient.containCakeType(any()) } answers { storageService.containCake(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
-        every { storageClient.updateCakesParams(any(), any(), any()) } answers {
-            storageService.updateCakesParams(
+        every { storageClient.updateCakeParams(any(), any(), any()) } answers {
+            storageService.updateCakeParams(
                 firstArg(),
                 secondArg(),
                 thirdArg()
@@ -102,18 +102,18 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
                 shouldThrow<IllegalArgumentException> { storageService.getCake("noElement") }
             }
             scenario("Проверка существования торта") {
-                storageService.containCakes("noElement", 0) shouldBe false
-                storageService.containCakes(firstCake.name, 0) shouldBe true
+                storageService.containCake("noElement", 0) shouldBe false
+                storageService.containCake(firstCake.name, 0) shouldBe true
             }
             scenario("Проверка добавления тортов") {
                 println(data[firstCake.name])
-                storageService.addCakes(firstCake)
+                storageService.addCake(firstCake)
                 println(data[firstCake.name])
                 storageService.getCake(firstCake.name).count shouldBe firstCake.count * 2
             }
             scenario("Проверка обновлений параметров") {
-                storageService.updateCakesParams(firstCake.name, null, 10)
-                storageService.updateCakesParams(secondCake.name, 3.0, null)
+                storageService.updateCakeParams(firstCake.name, null, 10)
+                storageService.updateCakeParams(secondCake.name, 3.0, null)
 
                 storageService.getCake(firstCake.name) shouldBe Cake(firstCake.name, firstCake.cost, firstCake.count + 10)
                 storageService.getCake(secondCake.name) shouldBe Cake(secondCake.name, 3.0, secondCake.count)

@@ -7,22 +7,22 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 @RequestMapping("/storage/cake")
 class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
-    fun getCakesList(): Set<Cake> = storageService.getCakesList()
+    fun getCakeList(): Set<Cake> = storageService.getCakeList()
 
     @GetMapping("/contain")
     fun containCakeType(@RequestParam name: String): Boolean =
-        storageService.containCakes(name, 0)
+        storageService.containCake(name, 0)
 
     @GetMapping("/get")
-    fun getCakes(@RequestParam name: String): Cake =
+    fun getCake(@RequestParam name: String): Cake =
         storageService.getCake(name)
 
     @PutMapping
-    fun addCakes(@RequestBody cake: Cake) {
-        storageService.addCakes(cake)
+    fun addCake(@RequestBody cake: Cake) {
+        storageService.addCake(cake)
     }
 
     @PatchMapping
     fun updateCakeParams(@RequestParam name: String, @RequestParam  cost: Double?, @RequestParam count: Int?): Cake =
-        storageService.updateCakesParams(name, cost, count)
+        storageService.updateCakeParams(name, cost, count)
 }

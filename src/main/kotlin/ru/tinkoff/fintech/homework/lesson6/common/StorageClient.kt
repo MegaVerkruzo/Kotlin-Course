@@ -13,7 +13,7 @@ class StorageClient(
     @Value("\${storage.address}") private val storageAddress: String
 ) {
 
-    fun getCakesList(): Set<Cake> =
+    fun getCakeList(): Set<Cake> =
         restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKE_SET", HttpMethod.GET).body!!
 
     fun containCakeType(name: String): Boolean =
@@ -22,7 +22,7 @@ class StorageClient(
     fun getCake(name: String): Cake =
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
-    fun updateCakesParams(name: String, cost: Double, count: Int): Cake =
+    fun updateCakeParams(name: String, cost: Double, count: Int): Cake =
         restTemplate.exchange<Cake>(
             "$storageAddress$PATCH_CAKE",
             HttpMethod.PATCH,
