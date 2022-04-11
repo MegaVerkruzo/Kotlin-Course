@@ -10,6 +10,7 @@ import java.time.Duration
 
 @Configuration
 class ServiceConfiguration {
+
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
         .setConnectTimeout(Duration.ofSeconds(CONNECT_TIMEOUT_IN_SECONDS))

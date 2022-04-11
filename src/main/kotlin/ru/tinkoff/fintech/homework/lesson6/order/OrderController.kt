@@ -7,6 +7,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 @RestController
 @RequestMapping("/order")
 class OrderController(private val orderService: OrderService) {
+
     @PostMapping("/add")
     fun addOrder(@RequestParam name: String, @RequestParam count: Int): Order =
         orderService.addOrder(name, count)

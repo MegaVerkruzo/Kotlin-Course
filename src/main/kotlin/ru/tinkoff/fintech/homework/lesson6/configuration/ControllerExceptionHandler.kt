@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class ControllerExceptionHandler {
+
     private val log = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler

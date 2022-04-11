@@ -8,6 +8,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 @RestController
 @RequestMapping("/store/cake")
 class StoreController(private val storageClient: StorageClient, private val orderClient: OrderClient) {
+
     @GetMapping("/list")
     fun getCakes(): Set<Cake> =
         storageClient.getCakes()

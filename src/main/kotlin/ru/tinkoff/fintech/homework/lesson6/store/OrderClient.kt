@@ -12,6 +12,7 @@ class OrderClient(
     private val restTemplate: RestTemplate,
     @Value("\${order.address}") private val orderAddress: String
 ) {
+
     fun addCakeOrder(name: String, count: Int): Order =
         restTemplate.postForObject("$orderAddress$ADD_ORDER", HttpMethod.POST, name, count)
 }

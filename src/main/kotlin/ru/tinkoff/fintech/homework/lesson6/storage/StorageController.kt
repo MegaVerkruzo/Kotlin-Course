@@ -6,6 +6,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 @RestController
 @RequestMapping("/storage/cake")
 class StorageController(private val storageService: StorageService) {
+
     @GetMapping("/list")
     fun getCakes(): Set<Cake> = storageService.getCakes()
 
