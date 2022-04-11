@@ -4,8 +4,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
-import ru.tinkoff.fintech.homework.lesson6.model.Order
+import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 import java.time.Duration
 
 @Configuration

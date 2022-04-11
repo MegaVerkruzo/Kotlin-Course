@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
-import ru.tinkoff.fintech.homework.lesson6.model.Order
+import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient

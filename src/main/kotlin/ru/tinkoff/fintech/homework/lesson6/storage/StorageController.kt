@@ -1,7 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.web.bind.annotation.*
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 
 @RestController
 @RequestMapping("/storage/cake")

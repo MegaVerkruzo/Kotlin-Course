@@ -1,7 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.stereotype.Service
-import ru.tinkoff.fintech.homework.lesson6.model.Cake
+import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 
 @Service
 class StorageDao {
