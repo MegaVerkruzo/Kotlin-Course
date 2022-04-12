@@ -12,7 +12,8 @@ class StorageDao {
 
     fun getCake(name: String): Cake? = data[name]
 
-    fun updateCake(cake: Cake) {
+    fun updateCake(cake: Cake): Cake {
         data[cake.name] = cake
+        return cake
     }
 }
