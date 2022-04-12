@@ -6,6 +6,7 @@ import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -42,13 +43,18 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakes() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()] }
-        every { storageDao.updateCake(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
+        every { storageDao.updateCake(any()) } answers {
+            data[firstArg<Cake>().name] = firstArg()
+            firstArg()
+        }
 
+        every { orderDao.getNumberOrder() } returns orderId
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
         every { orderDao.completeOrder(any()) } answers {
-            val order: Order? = orderDao.getOrder(firstArg())
+            val order = orders[firstArg()]
             requireNotNull(order) { "Нет такого заказа в базе!" }
             orders[firstArg()] = order.copy(completed = true)
+            orders[firstArg()]!!
         }
         every { orderDao.addOrder(any()) } answers {
             orders[orders.size + 1] = firstArg()
@@ -81,8 +87,10 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         feature("Тестируем OrderService") {
             scenario("Проверяем добавление заказа, на существующий тип торта") {
                 orderService.addOrder(firstCake.name, firstCake.count)
+                val order = orderService.getOrder(1)
 
-                orderService.getOrder(0).cake shouldBe firstCake
+                order shouldNotBe null
+                order!!.cake shouldBe firstCake
             }
             scenario("Проверяем добавление несуществующего типа торта") {
                 shouldThrow<IllegalArgumentException> { orderService.addOrder("noElement", 4) }
@@ -91,9 +99,11 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 val initialCount = firstCake.count
                 val delta = 3
                 orderService.addOrder(firstCake.name, 3)
-                orderService.completeOrder(0)
+                orderService.completeOrder(1)
 
-                storageService.getCake(firstCake.name).count shouldBe initialCount - delta
+                val cake = storageService.getCake(firstCake.name)
+                cake shouldNotBe null
+                cake!!.count shouldBe initialCount - delta
             }
             scenario("Проверка выполнения некорректного заказа") {
                 orderService.addOrder(firstCake.name, 10)
@@ -138,6 +148,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
 //        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 
     val orders: MutableMap<Int, Order> = mutableMapOf()
+    var orderId: Int = 0
 
     val firstCake = Cake("napoleon", 623.5, 8)
     val secondCake = Cake("medovik", 300.4, 3)
