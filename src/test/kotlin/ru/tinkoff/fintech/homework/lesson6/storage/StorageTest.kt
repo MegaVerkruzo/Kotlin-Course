@@ -45,7 +45,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
         every { storageDao.containCake(any(), any()) } answers {
             data.containsKey(firstArg()) && storageDao.getCake(firstArg())!!.count >= secondArg<Int>()
         }
-        every { storageDao.updateCakeParams(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
+        every { storageDao.updateCake(any()) } answers { data[firstArg<Cake>().name] = firstArg() }
 
         every { orderDao.getNumberOrder() } returns orders.size
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
@@ -69,8 +69,8 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
         every { storageClient.getCakes() } answers { storageService.getCakes() }
         every { storageClient.containCakeType(any()) } answers { storageService.containCake(firstArg(), 0) }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
-        every { storageClient.updateCakeParams(any(), any(), any()) } answers {
-            storageService.updateCakeParams(
+        every { storageClient.updateCake(any(), any(), any()) } answers {
+            storageService.updateCake(
                 firstArg(),
                 secondArg(),
                 thirdArg()
@@ -100,13 +100,13 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             }
             scenario("Проверка добавления тортов") {
                 println(data[firstCake.name])
-                storageService.updateCakeParams(firstCake.name, firstCake.cost, firstCake.count)
+                storageService.updateCake(firstCake.name, firstCake.cost, firstCake.count)
                 println(data[firstCake.name])
                 storageService.getCake(firstCake.name).count shouldBe firstCake.count * 2
             }
             scenario("Проверка обновлений параметров") {
-                storageService.updateCakeParams(firstCake.name, null, 10)
-                storageService.updateCakeParams(secondCake.name, 3.0, null)
+                storageService.updateCake(firstCake.name, null, 10)
+                storageService.updateCake(secondCake.name, 3.0, null)
 
                 storageService.getCake(firstCake.name) shouldBe Cake(firstCake.name, firstCake.cost, firstCake.count + 10)
                 storageService.getCake(secondCake.name) shouldBe Cake(secondCake.name, 3.0, secondCake.count)

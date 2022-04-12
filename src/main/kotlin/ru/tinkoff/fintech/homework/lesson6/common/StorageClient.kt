@@ -16,13 +16,10 @@ class StorageClient(
     fun getCakes(): Set<Cake> =
         restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKES", HttpMethod.GET).body!!
 
-    fun containCakeType(name: String): Boolean =
-        restTemplate.getForObject("$storageAddress$GET_CONSIST_CAKE", name)
-
-    fun getCake(name: String): Cake =
+    fun getCake(name: String): Cake? =
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
-    fun updateCakeParams(name: String, cost: Double, count: Int): Cake =
+    fun updateCake(name: String, cost: Double, count: Int): Cake =
         restTemplate.exchange<Cake>(
             "$storageAddress$PATCH_CAKE",
             HttpMethod.PATCH,
@@ -34,6 +31,5 @@ class StorageClient(
 }
 
 private const val GET_CAKES = "/storage/cake/list"
-private const val GET_CONSIST_CAKE = "/storage/cake/contain?name={name}"
 private const val GET_CAKE = "/storage/cake/get?name={name}"
 private const val PATCH_CAKE = "/storage/cake?name={name}&cost={cost}&count={count}"

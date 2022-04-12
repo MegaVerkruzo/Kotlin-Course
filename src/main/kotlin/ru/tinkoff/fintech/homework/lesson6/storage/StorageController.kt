@@ -10,15 +10,11 @@ class StorageController(private val storageService: StorageService) {
     @GetMapping("/list")
     fun getCakes(): Set<Cake> = storageService.getCakes()
 
-    @GetMapping("/contain")
-    fun containCakeType(@RequestParam name: String): Boolean =
-        storageService.containCake(name, 0)
-
     @GetMapping("/get")
-    fun getCake(@RequestParam name: String): Cake =
+    fun getCake(@RequestParam name: String): Cake? =
         storageService.getCake(name)
 
     @PatchMapping
-    fun updateCakeParams(@RequestParam name: String, @RequestParam  cost: Double?, @RequestParam count: Int?): Cake =
-        storageService.updateCakeParams(name, cost, count)
+    fun updateCake(@RequestParam name: String, @RequestParam  cost: Double?, @RequestParam count: Int?): Cake =
+        storageService.updateCake(name, cost, count)
 }

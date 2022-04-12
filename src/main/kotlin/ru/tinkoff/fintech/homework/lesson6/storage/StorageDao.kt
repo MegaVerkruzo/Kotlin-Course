@@ -12,9 +12,7 @@ class StorageDao {
 
     fun getCake(name: String): Cake? = data[name]
 
-    fun containCake(name: String, count: Int): Boolean = data.containsKey(name) && getCake(name)!!.count >= count
-
-    fun updateCakeParams(cake: Cake) {
+    fun updateCake(cake: Cake) {
         data[cake.name] = cake
     }
 }

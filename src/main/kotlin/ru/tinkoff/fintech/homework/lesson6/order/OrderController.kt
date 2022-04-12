@@ -13,7 +13,7 @@ class OrderController(private val orderService: OrderService) {
         orderService.addOrder(name, count)
 
     @GetMapping("/{orderId}")
-    fun getOrder(@PathVariable orderId: Int): Order =
+    fun getOrder(@PathVariable orderId: Int): Order? =
         orderService.getOrder(orderId)
 
     @PostMapping("/{orderId}/complete")
