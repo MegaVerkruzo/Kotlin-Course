@@ -1,59 +1,47 @@
-package ru.tinkoff.fintech.homework.lesson6.order
+package ru.tinkoff.fintech.homework.lesson6
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
-import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
-import ru.tinkoff.fintech.homework.lesson6.storage.StorageController
-import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
-import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
-import ru.tinkoff.fintech.homework.lesson6.store.StoreController
 import java.nio.charset.StandardCharsets.UTF_8
 import io.kotest.core.extensions.Extension
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContainAll
+import ru.tinkoff.fintech.homework.lesson6.order.OrderDao
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class StorageTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
+class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
     @MockkBean
-    private lateinit var storageDao: StorageDao
+    protected lateinit var storageDao: StorageDao
 
     @MockkBean
-    private lateinit var orderDao: OrderDao
+    protected lateinit var orderDao: OrderDao
 
-    private val orders: MutableMap<Int, Order> = mutableMapOf()
-    private var orderId: Int = 0
+    protected val orders: MutableMap<Int, Order> = mutableMapOf()
+    protected var orderId: Int = 0
 
-    private val napoleon = Cake("napoleon", 623.5, 8)
-    private val medovik = Cake("medovik", 300.4, 3)
-    private val shokoladnie = Cake("Shokoladnie", 2405.4, 5)
-
-    private val data: MutableMap<String, Cake> = mutableMapOf()
+    protected val data: MutableMap<String, Cake> = mutableMapOf()
 
     override fun extensions(): List<Extension> = listOf(SpringExtension)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakes() } returns data.values.toSet()
+        every { storageDao.getCakes() } answers { data.values.toSet() }
         every { storageDao.getCake(any()) } answers { data[firstArg()] }
         every { storageDao.updateCake(any()) } answers {
             data[firstArg<Cake>().name] = firstArg()
@@ -81,29 +69,43 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
     }
 
     init {
-        feature("Тестируем StorageContoller") {
-            scenario("Проверка добавления нескольких тортов") {
-                updateCake(napoleon.name, napoleon.cost, napoleon.count) shouldBe napoleon
-                updateCake(medovik.name, medovik.cost, medovik.count) shouldBe medovik
-                getCake(napoleon.name) shouldBe napoleon
-                getCake(medovik.name) shouldBe medovik
-                verify(exactly = 4) { storageDao.getCake(any()) }
-                verify(exactly = 2) { storageDao.updateCake(any()) }
+        feature("Тестируем OrderController") {
+            scenario("Проверка добавления заказа") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                val orderId = addOrder(napoleon.name, 3)
+
+                orderId shouldBe 1
+                getOrder(orderId)!!.cake shouldBe napoleon.copy(count = 3)
+                verify(exactly = 1) { orderDao.addOrder(any()) }
+                verify(exactly = 1) { orderDao.getOrder(any()) }
+                verify(exactly = 2) { storageDao.getCake(any()) }
             }
-            scenario("Проверка обновления стоимости и кол-ва тортов") {
-                updateCake(napoleon.name, napoleon.cost, napoleon.count) shouldBe napoleon
-                updateCake(napoleon.name, null, 3).count shouldBe napoleon.count + 3
-                updateCake(napoleon.name, 43.3, null).cost shouldBe 43.3
-                verify(exactly = 3) { storageDao.getCake(any()) }
-                verify(exactly = 3) { storageDao.updateCake(any()) }
+            scenario("Проверка выполнения заказа") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                val orderId = addOrder(napoleon.name, 3)
+                completedOrder(orderId).completed shouldBe true
+            }
+            scenario("Проверка на set") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                updateCake(medovik.name, medovik.cost, medovik.count)
+                getCakes() shouldContainAll setOf(napoleon, medovik)
             }
         }
     }
 
-    private fun getCake(name: String): Cake? =
-        mockMvc.get("/storage/cake?name={name}", name).readResponse()
+    protected fun addOrder(name: String, count: Int): Int =
+        mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse()
 
-    private fun updateCake(name: String, cost: Double?, count: Int?): Cake =
+    protected fun getCakes(): Set<Cake> =
+        mockMvc.get("/storage/cake/list").readResponse()
+
+    protected fun getOrder(orderId: Int): Order? =
+        mockMvc.get("/order/{orderId}", orderId).readResponse()
+
+    protected fun completedOrder(orderId: Int): Order =
+        mockMvc.post("/order/{orderId}/complete", orderId).readResponse()
+
+    protected fun updateCake(name: String, cost: Double?, count: Int?): Cake =
         mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
 
     private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
@@ -112,3 +114,6 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
         .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 }
 
+val napoleon = Cake("napoleon", 623.5, 8)
+val medovik = Cake("medovik", 300.4, 3)
+val shokoladnie = Cake("Shokoladnie", 2405.4, 5)
