@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -30,6 +31,12 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
                 updateCake(napoleon.name, 43.3, null).cost shouldBe 43.3
                 verify(exactly = 3) { storageDao.getCake(any()) }
                 verify(exactly = 3) { storageDao.updateCake(any()) }
+            }
+            scenario("Проверка на set") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                updateCake(medovik.name, medovik.cost, medovik.count)
+
+                getCakes() shouldContainAll setOf(napoleon, medovik)
             }
         }
     }
