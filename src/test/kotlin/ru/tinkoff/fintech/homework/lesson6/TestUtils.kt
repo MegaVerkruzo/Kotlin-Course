@@ -6,10 +6,8 @@ import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -20,9 +18,7 @@ import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import java.nio.charset.StandardCharsets.UTF_8
 import io.kotest.core.extensions.Extension
 import io.kotest.extensions.spring.SpringExtension
-import io.kotest.matchers.collections.shouldContainAll
 import ru.tinkoff.fintech.homework.lesson6.order.OrderDao
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
