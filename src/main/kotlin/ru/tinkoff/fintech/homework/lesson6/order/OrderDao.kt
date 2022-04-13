@@ -12,7 +12,7 @@ class OrderDao {
     private val orders: MutableMap<Int, Order> = mutableMapOf()
 
     fun addOrder(order: Order): Int {
-        orders[++orderId] = order
+        orders[++orderId] = order.copy(id = orderId)
         return orderId
     }
 
