@@ -11,6 +11,7 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -27,26 +28,40 @@ import java.nio.charset.StandardCharsets.UTF_8
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
-
     @MockBean
     private val storageDao = mockk<StorageDao>()
 
     @MockBean
     private val orderDao = mockk<OrderDao>()
 
-    @MockBean
+    @Autowired
     private lateinit var orderClient: OrderClient
 
-    @MockBean
+    @Autowired
     private lateinit var storageClient: StorageClient
 
-    @MockBean
+    @Autowired
     private lateinit var storageService: StorageService
 
-    @MockBean
+    @Autowired
     private lateinit var orderService: OrderService
 
+    val orders: MutableMap<Int, Order> = mutableMapOf()
+    var orderId: Int = 0
+
+    val firstCake = Cake("napoleon", 623.5, 8)
+    val secondCake = Cake("medovik", 300.4, 3)
+    val thirdCake = Cake("Shokoladnie", 2405.4, 5)
+
+
+    val data: MutableMap<String, Cake> = mutableMapOf(
+        firstCake.name to firstCake,
+        secondCake.name to secondCake
+    )
+
     override fun beforeEach(testCase: TestCase) {
+        data[firstCake.name] = firstCake
+        data[secondCake.name] = secondCake
         every { storageDao.getCakes() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()] }
         every { storageDao.updateCake(any()) } answers {
@@ -80,8 +95,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         clearAllMocks()
         data.clear()
         orders.clear()
-        data[firstCake.name] = firstCake
-        data[secondCake.name] = secondCake
+        orderId = 0
     }
 
     init {
@@ -146,18 +160,5 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         .andExpect { status { isEqualTo(expectedStatus.value()) } }
         .andReturn().response.getContentAsString(UTF_8)
         .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
-
-    val orders: MutableMap<Int, Order> = mutableMapOf()
-    var orderId: Int = 0
-
-    val firstCake = Cake("napoleon", 623.5, 8)
-    val secondCake = Cake("medovik", 300.4, 3)
-    val thirdCake = Cake("Shokoladnie", 2405.4, 5)
-
-
-    val data: MutableMap<String, Cake> = mutableMapOf(
-        firstCake.name to firstCake,
-        secondCake.name to secondCake
-    )
 }
 
