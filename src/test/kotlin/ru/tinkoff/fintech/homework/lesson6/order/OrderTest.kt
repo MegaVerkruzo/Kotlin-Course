@@ -53,7 +53,6 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             data[firstArg<Cake>().name] = firstArg()
             firstArg()
         }
-
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
         every { orderDao.completedOrder(any()) } answers {
             val order = orders[orderId]
@@ -73,11 +72,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         every { storageClient.getCakes() } answers { storageService.getCakes() }
         every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
         every { storageClient.updateCake(any(), any(), any()) } answers {
-            storageService.updateCake(
-                firstArg(),
-                secondArg(),
-                thirdArg()
-            )
+            storageService.updateCake(firstArg(), secondArg(), thirdArg())
         }
     }
 
