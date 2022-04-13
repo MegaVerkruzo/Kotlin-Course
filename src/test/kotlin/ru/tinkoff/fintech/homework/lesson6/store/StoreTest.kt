@@ -1,4 +1,4 @@
-package ru.tinkoff.fintech.homework.lesson6.order
+package ru.tinkoff.fintech.homework.lesson6.store
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -25,56 +25,13 @@ import ru.tinkoff.fintech.homework.lesson6.store.StoreController
 import java.nio.charset.StandardCharsets.UTF_8
 import io.kotest.core.extensions.Extension
 import io.kotest.extensions.spring.SpringExtension
+import ru.tinkoff.fintech.homework.lesson6.TestUtils
+import ru.tinkoff.fintech.homework.lesson6.medovik
+import ru.tinkoff.fintech.homework.lesson6.napoleon
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
-
-    @MockkBean
-    private lateinit var storageDao: StorageDao
-
-    @MockkBean
-    private lateinit var orderDao: OrderDao
-
-    private val orders: MutableMap<Int, Order> = mutableMapOf()
-    private var orderId: Int = 0
-
-    private val napoleon = Cake("napoleon", 623.5, 8)
-    private val medovik = Cake("medovik", 300.4, 3)
-    private val shokoladnie = Cake("Shokoladnie", 2405.4, 5)
-
-    private val data: MutableMap<String, Cake> = mutableMapOf()
-
-    override fun extensions(): List<Extension> = listOf(SpringExtension)
-
-    override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakes() } answers { data.values.toSet() }
-        every { storageDao.getCake(any()) } answers { data[firstArg()] }
-        every { storageDao.updateCake(any()) } answers {
-            data[firstArg<Cake>().name] = firstArg()
-            firstArg()
-        }
-        every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
-        every { orderDao.completedOrder(any()) } answers {
-            val order = orders[orderId]
-            requireNotNull(order) { "Нет такого заказа в базе!" }
-            val finishedOrder = order.copy(completed = true)
-            orders[orderId] = finishedOrder
-            finishedOrder
-        }
-        every { orderDao.addOrder(any()) } answers {
-            orders[++orderId] = firstArg<Order>().copy(id = orderId)
-            orderId
-        }
-    }
-
-    override fun afterEach(testCase: TestCase, result: TestResult) {
-        clearAllMocks()
-        data.clear()
-        orders.clear()
-        orderId = 0
-    }
-
+class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : TestUtils(mockMvc, objectMapper) {
     init {
         feature("Тестируем StoreController") {
             scenario("Проверка добавления заказа на несколько тортов") {
@@ -88,19 +45,5 @@ class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             }
         }
     }
-
-    private fun getOrder(orderId: Int): Order? =
-        mockMvc.get("/order/{orderId}", orderId).readResponse()
-
-    private fun updateCake(name: String, cost: Double?, count: Int?): Cake =
-        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
-
-    private fun addOrderStore(name: String, count: Int): Int =
-        mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
-
-    private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
-        .andExpect { status { isEqualTo(expectedStatus.value()) } }
-        .andReturn().response.getContentAsString(UTF_8)
-        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 }
 

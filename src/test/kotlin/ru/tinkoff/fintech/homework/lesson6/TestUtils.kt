@@ -108,6 +108,12 @@ class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     protected fun updateCake(name: String, cost: Double?, count: Int?): Cake =
         mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
 
+    protected fun getCake(name: String): Cake? =
+        mockMvc.get("/storage/cake?name={name}", name).readResponse()
+
+    protected fun addOrderStore(name: String, count: Int): Int =
+        mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
+
     private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
         .andExpect { status { isEqualTo(expectedStatus.value()) } }
         .andReturn().response.getContentAsString(UTF_8)
