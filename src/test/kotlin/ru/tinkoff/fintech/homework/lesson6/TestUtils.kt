@@ -72,14 +72,17 @@ class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     protected fun addOrder(name: String, count: Int, expectedStatus: HttpStatus = HttpStatus.OK): Int =
         mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse(expectedStatus)
 
-    protected fun getCakes(): Set<Cake> =
-        mockMvc.get("/storage/cake/list").readResponse()
-
     protected fun getOrder(orderId: Int, expectedStatus: HttpStatus = HttpStatus.OK): Order? =
         mockMvc.get("/order/{orderId}", orderId).readResponse(expectedStatus)
 
     protected fun completedOrder(orderId: Int, expectedStatus: HttpStatus = HttpStatus.OK): Order =
         mockMvc.post("/order/{orderId}/complete", orderId).readResponse(expectedStatus)
+
+    protected fun getCakes(): Set<Cake> =
+        mockMvc.get("/storage/cake/list").readResponse()
+
+    protected fun getCake(name: String): Cake? =
+        mockMvc.get("/storage/cake?name={name}", name).readResponse()
 
     protected fun updateCake(
         name: String,
@@ -90,8 +93,8 @@ class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count)
             .readResponse(expectedStatus)
 
-    protected fun getCake(name: String): Cake? =
-        mockMvc.get("/storage/cake?name={name}", name).readResponse()
+    protected fun getCakesStore(): Set<Cake> =
+        mockMvc.get("/store/cake/list").readResponse()
 
     protected fun addOrderStore(name: String, count: Int, expectedStatus: HttpStatus = HttpStatus.OK): Int =
         mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse(expectedStatus)

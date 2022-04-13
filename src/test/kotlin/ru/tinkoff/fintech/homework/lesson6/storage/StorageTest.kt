@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.TestUtils
 import ru.tinkoff.fintech.homework.lesson6.medovik
 import ru.tinkoff.fintech.homework.lesson6.napoleon
+import ru.tinkoff.fintech.homework.lesson6.shokoladnie
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -51,8 +52,9 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             scenario("Проверка выдачи списка тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
                 updateCake(medovik.name, medovik.cost, medovik.count)
+                updateCake(shokoladnie.name, shokoladnie.cost, shokoladnie.count)
 
-                getCakes() shouldContainAll setOf(napoleon, medovik)
+                getCakes() shouldContainAll setOf(napoleon, medovik, shokoladnie)
             }
         }
     }
