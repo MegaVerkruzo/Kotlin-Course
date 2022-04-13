@@ -2,6 +2,7 @@ package ru.tinkoff.fintech.homework.lesson6.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
@@ -11,7 +12,7 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import org.springframework.beans.factory.annotation.Autowired
+import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -20,48 +21,49 @@ import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
+import ru.tinkoff.fintech.homework.lesson6.storage.StorageController
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
+import ru.tinkoff.fintech.homework.lesson6.store.StoreController
 import java.nio.charset.StandardCharsets.UTF_8
+import io.kotest.core.extensions.Extension
+import io.kotest.extensions.spring.SpringExtension
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
-    @MockBean
-    private val storageDao = mockk<StorageDao>()
+class StorageTest(
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper,
+    private val orderClient: OrderClient,
+    private val storageClient: StorageClient,
+    private val storageService: StorageService,
+    private val orderService: OrderService,
+    private val storageController: StorageController,
+    private val storeController: StoreController,
+    private val orderController: OrderController
+) : FeatureSpec() {
 
-    @MockBean
-    private val orderDao = mockk<OrderDao>()
+    @MockkBean
+    private lateinit var storageDao: StorageDao
 
-    @Autowired
-    private lateinit var orderClient: OrderClient
-
-    @Autowired
-    private lateinit var storageClient: StorageClient
-
-    @Autowired
-    private lateinit var storageService: StorageService
-
-    @Autowired
-    private lateinit var orderService: OrderService
-
-    val orders: MutableMap<Int, Order> = mutableMapOf()
-    var orderId: Int = 0
-
-    val firstCake = Cake("napoleon", 623.5, 8)
-    val secondCake = Cake("medovik", 300.4, 3)
-    val thirdCake = Cake("Shokoladnie", 2405.4, 5)
+    @MockkBean
+    private lateinit var orderDao: OrderDao
 
 
-    val data: MutableMap<String, Cake> = mutableMapOf(
-        firstCake.name to firstCake,
-        secondCake.name to secondCake
-    )
+    private val orders: MutableMap<Int, Order> = mutableMapOf()
+    private var orderId: Int = 0
+
+    private val napoleon = Cake("napoleon", 623.5, 8)
+    private val medovik = Cake("medovik", 300.4, 3)
+    private val shokoladnie = Cake("Shokoladnie", 2405.4, 5)
+
+
+    private val data: MutableMap<String, Cake> = mutableMapOf()
+
+    override fun extensions(): List<Extension> = listOf(SpringExtension)
 
     override fun beforeEach(testCase: TestCase) {
-        data[firstCake.name] = firstCake
-        data[secondCake.name] = secondCake
         every { storageDao.getCakes() } returns data.values.toSet()
         every { storageDao.getCake(any()) } answers { data[firstArg()] }
         every { storageDao.updateCake(any()) } answers {
@@ -80,15 +82,6 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             orders[++orderId] = firstArg<Order>().copy(id = orderId)
             orderId
         }
-
-        every { orderClient.addOrder(any(), any()) } answers {
-            orderService.addOrder(firstArg(), secondArg())
-        }
-        every { storageClient.getCakes() } answers { storageService.getCakes() }
-        every { storageClient.getCake(any()) } answers { storageService.getCake(firstArg()) }
-        every { storageClient.updateCake(any(), any(), any()) } answers {
-            storageService.updateCake(firstArg(), secondArg(), thirdArg())
-        }
     }
 
     override fun afterEach(testCase: TestCase, result: TestResult) {
@@ -100,61 +93,51 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
 
     init {
         feature("Тестируем OrderService") {
-            scenario("Проверяем добавление заказа, на существующий тип торта") {
-                orderService.addOrder(firstCake.name, firstCake.count)
-                val order = orderService.getOrder(1)
-                order shouldNotBe null
-                order!!.cake shouldBe firstCake
-            }
-            scenario("Проверяем добавление несуществующего типа торта") {
-                shouldThrow<IllegalArgumentException> { orderService.addOrder("noElement", 4) }
-            }
-            scenario("Проверка выполнения корректного заказа") {
-                val initialCount = firstCake.count
-                val delta = 3
-                orderService.addOrder(firstCake.name, 3)
-                orderService.completedOrder(1)
+            scenario("Проверка добавления заказа") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                val orderId = addOrder(napoleon.name, 3)
 
-                val cake = storageService.getCake(firstCake.name)
-                cake shouldNotBe null
-                cake!!.count shouldBe initialCount - delta
+                orderId shouldBe 1
+                getOrder(orderId)!!.cake shouldBe napoleon.copy(count = 3)
+                verify(exactly = 1) { orderDao.addOrder(any()) }
+                verify(exactly = 1) { orderDao.getOrder(any()) }
+                verify(exactly = 2) { storageDao.getCake(any()) }
             }
-            scenario("Проверка выполнения некорректного заказа") {
-                orderService.addOrder(firstCake.name, 10)
-
-                shouldThrow<IllegalArgumentException> { orderService.completedOrder(0) }
+            scenario("Проверка выполнения заказа") {
+                updateCake(napoleon.name, napoleon.cost, napoleon.count)
+                val orderId = addOrder(napoleon.name, 3)
+                completedOrder(orderId).completed shouldBe true
             }
         }
     }
 
-    private fun addOrder(name: String, count: Int): Order =
+    private fun addOrder(name: String, count: Int): Int =
         mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse()
 
-    private fun getOrder(orderId: Int): Order =
+    private fun getOrder(orderId: Int): Order? =
         mockMvc.get("/order/{orderId}", orderId).readResponse()
 
-    private fun completeOrder(orderId: Int): Cake =
+    private fun completedOrder(orderId: Int): Order =
         mockMvc.post("/order/{orderId}/complete", orderId).readResponse()
 
-    private fun getCakesList(): Set<Cake> =
+    private fun getCakes(): Set<Cake> =
         mockMvc.get("/storage/cake/list").readResponse()
+
+    private fun getCake(name: String): Cake? =
+        mockMvc.get("/storage/cake?name={name}", name).readResponse()
+
+    private fun updateCake(name: String, cost: Double?, count: Int?): Cake =
+        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
 
     private fun addCakesOrder(name: String, count: Int): Order =
         mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
 
-    private fun consistCakeType(name: String): Boolean =
-        mockMvc.get("/storage/cake/consist?name={name}", name).readResponse()
+    private fun getCakesStore(): Set<Cake> =
+        mockMvc.get("/store/cake/list").readResponse()
 
-    private fun getCakes(name: String): Cake =
-        mockMvc.get("/storage/cake/get?name={name}", name).readResponse()
-
-    private fun addCakes(cake: Cake) {
+    private fun addCake(cake: Cake) {
         mockMvc.put("/storage/cake?cake={cake}", cake)
     }
-
-    private fun updateCakeParams(name: String, cost: Double?, count: Int?): Cake =
-        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
-
 
     private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
         .andExpect { status { isEqualTo(expectedStatus.value()) } }
