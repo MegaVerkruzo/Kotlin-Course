@@ -11,7 +11,7 @@ class StorageService(private val storageDao: StorageDao) {
 
     fun getCake(name: String): Cake? = storageDao.getCake(name)
 
-    fun updateCake(name: String, cost: Double?, count: Int?): Cake {
+    fun updateCake(name: String, cost: Double? = null, count: Int? = null): Cake {
         val oldCake = storageDao.getCake(name)
         return if (oldCake == null) {
             require(cost != null && count != null) { "Не хватает данных для торта" }
@@ -23,16 +23,14 @@ class StorageService(private val storageDao: StorageDao) {
 
     private fun addCake(name: String, cost: Double, count: Int): Cake {
         val newCake = Cake(name, cost, count)
-        storageDao.updateCake(newCake)
-        return newCake
+        return storageDao.updateCake(newCake)
     }
 
-    private fun updateCake(cake: Cake, cost: Double?, count: Int?): Cake {
+    private fun updateCake(cake: Cake, cost: Double? = null, count: Int? = null): Cake {
         val actualCost = cost ?: cake.cost
         val actualCount = (count ?: 0) + cake.count
         require(actualCount >= 0) { "Кол-во тортов стало меньше 0" }
         val newCake = cake.copy(cost = actualCost, count = actualCount)
-        storageDao.updateCake(newCake)
-        return newCake
+        return storageDao.updateCake(newCake)
     }
 }

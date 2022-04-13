@@ -11,6 +11,11 @@ class OrderDao {
 
     private val orders: MutableMap<Int, Order> = mutableMapOf()
 
+    fun addOrder(order: Order): Int {
+        orders[++orderId] = order
+        return orderId
+    }
+
     fun getOrder(orderId: Int): Order? = orders[orderId]
 
     fun completeOrder(orderId: Int): Order {
@@ -19,10 +24,5 @@ class OrderDao {
         val finishedOrder = order.copy(completed = true)
         orders[orderId] = finishedOrder
         return finishedOrder
-    }
-
-    fun addOrder(order: Order): Int {
-        orders[++orderId] = order
-        return orderId
     }
 }

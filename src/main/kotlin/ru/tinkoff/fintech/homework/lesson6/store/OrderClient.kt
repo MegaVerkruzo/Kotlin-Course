@@ -13,7 +13,7 @@ class OrderClient(
 ) {
 
     fun addOrder(name: String, count: Int): Int =
-        restTemplate.postForObject("$orderAddress$ADD_ORDER", HttpMethod.POST, name, count)
+        restTemplate.postForObject("$orderAddress$ADD_ORDER", null, name, count)
 }
 
 private const val ADD_ORDER = "/order/add?name={name}&count={count}"
