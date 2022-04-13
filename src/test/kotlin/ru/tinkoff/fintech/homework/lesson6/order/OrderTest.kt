@@ -32,13 +32,16 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
     private val orderDao = mockk<OrderDao>()
 
     @MockBean
-    private val orderClient = mockk<OrderClient>()
+    private lateinit var orderClient: OrderClient
 
     @MockBean
-    private val storageClient = mockk<StorageClient>()
+    private lateinit var storageClient: StorageClient
 
-    private val storageService = StorageService(storageDao)
-    private val orderService = OrderService(orderDao, storageClient)
+    @MockBean
+    private lateinit var storageService: StorageService
+
+    @MockBean
+    private lateinit var orderService: OrderService
 
     override fun beforeEach(testCase: TestCase) {
         every { storageDao.getCakes() } returns data.values.toSet()
@@ -48,17 +51,17 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             firstArg()
         }
 
-        every { orderDao.getNumberOrder() } returns orderId
         every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
-        every { orderDao.completeOrder(any()) } answers {
-            val order = orders[firstArg()]
+        every { orderDao.completedOrder(any()) } answers {
+            val order = orders[orderId]
             requireNotNull(order) { "Нет такого заказа в базе!" }
-            orders[firstArg()] = order.copy(completed = true)
-            orders[firstArg()]!!
+            val finishedOrder = order.copy(completed = true)
+            orders[orderId] = finishedOrder
+            finishedOrder
         }
         every { orderDao.addOrder(any()) } answers {
-            orders[orders.size + 1] = firstArg()
-            orders.size
+            orders[++orderId] = firstArg<Order>().copy(id = orderId)
+            orderId
         }
 
         every { orderClient.addOrder(any(), any()) } answers {
@@ -88,7 +91,6 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             scenario("Проверяем добавление заказа, на существующий тип торта") {
                 orderService.addOrder(firstCake.name, firstCake.count)
                 val order = orderService.getOrder(1)
-
                 order shouldNotBe null
                 order!!.cake shouldBe firstCake
             }
@@ -99,7 +101,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 val initialCount = firstCake.count
                 val delta = 3
                 orderService.addOrder(firstCake.name, 3)
-                orderService.completeOrder(1)
+                orderService.completedOrder(1)
 
                 val cake = storageService.getCake(firstCake.name)
                 cake shouldNotBe null
@@ -108,7 +110,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             scenario("Проверка выполнения некорректного заказа") {
                 orderService.addOrder(firstCake.name, 10)
 
-                shouldThrow<IllegalArgumentException> { orderService.completeOrder(0) }
+                shouldThrow<IllegalArgumentException> { orderService.completedOrder(0) }
             }
         }
     }
