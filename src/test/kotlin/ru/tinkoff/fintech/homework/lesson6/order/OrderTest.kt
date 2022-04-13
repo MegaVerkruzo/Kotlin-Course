@@ -32,7 +32,7 @@ import io.kotest.extensions.spring.SpringExtension
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class StorageTest(
+class OrderTest(
     private val mockMvc: MockMvc,
     private val objectMapper: ObjectMapper,
     private val orderClient: OrderClient,
@@ -92,7 +92,7 @@ class StorageTest(
     }
 
     init {
-        feature("Тестируем OrderService") {
+        feature("Тестируем OrderController") {
             scenario("Проверка добавления заказа") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
                 val orderId = addOrder(napoleon.name, 3)

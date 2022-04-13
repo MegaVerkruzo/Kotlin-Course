@@ -33,7 +33,7 @@ import io.kotest.matchers.collections.shouldContainAll
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class OrderTest(
+class StorageTest(
     private val mockMvc: MockMvc,
     private val objectMapper: ObjectMapper,
     private val orderClient: OrderClient,
@@ -93,7 +93,7 @@ class OrderTest(
     }
 
     init {
-        feature("Тестируем OrderService") {
+        feature("Тестируем StorageContoller") {
             scenario("Проверка добавления нескольких тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count) shouldBe napoleon
                 updateCake(medovik.name, medovik.cost, medovik.count) shouldBe medovik
