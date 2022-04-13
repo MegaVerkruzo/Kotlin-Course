@@ -61,7 +61,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             orders.size
         }
 
-        every { orderClient.addCakeOrder(any(), any()) } answers {
+        every { orderClient.addOrder(any(), any()) } answers {
             orderService.addOrder(firstArg(), secondArg())
         }
         every { storageClient.getCakes() } answers { storageService.getCakes() }

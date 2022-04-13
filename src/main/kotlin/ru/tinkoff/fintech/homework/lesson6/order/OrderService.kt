@@ -7,12 +7,11 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 @Service
 class OrderService(private val orderDao: OrderDao, private val storageClient: StorageClient) {
 
-    fun addOrder(name: String, count: Int): Order {
+    fun addOrder(name: String, count: Int): Int {
         val cake = storageClient.getCake(name)
         requireNotNull(cake) { "Не удалось добавить заказ с несуществующим тортом \"$name\"" }
-        val order = Order(orderDao.getNumberOrder(), cake.copy(count = count), false)
-        orderDao.addOrder(order)
-        return order
+        val order = Order(cake.copy(count = count), false)
+        return orderDao.addOrder(order)
     }
 
     fun getOrder(orderId: Int): Order? = orderDao.getOrder(orderId)

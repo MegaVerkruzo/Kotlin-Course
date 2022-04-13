@@ -14,6 +14,6 @@ class StoreController(private val storageClient: StorageClient, private val orde
         storageClient.getCakes()
 
     @PostMapping("/add-order")
-    fun addCakeOrder(@RequestParam name: String, @RequestParam count: Int): Order =
-        orderClient.addCakeOrder(name, count)
+    fun addOrder(@RequestParam name: String, @RequestParam count: Int): Int =
+        orderClient.addOrder(name, count)
 }

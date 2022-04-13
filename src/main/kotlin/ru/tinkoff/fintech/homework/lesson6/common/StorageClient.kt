@@ -20,14 +20,13 @@ class StorageClient(
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
 
     fun updateCake(name: String, cost: Double, count: Int): Cake =
-        restTemplate.exchange<Cake>(
+        restTemplate.patchForObject(
             "$storageAddress$PATCH_CAKE",
             HttpMethod.PATCH,
-            HttpEntity.EMPTY,
             name,
             cost,
             count
-        ).body!!
+        )
 }
 
 private const val GET_CAKES = "/storage/cake/list"
