@@ -17,6 +17,6 @@ class OrderController(private val orderService: OrderService) {
         orderService.getOrder(orderId)
 
     @PostMapping("/{orderId}/complete")
-    fun completeOrder(@PathVariable orderId: Int): Order =
-        orderService.completeOrder(orderId)
+    fun completedOrder(@PathVariable orderId: Int): Order =
+        orderService.completedOrder(orderId)
 }

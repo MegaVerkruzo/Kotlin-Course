@@ -29,6 +29,7 @@ class StorageService(private val storageDao: StorageDao) {
     private fun updateCake(cake: Cake, cost: Double? = null, count: Int? = null): Cake {
         val actualCost = cost ?: cake.cost
         val actualCount = (count ?: 0) + cake.count
+        require(actualCost > 0) { "Стоимость торта должна быть положительной" }
         require(actualCount >= 0) { "Кол-во тортов стало меньше 0" }
         val newCake = cake.copy(cost = actualCost, count = actualCount)
         return storageDao.updateCake(newCake)

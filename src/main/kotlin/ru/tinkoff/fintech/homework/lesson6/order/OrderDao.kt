@@ -18,7 +18,7 @@ class OrderDao {
 
     fun getOrder(orderId: Int): Order? = orders[orderId]
 
-    fun completeOrder(orderId: Int): Order {
+    fun completedOrder(orderId: Int): Order {
         val order = orders[orderId]
         requireNotNull(order) { "Нет такого заказа в базе!" }
         val finishedOrder = order.copy(completed = true)

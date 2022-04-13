@@ -16,11 +16,11 @@ class OrderService(private val orderDao: OrderDao, private val storageClient: St
 
     fun getOrder(orderId: Int): Order? = orderDao.getOrder(orderId)
 
-    fun completeOrder(orderId: Int): Order {
+    fun completedOrder(orderId: Int): Order {
         val order = getOrder(orderId)
         requireNotNull(order) { "Попытка обращения к несуществующему заказу \"$orderId\"" }
         val cake = order.cake
         storageClient.updateCake(cake.name, cake.cost, -cake.count)
-        return orderDao.completeOrder(orderId)
+        return orderDao.completedOrder(orderId)
     }
 }
