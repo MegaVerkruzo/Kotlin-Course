@@ -1,6 +1,7 @@
 package ru.tinkoff.fintech.homework.lesson6.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.TestCase
@@ -13,6 +14,7 @@ import io.mockk.mockk
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
@@ -20,6 +22,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageService
 import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
 import ru.tinkoff.fintech.homework.lesson6.store.OrderClient
+import java.nio.charset.StandardCharsets.UTF_8
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -115,39 +118,39 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         }
     }
 
-//    private fun addOrder(name: String, count: Int): Order =
-//        mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse()
-//
-//    private fun getOrder(orderId: Int): Order =
-//        mockMvc.get("/order/{orderId}", orderId).readResponse()
-//
-//    private fun completeOrder(orderId: Int): Cake =
-//        mockMvc.post("/order/{orderId}/complete", orderId).readResponse()
-//
-//    private fun getCakesList(): Set<Cake> =
-//        mockMvc.get("/storage/cake/list").readResponse()
-//
-//    private fun addCakesOrder(name: String, count: Int): Order =
-//        mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
-//
-//    private fun consistCakeType(name: String): Boolean =
-//        mockMvc.get("/storage/cake/consist?name={name}", name).readResponse()
-//
-//    private fun getCakes(name: String): Cake =
-//        mockMvc.get("/storage/cake/get?name={name}", name).readResponse()
-//
-//    private fun addCakes(cake: Cake) {
-//        mockMvc.put("/storage/cake?cake={cake}", cake)
-//    }
-//
-//    private fun updateCakeParams(name: String, cost: Double?, count: Int?): Cake =
-//        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
-//
-//
-//    private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
-//        .andExpect { status { isEqualTo(expectedStatus.value()) } }
-//        .andReturn().response.getContentAsString(UTF_8)
-//        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
+    private fun addOrder(name: String, count: Int): Order =
+        mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse()
+
+    private fun getOrder(orderId: Int): Order =
+        mockMvc.get("/order/{orderId}", orderId).readResponse()
+
+    private fun completeOrder(orderId: Int): Cake =
+        mockMvc.post("/order/{orderId}/complete", orderId).readResponse()
+
+    private fun getCakesList(): Set<Cake> =
+        mockMvc.get("/storage/cake/list").readResponse()
+
+    private fun addCakesOrder(name: String, count: Int): Order =
+        mockMvc.post("/store/cake/add-order?name={name}&count={count}", name, count).readResponse()
+
+    private fun consistCakeType(name: String): Boolean =
+        mockMvc.get("/storage/cake/consist?name={name}", name).readResponse()
+
+    private fun getCakes(name: String): Cake =
+        mockMvc.get("/storage/cake/get?name={name}", name).readResponse()
+
+    private fun addCakes(cake: Cake) {
+        mockMvc.put("/storage/cake?cake={cake}", cake)
+    }
+
+    private fun updateCakeParams(name: String, cost: Double?, count: Int?): Cake =
+        mockMvc.patch("/storage/cake?name={name}&cost={cost}&count={count}", name, cost, count).readResponse()
+
+
+    private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
+        .andExpect { status { isEqualTo(expectedStatus.value()) } }
+        .andReturn().response.getContentAsString(UTF_8)
+        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 
     val orders: MutableMap<Int, Order> = mutableMapOf()
     var orderId: Int = 0

@@ -10,7 +10,7 @@ class OrderService(private val orderDao: OrderDao, private val storageClient: St
     fun addOrder(name: String, count: Int): Int {
         val cake = storageClient.getCake(name)
         requireNotNull(cake) { "Не удалось добавить заказ с несуществующим тортом \"$name\"" }
-        val order = Order(0, cake.copy(count = count))
+        val order = Order(cake = cake.copy(count = count))
         return orderDao.addOrder(order)
     }
 

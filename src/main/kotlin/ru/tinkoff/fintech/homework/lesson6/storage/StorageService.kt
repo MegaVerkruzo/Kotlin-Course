@@ -22,6 +22,8 @@ class StorageService(private val storageDao: StorageDao) {
     }
 
     private fun addCake(name: String, cost: Double, count: Int): Cake {
+        require(cost > 0) { "Стоимость должна быть положительной" }
+        require(count >= 0) { "Кол-во не должно быть отрицательным" }
         val newCake = Cake(name, cost, count)
         return storageDao.updateCake(newCake)
     }
