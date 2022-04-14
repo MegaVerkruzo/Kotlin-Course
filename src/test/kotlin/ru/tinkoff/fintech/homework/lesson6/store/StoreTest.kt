@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainAll
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.verify
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.ParentTest
@@ -20,7 +17,8 @@ import ru.tinkoff.fintech.homework.lesson6.napoleon
 import ru.tinkoff.fintech.homework.lesson6.shokoladnie
 import java.nio.charset.StandardCharsets
 
-class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : ParentTest(mockMvc, objectMapper) {
+class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) :
+    ParentTest(mockMvc, objectMapper) {
 
     init {
         feature("Тестируем StoreController") {

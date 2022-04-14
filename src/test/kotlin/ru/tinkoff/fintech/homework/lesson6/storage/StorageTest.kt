@@ -20,7 +20,8 @@ import java.nio.charset.StandardCharsets
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class StorageTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : ParentTest(mockMvc, objectMapper) {
+class StorageTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) :
+    ParentTest(mockMvc, objectMapper) {
 
     init {
         feature("Тестируем StorageController") {
