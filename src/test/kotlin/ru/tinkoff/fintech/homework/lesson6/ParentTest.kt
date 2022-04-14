@@ -22,7 +22,7 @@ import ru.tinkoff.fintech.homework.lesson6.order.OrderDao
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
+class ParentTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
     @MockkBean
     protected lateinit var storageDao: StorageDao
@@ -52,8 +52,9 @@ class TestUtils(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             finishedOrder
         }
         every { orderDao.addOrder(any()) } answers {
-            orders[++orderId] = firstArg<Order>().copy(id = orderId)
-            orderId
+            val newOrder = firstArg<Order>().copy(id = orderId)
+            orders[++orderId] = newOrder
+            newOrder
         }
     }
 

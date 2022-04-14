@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.client.HttpClientErrorException.BadRequest
 
 @RestControllerAdvice
 class ControllerExceptionHandler {
@@ -14,6 +15,12 @@ class ControllerExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleIllegalArgumentException(e: IllegalArgumentException): Map<String, String> {
+        log.warn("Некорректные введённые данные: " + e.message, e)
+        return errorResponse(e)
+    }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleBadRequest(e: BadRequest): Map<String, String> {
         log.warn("Некорректные введённые данные: " + e.message, e)
         return errorResponse(e)
     }

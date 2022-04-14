@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.*
 import org.springframework.http.HttpStatus
-import ru.tinkoff.fintech.homework.lesson6.TestUtils
+import ru.tinkoff.fintech.homework.lesson6.ParentTest
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 import ru.tinkoff.fintech.homework.lesson6.napoleon
 import java.nio.charset.StandardCharsets
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) :
-    TestUtils(mockMvc, objectMapper) {
+    ParentTest(mockMvc, objectMapper) {
 
     init {
         feature("Тестируем OrderController") {
