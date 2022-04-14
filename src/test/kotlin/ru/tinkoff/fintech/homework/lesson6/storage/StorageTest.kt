@@ -1,18 +1,22 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.TestUtils
+import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.medovik
 import ru.tinkoff.fintech.homework.lesson6.napoleon
 import ru.tinkoff.fintech.homework.lesson6.shokoladnie
+import java.nio.charset.StandardCharsets
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -26,11 +30,12 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
 
                 getCake(napoleon.name) shouldBe napoleon
                 getCake(medovik.name) shouldBe medovik
-                verify(exactly = 4) { storageDao.getCake(any()) }
+                verify(exactly = 2) { storageDao.getCake(napoleon.name) }
+                verify(exactly = 2) { storageDao.getCake(medovik.name) }
                 verify(exactly = 2) { storageDao.updateCake(any()) }
             }
             scenario("Проверка нахождения несуществующего торта") {
-                println(getCake("NoCake"))
+                getCake("NoCake") shouldBe null
             }
             scenario("Проверка корректного обновления стоимости и кол-ва тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count) shouldBe napoleon
@@ -40,7 +45,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
 
                 cake.count shouldBe napoleon.count + 3
                 cake.cost shouldBe 43.3
-                verify(exactly = 4) { storageDao.getCake(any()) }
+                verify(exactly = 4) { storageDao.getCake(napoleon.name) }
                 verify(exactly = 3) { storageDao.updateCake(any()) }
             }
             scenario("Проверка некорректного обновления стоимости и кол-ва тортов") {
@@ -58,5 +63,13 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             }
         }
     }
+
+    protected fun getCakes(): Set<Cake> =
+        mockMvc.get("/storage/cake/list").readResponse()
+
+    private inline fun <reified T> ResultActionsDsl.readResponse(expectedStatus: HttpStatus = HttpStatus.OK): T = this
+        .andExpect { status { isEqualTo(expectedStatus.value()) } }
+        .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 }
 

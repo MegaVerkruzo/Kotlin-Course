@@ -2,7 +2,6 @@ package ru.tinkoff.fintech.homework.lesson6.storage
 
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
-import java.lang.IllegalArgumentException
 
 @Service
 class StorageService(private val storageDao: StorageDao) {
