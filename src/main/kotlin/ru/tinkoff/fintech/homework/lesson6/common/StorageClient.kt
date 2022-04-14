@@ -14,7 +14,7 @@ class StorageClient(
 ) {
 
     fun getCakes(): Set<Cake> =
-        restTemplate.getForObject("$storageAddress$GET_CAKES")
+        restTemplate.exchange<Set<Cake>>("$storageAddress$GET_CAKES", HttpMethod.GET).body!!
 
     fun getCake(name: String): Cake? =
         restTemplate.getForObject("$storageAddress$GET_CAKE", name)
