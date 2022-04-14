@@ -42,7 +42,7 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 completeOrder(orderId).completed shouldBe true
             }
             scenario("Проверка выполнения некорректного заказа") {
-                shouldThrow<Exception> { completeOrder(orderId, HttpStatus.BAD_REQUEST) }
+                shouldThrow<Exception> { completeOrder(orderId) }
             }
         }
     }
