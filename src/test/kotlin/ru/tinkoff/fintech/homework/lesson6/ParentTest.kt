@@ -52,8 +52,8 @@ class ParentTest(private val mockMvc: MockMvc, private val objectMapper: ObjectM
             finishedOrder
         }
         every { orderDao.addOrder(any()) } answers {
-            val newOrder = firstArg<Order>().copy(id = orderId)
-            orders[++orderId] = newOrder
+            val newOrder = firstArg<Order>().copy(id = ++orderId)
+            orders[orderId] = newOrder
             newOrder
         }
     }

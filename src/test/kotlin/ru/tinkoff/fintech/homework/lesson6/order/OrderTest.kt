@@ -1,5 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson6.order
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
@@ -24,7 +25,8 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
             scenario("Проверка добавления 1-ого корректного заказа") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
 
-                val orderId = addOrder(napoleon.name, 3)
+                val getOrder = addOrder(napoleon.name, 3)
+                val orderId = getOrder.id
                 getOrder(orderId)!!.cake shouldBe napoleon.copy(count = 3)
 
                 orderId shouldBe 1
@@ -33,21 +35,21 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 verify(exactly = 2) { storageDao.getCake(napoleon.name) }
             }
             scenario("Проверка добавления некорректного заказа") {
-                shouldThrow<Exception> { addOrder(napoleon.name, 3, HttpStatus.BAD_REQUEST) }
+                shouldThrow<JsonMappingException> { addOrder(napoleon.name, 3, HttpStatus.BAD_REQUEST) }
             }
             scenario("Проверка выполнения корректного заказа") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
-                val orderId = addOrder(napoleon.name, 3)
+                val orderId = addOrder(napoleon.name, 3).id
 
                 completeOrder(orderId).completed shouldBe true
             }
             scenario("Проверка выполнения некорректного заказа") {
-                shouldThrow<Exception> { completeOrder(orderId) }
+                shouldThrow<JsonMappingException> { completeOrder(orderId, HttpStatus.BAD_REQUEST) }
             }
         }
     }
 
-    protected fun addOrder(name: String, count: Int, expectedStatus: HttpStatus = HttpStatus.OK): Int =
+    protected fun addOrder(name: String, count: Int, expectedStatus: HttpStatus = HttpStatus.OK): Order =
         mockMvc.post("/order/add?name={name}&count={count}", name, count).readResponse(expectedStatus)
 
     protected fun completeOrder(orderId: Int, expectedStatus: HttpStatus = HttpStatus.OK): Order =

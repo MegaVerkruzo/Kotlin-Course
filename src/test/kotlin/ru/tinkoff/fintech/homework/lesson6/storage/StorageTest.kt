@@ -1,5 +1,6 @@
 package ru.tinkoff.fintech.homework.lesson6.storage
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
@@ -34,7 +35,7 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
                 verify(exactly = 2) { storageDao.updateCake(any()) }
             }
             scenario("Проверка нахождения несуществующего торта") {
-                getCake("NoCake") shouldBe null
+                shouldThrow<JsonMappingException> { getCake("NoCake") }
             }
             scenario("Проверка корректного обновления стоимости и кол-ва тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count) shouldBe napoleon
@@ -50,8 +51,8 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
             scenario("Проверка некорректного обновления стоимости и кол-ва тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
 
-                shouldThrow<Exception> { updateCake(napoleon.name, null, -100, HttpStatus.BAD_REQUEST) }
-                shouldThrow<Exception> { updateCake(napoleon.name, -43.3, null, HttpStatus.BAD_REQUEST) }
+                shouldThrow<JsonMappingException> { updateCake(napoleon.name, null, -100, HttpStatus.BAD_REQUEST) }
+                shouldThrow<JsonMappingException> { updateCake(napoleon.name, -43.3, null, HttpStatus.BAD_REQUEST) }
             }
             scenario("Проверка выдачи списка тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)
