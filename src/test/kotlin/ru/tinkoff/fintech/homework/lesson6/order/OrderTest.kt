@@ -61,4 +61,4 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
         .let { if (T::class == String::class) it as T else objectMapper.readValue(it) }
 }
 
-val order = Order(cake = napoleon.copy(count = 3))
+private val order = Order(cake = napoleon.copy(count = 3))
