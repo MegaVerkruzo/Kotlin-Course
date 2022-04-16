@@ -31,9 +31,9 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
 
                 getCake(napoleon.name) shouldBe napoleon
                 getCake(medovik.name) shouldBe medovik
-                verify(exactly = 2) { storageDao.getCake(napoleon.name) }
-                verify(exactly = 2) { storageDao.getCake(medovik.name) }
-                verify(exactly = 2) { storageDao.updateCake(any()) }
+                verify(exactly = 2) { devStorageDao.getCake(napoleon.name) }
+                verify(exactly = 2) { devStorageDao.getCake(medovik.name) }
+                verify(exactly = 2) { devStorageDao.updateCake(any()) }
             }
             scenario("Проверка нахождения несуществующего торта") {
                 shouldThrow<JsonMappingException> { getCake("NoCake") }
@@ -46,8 +46,8 @@ class StorageTest(private val mockMvc: MockMvc, private val objectMapper: Object
 
                 cake.count shouldBe napoleon.count + 3
                 cake.cost shouldBe 43.3
-                verify(exactly = 4) { storageDao.getCake(napoleon.name) }
-                verify(exactly = 3) { storageDao.updateCake(any()) }
+                verify(exactly = 4) { devStorageDao.getCake(napoleon.name) }
+                verify(exactly = 3) { devStorageDao.updateCake(any()) }
             }
             scenario("Проверка некорректного обновления стоимости и кол-ва тортов") {
                 updateCake(napoleon.name, napoleon.cost, napoleon.count)

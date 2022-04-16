@@ -30,9 +30,9 @@ class OrderTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 getOrder(orderId)!!.cake shouldBe napoleon.copy(count = 3)
 
                 orderId shouldBe 1
-                verify(exactly = 1) { orderDao.addOrder(order) }
-                verify(exactly = 1) { orderDao.getOrder(orderId) }
-                verify(exactly = 2) { storageDao.getCake(napoleon.name) }
+                verify(exactly = 1) { devOrderDao.addOrder(order) }
+                verify(exactly = 1) { devOrderDao.getOrder(orderId) }
+                verify(exactly = 2) { devStorageDao.getCake(napoleon.name) }
             }
             scenario("Проверка добавления некорректного заказа") {
                 shouldThrow<JsonMappingException> { addOrder(napoleon.name, 3, HttpStatus.BAD_REQUEST) }

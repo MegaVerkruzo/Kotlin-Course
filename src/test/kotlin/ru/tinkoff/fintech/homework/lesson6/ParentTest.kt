@@ -14,21 +14,21 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.*
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
-import ru.tinkoff.fintech.homework.lesson6.storage.StorageDao
+import ru.tinkoff.fintech.homework.lesson6.storage.DevStorageDao
 import java.nio.charset.StandardCharsets.UTF_8
 import io.kotest.core.extensions.Extension
 import io.kotest.extensions.spring.SpringExtension
-import ru.tinkoff.fintech.homework.lesson6.order.OrderDao
+import ru.tinkoff.fintech.homework.lesson6.order.DevOrderDao
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 class ParentTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMapper) : FeatureSpec() {
 
     @MockkBean
-    protected lateinit var storageDao: StorageDao
+    protected lateinit var devStorageDao: DevStorageDao
 
     @MockkBean
-    protected lateinit var orderDao: OrderDao
+    protected lateinit var devOrderDao: DevOrderDao
 
     val data: MutableMap<String, Cake> = mutableMapOf()
     val orders: MutableMap<Int, Order> = mutableMapOf()
@@ -37,21 +37,21 @@ class ParentTest(private val mockMvc: MockMvc, private val objectMapper: ObjectM
     override fun extensions(): List<Extension> = listOf(SpringExtension)
 
     override fun beforeEach(testCase: TestCase) {
-        every { storageDao.getCakes() } answers { data.values.toSet() }
-        every { storageDao.getCake(any()) } answers { data[firstArg()] }
-        every { storageDao.updateCake(any()) } answers {
+        every { devStorageDao.getCakes() } answers { data.values.toSet() }
+        every { devStorageDao.getCake(any()) } answers { data[firstArg()] }
+        every { devStorageDao.updateCake(any()) } answers {
             data[firstArg<Cake>().name] = firstArg()
             firstArg()
         }
-        every { orderDao.getOrder(any()) } answers { orders[firstArg()] }
-        every { orderDao.completedOrder(any()) } answers {
+        every { devOrderDao.getOrder(any()) } answers { orders[firstArg()] }
+        every { devOrderDao.completedOrder(any()) } answers {
             val order = orders[orderId]
             requireNotNull(order) { "Нет такого заказа в базе!" }
             val finishedOrder = order.copy(completed = true)
             orders[orderId] = finishedOrder
             finishedOrder
         }
-        every { orderDao.addOrder(any()) } answers {
+        every { devOrderDao.addOrder(any()) } answers {
             val newOrder = firstArg<Order>().copy(id = ++orderId)
             orders[orderId] = newOrder
             newOrder

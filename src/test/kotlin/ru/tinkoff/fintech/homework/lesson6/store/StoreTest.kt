@@ -28,10 +28,10 @@ class StoreTest(private val mockMvc: MockMvc, private val objectMapper: ObjectMa
                 val orderId = addOrderStore(napoleon.name, 3).id
 
                 getOrder(orderId)!!.cake shouldBe napoleon.copy(count = 3)
-                verify(exactly = 2) { storageDao.getCake(napoleon.name) }
-                verify(exactly = 1) { storageDao.getCake(medovik.name) }
-                verify(exactly = 1) { orderDao.addOrder(order) }
-                verify(exactly = 1) { orderDao.getOrder(orderId) }
+                verify(exactly = 2) { devStorageDao.getCake(napoleon.name) }
+                verify(exactly = 1) { devStorageDao.getCake(medovik.name) }
+                verify(exactly = 1) { devOrderDao.addOrder(order) }
+                verify(exactly = 1) { devOrderDao.getOrder(orderId) }
             }
             scenario("Проверка добавления некорректного заказа на несуществующий торт") {
                 shouldThrow<JsonMappingException> { addOrderStore(napoleon.name, 10, HttpStatus.BAD_REQUEST) }
