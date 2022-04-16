@@ -4,15 +4,15 @@ import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 
 @Service
-class StorageDao {
+class StorageDao: StorageDaoInterface {
 
     private val data: MutableMap<String, Cake> = mutableMapOf()
 
-    fun getCakes(): Set<Cake> = data.values.toSet()
+    override fun getCakes(): Set<Cake> = data.values.toSet()
 
-    fun getCake(name: String): Cake? = data[name]
+    override fun getCake(name: String): Cake? = data[name]
 
-    fun updateCake(cake: Cake): Cake {
+    override fun updateCake(cake: Cake): Cake {
         data[cake.name] = cake
         return cake
     }

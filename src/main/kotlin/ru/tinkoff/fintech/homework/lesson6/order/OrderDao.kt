@@ -5,21 +5,21 @@ import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 
 @Service
-class OrderDao {
+class OrderDao : OrderDaoInterface {
 
     private var orderId: Int = 0
 
     private val orders: MutableMap<Int, Order> = mutableMapOf()
 
-    fun addOrder(order: Order): Order {
+    override fun addOrder(order: Order): Order {
         val newOrder = order.copy(id = ++orderId)
         orders[orderId] = newOrder
         return newOrder
     }
 
-    fun getOrder(orderId: Int): Order? = orders[orderId]
+    override fun getOrder(orderId: Int): Order? = orders[orderId]
 
-    fun completedOrder(orderId: Int): Order {
+    override fun completedOrder(orderId: Int): Order {
         val order = orders[orderId]
         requireNotNull(order) { "Нет такого заказа в базе!" }
         val completedOrder = order.copy(completed = true)
