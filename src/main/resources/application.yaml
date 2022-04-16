@@ -1,6 +1,6 @@
 spring:
-  application.name: cakesShop
   profiles.active: dev
+  application.name: cakesShop
 server.port: 9000
 
 storage.address: http://localhost:9000

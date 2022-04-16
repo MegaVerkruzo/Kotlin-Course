@@ -1,9 +1,11 @@
 package ru.tinkoff.fintech.homework.lesson6.order
 
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 
 @Service
+@Profile("dev", "cakesShop")
 class DevOrderDao : OrderDao {
 
     private var orderId: Int = 0
