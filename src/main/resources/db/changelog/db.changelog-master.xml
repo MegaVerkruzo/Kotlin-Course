@@ -1,0 +1,28 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog">
+    <changeSet id="make" author="alexey">
+        <sql>
+            CREATE TABLE orders
+            (
+                order_id        serial PRIMARY KEY,
+                cake_name       VARCHAR(50) UNIQUE NOT NULL,
+                cake_cost       FLOAT              NOT NULL,
+                cake_count      INT                NOT NULL,
+                order_completed BIT                NOT NULL,
+                created_on      TIMESTAMP          NOT NULL,
+                finished        TIMESTAMP          NOT NULL
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="make" author="alexey">
+        <sql>
+            CREATE TABLE cakes
+            (
+                cake_id    serial PRIMARY KEY,
+                cake_name  VARCHAR(50) UNIQUE NOT NULL,
+                cake_cost  FLOAT              NOT NULL,
+                cake_count INT                NOT NULL,
+                created_on TIMESTAMP          NOT NULL
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
