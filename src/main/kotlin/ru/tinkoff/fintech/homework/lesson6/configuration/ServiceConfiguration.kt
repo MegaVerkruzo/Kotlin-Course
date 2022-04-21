@@ -11,7 +11,7 @@ import java.time.Duration
 import javax.sql.DataSource
 
 @Configuration
-abstract class ServiceConfiguration {
+class ServiceConfiguration {
 
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
