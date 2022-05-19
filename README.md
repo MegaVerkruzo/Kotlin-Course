@@ -1,6 +1,9 @@
-# Kotlin - Course
+# kotlin-fintech-tinkoff
 
-### What meaning of each pull request?
+### What is this course about?
+It's about bases of kotlin
+
+### Meaning of each pull request
 - [lesson1](https://github.com/MegaVerkruzo/Kotlin-Course/pull/1) about using classes
 - [lesson3](https://github.com/MegaVerkruzo/Kotlin-Course/pull/3) about testing with kotest
 - [lesson4](https://github.com/MegaVerkruzo/Kotlin-Course/pull/4) about data structures in kotlin
