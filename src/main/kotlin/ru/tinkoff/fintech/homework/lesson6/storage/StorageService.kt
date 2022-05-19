@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.homework.lesson6.common.model.Cake
 
 @Service
-class StorageService(private val devStorageDao: DevStorageDao) {
+class StorageService(private val devStorageDao: StorageRepository) {
 
     fun getCakes(): Set<Cake> = devStorageDao.getCakes()
 
@@ -24,7 +24,7 @@ class StorageService(private val devStorageDao: DevStorageDao) {
         require(cost > 0) { "Стоимость должна быть положительной" }
         require(count >= 0) { "Кол-во не должно быть отрицательным" }
         val newCake = Cake(name, cost, count)
-        return devStorageDao.updateCake(newCake)
+        return devStorageDao.addCake(newCake)
     }
 
     private fun updateCake(cake: Cake, cost: Double? = null, count: Int? = null): Cake {

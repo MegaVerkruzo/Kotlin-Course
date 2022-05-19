@@ -5,7 +5,7 @@ import ru.tinkoff.fintech.homework.lesson6.common.StorageClient
 import ru.tinkoff.fintech.homework.lesson6.common.model.Order
 
 @Service
-class OrderService(private val devOrderDao: DevOrderDao, private val storageClient: StorageClient) {
+class OrderService(private val devOrderDao: OrderRepository, private val storageClient: StorageClient) {
 
     fun addOrder(name: String, count: Int): Order {
         val cake = storageClient.getCake(name)

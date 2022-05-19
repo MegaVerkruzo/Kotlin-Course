@@ -14,9 +14,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
                 cake_name       VARCHAR(50) UNIQUE NOT NULL,
                 cake_cost       FLOAT              NOT NULL,
                 cake_count      INT                NOT NULL,
-                order_completed BIT                NOT NULL,
-                created_on      TIMESTAMP          NOT NULL,
-                finished        TIMESTAMP          NOT NULL
+                order_completed BIT                NOT NULL
             );
         </sql>
     </changeSet>
@@ -27,9 +25,13 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
                 cake_id    serial PRIMARY KEY,
                 cake_name  VARCHAR(50) UNIQUE NOT NULL,
                 cake_cost  FLOAT              NOT NULL,
-                cake_count INT                NOT NULL,
-                created_on TIMESTAMP          NOT NULL
+                cake_count INT                NOT NULL
             );
+        </sql>
+    </changeSet>
+    <changeSet id="add cakes" author="alexey">
+        <sql>
+            INSERT INTO cakes SET cake_id = 1, cake_name="cesar", cake_cost=32.0, cake_count=4343)
         </sql>
     </changeSet>
 </databaseChangeLog>
