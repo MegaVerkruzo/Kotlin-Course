@@ -1,0 +1,7 @@
+spring:
+  application.name: cakesShop
+  profiles.active: dev
+server.port: 9000
+
+storage.address: http://localhost:9000
+order.address: http://localhost:9000
